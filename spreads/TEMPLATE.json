@@ -10,5 +10,9 @@
   "stamp": "USO PERSONAL",
   "tags": [],
   "cta": { "label": "Visitar", "url": "https://", "disabled": false },
-  "note": null
+  "note": null,
+  "image": "IMG/mi-captura.png",
+  "imageAlt": "Descripción de la captura",
+  "imageTilt": -4,
+  "imagePlaceholder": null
 }
