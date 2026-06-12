@@ -1,0 +1,478 @@
+/* ═══════════════════════════════════════════════════════════
+   CONSTRUÍ ESTO — Fanzine visual system
+   Max column 520px · xerox/collage · vanilla CSS
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --paper: #f5f0e6;
+  --paper-dark: #e8e2d6;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --red: #e63946;
+  --blue: #457b9d;
+  --tape: rgba(230, 210, 150, 0.65);
+  --shadow: rgba(0, 0, 0, 0.12);
+  --col: 520px;
+  --display: 'Bangers', cursive;
+  --typewriter: 'Special Elite', monospace;
+  --hand: 'Patrick Hand', cursive;
+  --mono: 'Space Mono', monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; scroll-snap-type: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  font-family: var(--hand);
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: #2a2a2a;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(69, 123, 157, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(230, 57, 70, 0.06) 0%, transparent 50%);
+  min-height: 100vh;
+}
+
+a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+a:hover { color: var(--red); }
+
+/* ── Chrome (fuera de la página) ── */
+.zine-chrome {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 230, 0.4);
+}
+
+.zine-chrome--page {
+  bottom: 20px;
+  right: max(20px, calc(50% - var(--col) / 2 - 60px));
+}
+
+.zine-chrome--issue {
+  top: 20px;
+  left: max(20px, calc(50% - var(--col) / 2 - 60px));
+}
+
+.zine-toolbar {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 110;
+  display: flex;
+  gap: 8px;
+}
+
+.zine-toolbar button {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border: 1px solid rgba(245, 240, 230, 0.25);
+  background: rgba(26, 26, 26, 0.85);
+  color: var(--paper);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.zine-toolbar button:hover {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+/* ── Stage (columna centrada) ── */
+#zine-root {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 24px 0 80px;
+}
+
+/* ── Spread (página) ── */
+.spread {
+  position: relative;
+  min-height: 88vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  margin-bottom: 32px;
+  padding: 28px 24px 48px;
+  background: var(--paper);
+  box-shadow:
+    4px 4px 0 var(--shadow),
+    8px 8px 24px rgba(0, 0, 0, 0.25);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.4s var(--ease);
+}
+
+.spread:nth-child(odd) { --tilt: -0.4deg; }
+.spread:nth-child(even) { --tilt: 0.35deg; }
+
+.spread:hover { --tilt: 0deg; }
+
+/* Halftone texture overlay */
+.spread::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: radial-gradient(circle, var(--ink) 0.6px, transparent 0.6px);
+  background-size: 4px 4px;
+}
+
+/* Cinta adhesiva top */
+.spread::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 72px;
+  height: 22px;
+  background: var(--tape);
+  box-shadow: 0 1px 3px var(--shadow);
+  pointer-events: none;
+}
+
+.spread__page-num {
+  position: absolute;
+  bottom: 14px;
+  right: 18px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--ink-soft);
+  opacity: 0.6;
+}
+
+/* ── Cover ── */
+.spread--cover {
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background:
+    linear-gradient(135deg, var(--paper) 0%, var(--paper-dark) 100%);
+  border: 3px solid var(--ink);
+}
+
+.spread--cover .spread__masthead {
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 10vw, 3.2rem);
+  line-height: 0.95;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.spread--cover .spread__issue {
+  font-family: var(--typewriter);
+  font-size: 1rem;
+  color: var(--red);
+  margin-bottom: 32px;
+}
+
+.spread--cover .spread__author {
+  font-family: var(--hand);
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+}
+
+.spread--cover .spread__stamp {
+  margin-top: 40px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  padding: 10px 20px;
+  border: 2px double var(--ink);
+  transform: rotate(-8deg);
+  color: var(--ink);
+}
+
+/* ── Panel / bocadillo ── */
+.panel {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.panel__title {
+  font-family: var(--typewriter);
+  font-size: clamp(1.25rem, 4vw, 1.6rem);
+  line-height: 1.2;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+
+.panel__hook {
+  font-family: var(--hand);
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 18px 18px 18px 4px;
+  position: relative;
+}
+
+.panel__hook::before {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 20px;
+  width: 0; height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid var(--ink);
+}
+
+.panel__body {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.panel__body p + p { margin-top: 14px; }
+
+/* ── Stamp / sello ── */
+.stamp {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border: 2px double var(--red);
+  color: var(--red);
+  transform: rotate(-6deg);
+  margin-top: 16px;
+}
+
+.stamp--blue {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+/* ── Tags ── */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0;
+}
+
+.tag {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid var(--ink);
+  background: var(--paper-dark);
+}
+
+/* ── CTA ── */
+.cta {
+  display: inline-block;
+  margin-top: 20px;
+  font-family: var(--typewriter);
+  font-size: 0.95rem;
+  padding: 12px 22px;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  border: none;
+  transition: background 0.25s, transform 0.25s var(--ease);
+}
+
+.cta:hover {
+  background: var(--red);
+  color: var(--paper);
+  transform: translateX(4px);
+}
+
+.cta--disabled {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 2px dashed var(--ink-soft);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ── Diary layout (personal) ── */
+.spread--diary {
+  border-left: 4px solid var(--blue);
+}
+
+.spread--diary .panel__hook {
+  border-radius: 4px 18px 18px 18px;
+  background: rgba(69, 123, 157, 0.08);
+  border-color: var(--blue);
+}
+
+/* ── Product layout ── */
+.spread--product {
+  border-top: 4px solid var(--red);
+}
+
+.spread--product .panel__title {
+  color: var(--red);
+}
+
+/* ── Web layout ── */
+.spread--web {
+  background: linear-gradient(180deg, var(--paper) 0%, #fff 100%);
+}
+
+/* ── Editorial ── */
+.spread--editorial .panel__title {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  letter-spacing: 0.02em;
+}
+
+.note-box {
+  margin-top: 20px;
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  background: var(--paper-dark);
+  border-left: 3px solid var(--blue);
+  color: var(--ink-soft);
+}
+
+/* ── Back cover ── */
+.spread--back {
+  min-height: 70vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.spread--back .panel__title {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  color: var(--paper);
+  margin-bottom: 16px;
+}
+
+.spread--back .panel__hook,
+.spread--back .panel__body {
+  color: rgba(245, 240, 230, 0.8);
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.spread--back .panel__hook::before { display: none; }
+
+.spread--back .links {
+  display: flex;
+  gap: 24px;
+  margin-top: 28px;
+  list-style: none;
+}
+
+.spread--back .links a {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper);
+  text-decoration: none;
+  border-bottom: 1px solid var(--red);
+}
+
+.spread--back .links a:hover { color: var(--red); }
+
+.spread--back .footer-note {
+  margin-top: 32px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  opacity: 0.5;
+}
+
+/* ── Reveal animation ── */
+.spread .panel {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+
+.spread.is-visible .panel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Collage accent (recorte) ── */
+.collage-cut {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--red);
+  border-radius: 50%;
+  font-family: var(--mono);
+  font-size: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transform: rotate(12deg);
+  color: var(--red);
+  line-height: 1.2;
+  opacity: 0.7;
+}
+
+/* ── Print / PDF ── */
+@media print {
+  body { background: white; }
+  .zine-chrome, .zine-toolbar { display: none !important; }
+  #zine-root { max-width: 100%; padding: 0; }
+  .spread {
+    min-height: auto;
+    page-break-after: always;
+    box-shadow: none;
+    margin: 0;
+    transform: none !important;
+    border: 1px solid #ccc;
+  }
+  .spread::after { display: none; }
+  .spread .panel { opacity: 1 !important; transform: none !important; }
+}
+
+@media (max-width: 560px) {
+  #zine-root { padding: 12px 10px 60px; }
+  .spread { padding: 22px 18px 40px; margin-bottom: 20px; }
+  .zine-chrome--page,
+  .zine-chrome--issue { display: none; }
+}

@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "issue": 1,
+    "title": "Construí esto",
+    "subtitle": "Fanzine de herramientas para problemas reales",
+    "author": "Facundo Galetta",
+    "location": "Montevideo, Uruguay",
+    "updated": "2026-06-12"
+  },
+  "spreads": [
+    {
+      "id": "cover",
+      "page": 1,
+      "layout": "cover",
+      "title": "Construí esto",
+      "hook": "Fanzine #1",
+      "body": "Psicólogo · constructor · Montevideo",
+      "stamp": "2026"
+    },
+    {
+      "id": "intro",
+      "page": 2,
+      "layout": "editorial",
+      "title": "De qué va esto",
+      "hook": "Armo herramientas para problemas que tengo de verdad.",
+      "body": "Ayudar a quien sigue en la facultad. Pagarle a la niñera. Registrar la huerta. Saber a dónde se va la plata. Si a mí me sirvió, capaz a vos también.",
+      "stamp": "LOCAL-FIRST",
+      "note": "Tus datos quedan en tu máquina."
+    },
+    {
+      "id": "asistente",
+      "page": 3,
+      "layout": "product",
+      "tier": "public",
+      "title": "Asistente Académico",
+      "hook": "Corrector de tesis con IA.",
+      "body": "Revisa citas APA, redacción y estructura. Cada cambio en una tarjeta: aceptás o rechazás vos, no la máquina. Exporta a Word y PDF.",
+      "tags": ["Gratis", "Beta"],
+      "cta": { "label": "Próximamente en GitHub", "url": null, "disabled": true }
+    },
+    {
+      "id": "supercouncil",
+      "page": 4,
+      "layout": "product",
+      "tier": "public",
+      "title": "SuperCouncil",
+      "hook": "Un consejo de IAs que delibera.",
+      "body": "Varios modelos debaten tu problema, se auditan entre sí y un Chairman sintetiza la respuesta. Self-hosted, fábrica de agentes y bot de Telegram. Para gente técnica.",
+      "tags": ["USD 49", "Self-hosted"],
+      "cta": { "label": "Ver en Gumroad", "url": "https://complexity88.gumroad.com/l/supercouncil", "disabled": false }
+    },
+    {
+      "id": "vincularmente",
+      "page": 5,
+      "layout": "web",
+      "tier": "web",
+      "title": "Vincularmente",
+      "hook": "Psicología y bienestar en la web.",
+      "body": "Sitio sobre vínculos, apego y comunicación. Se actualiza solo con un pipeline que armé con IA y curo a mano. Acá se cruzan mis dos oficios.",
+      "tags": ["En vivo"],
+      "cta": { "label": "Visitar sitio", "url": "https://mankuy.github.io/vincularmente-site/index.html", "disabled": false }
+    },
+    {
+      "id": "gonza-discos",
+      "page": 6,
+      "layout": "web",
+      "tier": "web",
+      "title": "Gonza Discos",
+      "hook": "Tienda de vinilos para un amigo.",
+      "body": "Catálogo con grading, identificación de discos por foto con IA y pedido por WhatsApp. Toda la app en un solo archivo.",
+      "tags": ["En prueba", "Para un amigo"],
+      "cta": { "label": "Visitar", "url": "https://gonzalodiscos.facundo-galetta.workers.dev/", "disabled": false }
+    },
+    {
+      "id": "gastos",
+      "page": 7,
+      "layout": "diary",
+      "tier": "personal",
+      "title": "Registro de Gastos",
+      "hook": "Quería saber a dónde se iba la plata.",
+      "body": "Cargo gastos a mano o le saco foto al recibo y la app reconoce el monto. Gráficos, proyecciones, capacidad de ahorro.",
+      "stamp": "USO PERSONAL"
+    },
+    {
+      "id": "ninera",
+      "page": 8,
+      "layout": "diary",
+      "tier": "personal",
+      "title": "Sueldo Niñera",
+      "hook": "Me cansé de calcular a mano las horas de la niñera de mi hija.",
+      "body": "Registro las horas, la app suma el mes y arma el recibo de sueldo solo.",
+      "stamp": "USO PERSONAL"
+    },
+    {
+      "id": "jardin",
+      "page": 9,
+      "layout": "diary",
+      "tier": "personal",
+      "title": "Jardín",
+      "hook": "Registro de cosecha de la huerta.",
+      "body": "Qué planté, qué salió, cuánto y cuándo. Para saber si la temporada fue buena con datos, no con memoria.",
+      "stamp": "USO PERSONAL"
+    },
+    {
+      "id": "salones",
+      "page": 10,
+      "layout": "diary",
+      "tier": "personal",
+      "title": "Salones de Fiesta",
+      "hook": "Gestión de reservas para salones infantiles.",
+      "body": "Agenda, clientes y pagos en un solo lugar.",
+      "stamp": "EN DESARROLLO"
+    },
+    {
+      "id": "historia",
+      "page": 11,
+      "layout": "editorial",
+      "title": "¿Por qué un psicólogo hace apps?",
+      "hook": "Porque los problemas no piden título universitario.",
+      "body": "Mi tesis la escribí hace años; el APA me comió la cabeza en su momento, como a cualquiera. Pero el corrector no lo hice para eso: lo armé después, para amigos que siguen estudiando y para cuando yo mismo reviso trabajos.\n\nTengo una hija y una niñera, y sumar las horas del mes a mano era un embole: app. Tengo huerta: app. Misma regla siempre: el problema primero, la tecnología después.\n\nLocal-first, porque tus datos son tuyos.\n\nEl Asistente Académico va a estar abierto en GitHub. Si lo usás y encontrás un error o se te ocurre una mejora, escribime: eso vale más que cualquier venta.",
+      "stamp": null,
+      "note": null
+    },
+    {
+      "id": "back-cover",
+      "page": 12,
+      "layout": "back-cover",
+      "title": "Fin del fanzine #1",
+      "hook": "Estas apps personales no están publicadas: las hice para mi casa.",
+      "body": "Si te interesa una herramienta así para vos, escribime.",
+      "links": [
+        { "label": "X / Twitter", "url": "https://x.com/SuperCouncil_" },
+        { "label": "GitHub", "url": "https://github.com/Mankuy" }
+      ],
+      "note": "Hecho en Montevideo, Uruguay"
+    }
+  ]
+}

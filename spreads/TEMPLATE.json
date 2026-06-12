@@ -1,0 +1,14 @@
+{
+  "_instructions": "Copiá este objeto dentro de spreads.json → spreads[]. Ajustá page (número siguiente). Corré: node scripts/new-spread.js para asistencia.",
+  "id": "mi-proyecto-slug",
+  "page": 99,
+  "layout": "diary",
+  "tier": "personal",
+  "title": "Nombre del Proyecto",
+  "hook": "Una línea que engancha — el problema que tenías.",
+  "body": "Qué hace la herramienta, en 2-3 oraciones. Primera persona.",
+  "stamp": "USO PERSONAL",
+  "tags": [],
+  "cta": { "label": "Visitar", "url": "https://", "disabled": false },
+  "note": null
+}
