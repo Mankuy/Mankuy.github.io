@@ -1,12 +1,16 @@
 /**
  * CONSTRUÍ ESTO — Fanzine renderer
- * Lee spreads.json y monta las páginas en #zine-root
+ * Revista digital con volteo de página, lightbox y PDF
  */
 (function () {
   'use strict';
 
   const ROOT_ID = 'zine-root';
   const DATA_URL = 'spreads.json';
+  const MAGAZINE_BP = '(min-width: 900px)';
+  const FLIP_MS = 720;
+
+  let revealObserver = null;
 
   function esc(s) {
     if (s == null) return '';
@@ -23,6 +27,14 @@
   function bodyHtml(text) {
     if (!text) return '';
     return text.split('\n\n').map(p => `<p>${esc(p)}</p>`).join('');
+  }
+
+  function spreadImages(s) {
+    if (s.images && s.images.length) return s.images;
+    if (s.image) {
+      return [{ src: s.image, alt: s.imageAlt || s.title, tilt: s.imageTilt }];
+    }
+    return [];
   }
 
   function renderTags(tags) {
@@ -58,22 +70,26 @@
     return `<span class="spread__page-num">— ${String(n).padStart(2, '0')} / ${String(total).padStart(2, '0')} —</span>`;
   }
 
-  function renderCollagePhoto(item) {
-    const tilt = item.tilt != null ? item.tilt : 0;
-    const size = item.size || 'md';
+  function renderPhoto(img, opts = {}) {
+    const tilt = img.tilt != null ? img.tilt : 0;
+    const size = opts.size || 'spread';
+    const alt = img.alt || '';
     return `
-      <figure class="collage-photo collage-photo--${esc(size)}" style="--photo-tilt:${tilt}deg">
-        <img src="${imgSrc(item.src)}" alt="" loading="lazy" decoding="async">
+      <figure class="collage-photo collage-photo--${esc(size)} collage-photo--zoomable" style="--photo-tilt:${tilt}deg">
+        <button type="button" class="collage-photo__btn" data-lightbox-src="${imgSrc(img.src)}" data-lightbox-alt="${esc(alt)}" aria-label="Ver imagen en grande">
+          <img src="${imgSrc(img.src)}" alt="${esc(alt)}" loading="lazy" decoding="async">
+        </button>
       </figure>`;
   }
 
+  function renderCollagePhoto(item) {
+    return renderPhoto({ src: item.src, alt: '', tilt: item.tilt }, { size: item.size || 'md' });
+  }
+
   function renderCollage(s) {
-    if (s.image) {
-      const tilt = s.imageTilt != null ? s.imageTilt : 0;
-      return `
-        <figure class="collage-photo collage-photo--spread" style="--photo-tilt:${tilt}deg">
-          <img src="${imgSrc(s.image)}" alt="${esc(s.imageAlt || s.title)}" loading="lazy" decoding="async">
-        </figure>`;
+    const imgs = spreadImages(s);
+    if (imgs.length) {
+      return `<div class="collage-stack">${imgs.map(img => renderPhoto(img)).join('')}</div>`;
     }
     if (s.imagePlaceholder) {
       return `
@@ -102,12 +118,28 @@
   }
 
   function renderCover(s, total) {
+    const lines = (s.coverLines || []).map(l => `<li>${esc(l)}</li>`).join('');
+    const collage = (s.coverCollage || []).map((item, i) => {
+      const src = typeof item === 'string' ? item : item.src;
+      const tilt = typeof item === 'object' && item.tilt != null ? item.tilt : (i % 2 ? 5 : -4);
+      return renderPhoto({ src, alt: '', tilt }, { size: 'cover' });
+    }).join('');
+
     return `
       <article class="spread spread--cover" id="spread-${esc(s.id)}" data-page="${s.page}">
-        <h1 class="spread__masthead">${esc(s.title)}</h1>
-        <p class="spread__issue">${esc(s.hook)}</p>
-        <p class="spread__author">${esc(s.body)}</p>
-        ${s.stamp ? `<span class="spread__stamp">${esc(s.stamp)}</span>` : ''}
+        <div class="cover-spine" aria-hidden="true"></div>
+        <div class="cover-inner">
+          <header class="cover-top">
+            <span class="cover-kicker">Fanzine · Facundo Galetta</span>
+            <span class="cover-price">${esc(s.stamp || '')}</span>
+          </header>
+          <h1 class="spread__masthead">${esc(s.title)}</h1>
+          <p class="spread__issue">${esc(s.hook)}</p>
+          ${lines ? `<ul class="cover-lines">${lines}</ul>` : ''}
+          <p class="spread__author">${esc(s.body)}</p>
+          ${collage ? `<div class="cover-collage">${collage}</div>` : ''}
+          <button type="button" class="cover-cta" id="cover-open-btn">${esc(s.ctaCover || 'Pasá la página →')}</button>
+        </div>
         ${pageNum(s.page, total)}
       </article>`;
   }
@@ -126,7 +158,7 @@
           ${renderStamp(s.stamp, 'blue')}
           ${s.note ? `<div class="note-box">${esc(s.note)}</div>` : ''}
         </div>
-        ${collage ? `<div class="collage-cluster" aria-hidden="true">${collage}</div>` : ''}
+        ${collage ? `<div class="collage-cluster">${collage}</div>` : ''}
         ${pageNum(s.page, total)}
       </article>`;
   }
@@ -228,25 +260,16 @@
 
   function renderSpread(s, total) {
     const fn = RENDERERS[s.layout];
-    if (!fn) {
-      console.warn('Unknown layout:', s.layout);
-      return renderEditorial(s, total);
-    }
+    if (!fn) return renderEditorial(s, total);
     return fn(s, total);
   }
 
   function initChrome(meta) {
     const issueEl = document.getElementById('zine-issue-label');
-    const pageEl = document.getElementById('zine-page-label');
     if (issueEl && meta) {
       issueEl.textContent = `${meta.title || 'Fanzine'} #${meta.issue || 1}`;
     }
-    return pageEl;
   }
-
-  const MAGAZINE_BP = '(min-width: 900px)';
-
-  let revealObserver = null;
 
   function initReveal() {
     if (revealObserver) {
@@ -259,13 +282,48 @@
         if (e.isIntersecting) {
           e.target.classList.add('is-visible');
           const pageEl = document.getElementById('zine-page-label');
-          if (pageEl) {
-            pageEl.textContent = `Pág ${e.target.dataset.page || '?'}`;
-          }
+          if (pageEl) pageEl.textContent = `Pág ${e.target.dataset.page || '?'}`;
         }
       });
     }, { threshold: 0.25 });
     spreads.forEach(el => revealObserver.observe(el));
+  }
+
+  function initLightbox() {
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightbox-img');
+    const lbClose = document.getElementById('lightbox-close');
+    if (!lb || !lbImg) return;
+
+    function open(src, alt) {
+      lbImg.src = src;
+      lbImg.alt = alt || '';
+      lb.hidden = false;
+      document.body.classList.add('lightbox-open');
+      lbClose?.focus();
+    }
+
+    function close() {
+      lb.hidden = true;
+      lbImg.src = '';
+      document.body.classList.remove('lightbox-open');
+    }
+
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-lightbox-src]');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      open(btn.getAttribute('data-lightbox-src'), btn.getAttribute('data-lightbox-alt'));
+    });
+
+    lbClose?.addEventListener('click', close);
+    lb.addEventListener('click', e => {
+      if (e.target === lb || e.target.classList.contains('lightbox__backdrop')) close();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !lb.hidden) close();
+    });
   }
 
   function initMagazine(total) {
@@ -278,11 +336,13 @@
     const edgeNext = document.getElementById('magazine-edge-next');
     const indicator = document.getElementById('magazine-indicator');
     const pageChrome = document.getElementById('zine-page-label');
+    const book = document.getElementById('magazine-book');
 
     let spreads = [];
     let current = 0;
     let enabled = false;
     let transitioning = false;
+    let goRef = null;
 
     function spreadIndexFromId(id) {
       if (!id) return -1;
@@ -302,17 +362,25 @@
       if (pageChrome) pageChrome.textContent = `Pág ${page}`;
       if (prevBtn) prevBtn.disabled = index <= 0;
       if (nextBtn) nextBtn.disabled = index >= spreads.length - 1;
+      if (book) book.dataset.page = String(index + 1);
     }
 
     function setHash(index, replace) {
       const id = spreads[index]?.id;
       if (!id) return;
       const url = `${location.pathname}${location.search}#${id}`;
-      if (replace) {
-        history.replaceState(null, '', url);
-      } else {
-        history.pushState(null, '', url);
-      }
+      if (replace) history.replaceState(null, '', url);
+      else history.pushState(null, '', url);
+    }
+
+    function clearFlipClasses() {
+      spreads.forEach(s => {
+        s.classList.remove(
+          'is-flip-out-forward', 'is-flip-out-back',
+          'is-flip-under', 'is-entering', 'is-leaving',
+          'is-entering-left', 'is-entering-right'
+        );
+      });
     }
 
     function showPage(index, opts = {}) {
@@ -329,40 +397,49 @@
       const outgoing = spreads[prev];
       const incoming = spreads[next];
 
+      if (transitioning) return;
       transitioning = true;
 
+      clearFlipClasses();
+
       spreads.forEach((s, i) => {
-        s.classList.remove('is-active', 'is-entering', 'is-leaving', 'is-entering-left', 'is-entering-right');
-        if (i !== next && i !== prev) {
-          s.setAttribute('aria-hidden', 'true');
-        }
+        s.classList.remove('is-active');
+        if (i !== next) s.setAttribute('aria-hidden', 'true');
       });
 
-      if (outgoing && prev !== next) {
-        outgoing.classList.add('is-leaving');
-        outgoing.classList.remove('is-active');
-        if (direction < 0) outgoing.classList.add('is-leaving-left');
-        if (direction > 0) outgoing.classList.add('is-leaving-right');
-      }
+      if (animate && direction !== 0 && outgoing && prev !== next) {
+        incoming.classList.add('is-flip-under', 'is-visible');
+        incoming.removeAttribute('aria-hidden');
+        outgoing.classList.add(direction > 0 ? 'is-flip-out-forward' : 'is-flip-out-back');
+        incoming.classList.add('is-active');
 
-      incoming.classList.add('is-visible', 'is-active');
-      incoming.removeAttribute('aria-hidden');
-      if (animate && direction !== 0) {
-        incoming.classList.add(direction < 0 ? 'is-entering-left' : 'is-entering-right');
-        incoming.classList.add('is-entering');
-      }
-
-      current = next;
-      updateChrome(current);
-
-      if (updateHash) setHash(current, replaceHash);
-
-      window.setTimeout(() => {
-        spreads.forEach(s => {
-          s.classList.remove('is-entering', 'is-leaving', 'is-entering-left', 'is-entering-right');
+        window.setTimeout(() => {
+          clearFlipClasses();
+          spreads.forEach((s, i) => {
+            if (i === next) {
+              s.classList.add('is-active', 'is-visible');
+              s.removeAttribute('aria-hidden');
+            } else {
+              s.setAttribute('aria-hidden', 'true');
+            }
+          });
+          current = next;
+          updateChrome(current);
+          if (updateHash) setHash(current, replaceHash);
+          transitioning = false;
+        }, FLIP_MS);
+      } else {
+        spreads.forEach((s, i) => {
+          if (i === next) {
+            s.classList.add('is-active', 'is-visible');
+            s.removeAttribute('aria-hidden');
+          }
         });
+        current = next;
+        updateChrome(current);
+        if (updateHash) setHash(current, replaceHash);
         transitioning = false;
-      }, animate ? 420 : 0);
+      }
     }
 
     function go(delta) {
@@ -372,15 +449,19 @@
       showPage(next, { direction: delta });
     }
 
+    goRef = go;
+
     function onWheel(e) {
       if (!enabled) return;
-      if (e.target.closest('.panel')) return;
+      if (e.target.closest('.panel, .collage-stack, .cover-inner')) return;
       e.preventDefault();
     }
 
     function onKeydown(e) {
       if (!enabled) return;
       if (e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+      const lb = document.getElementById('lightbox');
+      if (lb && !lb.hidden) return;
       if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault();
         go(-1);
@@ -400,21 +481,17 @@
       if (!enabled) return;
       const link = e.target.closest('.index-list__link');
       if (!link) return;
-      const href = link.getAttribute('href');
-      if (!href || !href.startsWith('#')) return;
       e.preventDefault();
-      const idx = spreadIndexFromId(href.slice(1));
+      const idx = spreadIndexFromId(link.getAttribute('href')?.slice(1));
       if (idx < 0) return;
-      const direction = idx > current ? 1 : idx < current ? -1 : 0;
-      showPage(idx, { direction });
+      showPage(idx, { direction: idx > current ? 1 : idx < current ? -1 : 0 });
     }
 
     function onHashChange() {
       if (!enabled) return;
       const idx = spreadIndexFromHash();
       if (idx !== current) {
-        const direction = idx > current ? 1 : -1;
-        showPage(idx, { direction, updateHash: false });
+        showPage(idx, { direction: idx > current ? 1 : -1, updateHash: false });
       }
     }
 
@@ -446,12 +523,18 @@
       document.addEventListener('click', onIndexClick);
       document.addEventListener('wheel', onWheel, { passive: false });
       window.addEventListener('hashchange', onHashChange);
+
+      const coverBtn = document.getElementById('cover-open-btn');
+      if (coverBtn) {
+        coverBtn.addEventListener('click', () => go(1));
+      }
     }
 
     function disable() {
       if (!enabled) return;
       enabled = false;
       transitioning = false;
+      clearFlipClasses();
 
       document.body.classList.remove('magazine-mode');
       if (nav) nav.hidden = true;
@@ -461,10 +544,7 @@
       }
 
       spreads.forEach(s => {
-        s.classList.remove(
-          'is-active', 'is-entering', 'is-leaving',
-          'is-entering-left', 'is-entering-right'
-        );
+        s.classList.remove('is-active', 'is-flip-under', 'is-flip-out-forward', 'is-flip-out-back');
         s.removeAttribute('aria-hidden');
       });
 
@@ -494,7 +574,6 @@
     const images = document.querySelectorAll('#zine-root img');
     return Promise.all([...images].map(img => {
       img.loading = 'eager';
-      img.decoding = 'sync';
       if (img.complete && img.naturalWidth > 0) return Promise.resolve();
       return new Promise(resolve => {
         img.addEventListener('load', resolve, { once: true });
@@ -503,24 +582,40 @@
     }));
   }
 
-  async function preparePrint() {
+  function preparePrintDOM() {
     document.querySelectorAll('.spread').forEach(s => {
       s.classList.add('is-visible');
+      s.classList.remove('is-active', 'is-flip-under', 'is-flip-out-forward', 'is-flip-out-back');
+      s.removeAttribute('aria-hidden');
+      s.style.visibility = '';
+      s.style.opacity = '';
     });
-    document.body.classList.add('printing');
+  }
+
+  async function preparePrint() {
+    preparePrintDOM();
+    document.body.classList.add('printing', 'print-prep');
     await waitForPrintImages();
+    await new Promise(r => setTimeout(r, 120));
   }
 
   function cleanupPrint() {
-    document.body.classList.remove('printing');
+    document.body.classList.remove('printing', 'print-prep');
   }
 
   function initPrint() {
     const btn = document.getElementById('btn-print');
     if (btn) {
       btn.addEventListener('click', async () => {
-        await preparePrint();
-        window.print();
+        try {
+          btn.disabled = true;
+          await preparePrint();
+          window.print();
+        } catch (err) {
+          console.error('PDF error:', err);
+        } finally {
+          btn.disabled = false;
+        }
       });
     }
     window.addEventListener('beforeprint', () => { preparePrint(); });
@@ -541,14 +636,20 @@
       initChrome(data.meta);
       document.title = `${data.meta?.author || 'Facundo Galetta'} — ${data.meta?.title || 'Fanzine'}`;
 
-      root.innerHTML = spreads
-        .sort((a, b) => a.page - b.page)
-        .map(s => renderSpread(s, total))
-        .join('');
+      root.innerHTML = `<div class="magazine-book" id="magazine-book">${
+        spreads.sort((a, b) => a.page - b.page).map(s => renderSpread(s, total)).join('')
+      }</div>`;
 
       initReveal();
+      initLightbox();
       initMagazine(total);
       initPrint();
+
+      document.getElementById('cover-open-btn')?.addEventListener('click', () => {
+        if (!window.matchMedia(MAGAZINE_BP).matches) {
+          document.getElementById('spread-intro')?.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
     } catch (err) {
       root.innerHTML = `<p style="padding:2rem;color:#e63946;font-family:monospace">Error cargando spreads.json: ${esc(err.message)}<br><small>Abrí con un servidor local si fetch falla por CORS (file://).</small></p>`;
       console.error(err);

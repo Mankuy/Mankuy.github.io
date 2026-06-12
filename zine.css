@@ -194,40 +194,167 @@ a:hover { color: var(--red); }
   opacity: 0.6;
 }
 
-/* ── Cover ── */
+/* ── Magazine desk + book shell ── */
+.magazine-desk {
+  display: none;
+}
+
+.magazine-book {
+  width: 100%;
+}
+
+/* ── Cover (tapa de revista) ── */
 .spread--cover {
   min-height: 92vh;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, #faf6ec 0%, var(--paper) 35%, var(--paper-dark) 100%);
+  border: none;
+  box-shadow: none;
+}
+
+.spread--cover::before {
+  opacity: 0.06;
+}
+
+.cover-spine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 14px;
+  background: linear-gradient(90deg, rgba(0,0,0,0.18), rgba(0,0,0,0.04), transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  background:
-    linear-gradient(135deg, var(--paper) 0%, var(--paper-dark) 100%);
-  border: 3px solid var(--ink);
+  min-height: inherit;
+  padding: 8px 20px 24px;
+}
+
+.cover-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 20px;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.cover-kicker { color: var(--red); }
+
+.cover-price {
+  padding: 4px 10px;
+  border: 2px double var(--ink);
+  transform: rotate(-4deg);
+  color: var(--ink);
 }
 
 .spread--cover .spread__masthead {
   font-family: var(--display);
-  font-size: clamp(2.4rem, 10vw, 3.2rem);
-  line-height: 0.95;
-  letter-spacing: 0.04em;
+  font-size: clamp(2.8rem, 11vw, 4.2rem);
+  line-height: 0.9;
+  letter-spacing: 0.06em;
   color: var(--ink);
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+  text-shadow: 3px 3px 0 rgba(230, 57, 70, 0.15);
 }
 
 .spread--cover .spread__issue {
   font-family: var(--typewriter);
-  font-size: 1rem;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
   color: var(--red);
-  margin-bottom: 32px;
+  margin-bottom: 18px;
+  max-width: 28ch;
+}
+
+.cover-lines {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 12px 18px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  transform: rotate(-1deg);
+  box-shadow: 4px 4px 0 var(--shadow);
+  text-align: left;
+  max-width: 320px;
+}
+
+.cover-lines li {
+  font-family: var(--hand);
+  font-size: 1.05rem;
+  padding: 5px 0;
+  border-bottom: 1px dashed rgba(26, 26, 26, 0.15);
+  color: var(--ink);
+}
+
+.cover-lines li:last-child { border-bottom: none; }
+
+.cover-lines li::before {
+  content: "★ ";
+  color: var(--red);
+  font-size: 0.75rem;
 }
 
 .spread--cover .spread__author {
   font-family: var(--hand);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: var(--ink-soft);
+  margin-bottom: 16px;
+}
+
+.cover-collage {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 12px 0 20px;
+  max-width: 100%;
+}
+
+.collage-photo--cover {
+  width: clamp(88px, 22vw, 130px);
+  float: none;
+  margin: 0;
+}
+
+.cover-cta {
+  font-family: var(--typewriter);
+  font-size: 1rem;
+  padding: 14px 28px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  cursor: pointer;
+  transform: rotate(-2deg);
+  box-shadow: 4px 4px 0 var(--red);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s;
+  animation: cover-pulse 2.5s ease-in-out infinite;
+}
+
+.cover-cta:hover {
+  transform: rotate(0deg) translateY(-2px);
+  box-shadow: 6px 6px 0 var(--red);
+}
+
+@keyframes cover-pulse {
+  0%, 100% { box-shadow: 4px 4px 0 var(--red); }
+  50% { box-shadow: 4px 4px 0 var(--red), 0 0 0 6px rgba(230, 57, 70, 0.12); }
 }
 
 .spread--cover .spread__stamp {
@@ -578,11 +705,36 @@ a:hover { color: var(--red); }
   transition: transform 0.35s var(--ease);
 }
 
+.collage-photo__btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+  line-height: 0;
+}
+
 .collage-photo img {
   display: block;
   width: 100%;
   height: auto;
   filter: contrast(1.05) saturate(0.92);
+  pointer-events: none;
+}
+
+.collage-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.collage-stack .collage-photo--spread {
+  float: none;
+  width: 100%;
+  max-width: 280px;
+  margin: 0;
 }
 
 .collage-photo::before {
@@ -836,6 +988,7 @@ a:hover { color: var(--red); }
   }
 
   /* Stack images above text — no floats in print */
+  .collage-stack,
   .collage-photo--spread,
   .collage-placeholder,
   .collage-cluster {
@@ -941,17 +1094,120 @@ a:hover { color: var(--red); }
   }
 }
 
+/* ── Lightbox ── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.lightbox[hidden] { display: none !important; }
+
+.lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(6px);
+}
+
+.lightbox__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  font-size: 1.2rem;
+  border: 1px solid rgba(245, 240, 230, 0.3);
+  background: rgba(26, 26, 26, 0.8);
+  color: var(--paper);
+  cursor: pointer;
+}
+
+.lightbox__frame {
+  position: relative;
+  z-index: 1;
+  max-width: min(94vw, 1200px);
+  max-height: 90vh;
+  margin: 0;
+  padding: 8px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  box-shadow: 8px 10px 32px rgba(0, 0, 0, 0.5);
+  transform: rotate(-0.5deg);
+}
+
+.lightbox__frame img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(90vh - 40px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+body.lightbox-open { overflow: hidden; }
+
+/* ── Print prep (antes de window.print) ── */
+body.print-prep {
+  overflow: visible !important;
+  height: auto !important;
+}
+
+body.print-prep.magazine-mode #zine-root {
+  position: static !important;
+  inset: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+body.print-prep.magazine-mode .magazine-book {
+  perspective: none !important;
+}
+
+body.print-prep.magazine-mode .spread {
+  position: relative !important;
+  inset: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+  height: auto !important;
+  min-height: 0 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+  page-break-inside: auto;
+}
+
 /* ═══════════════════════════════════════════════════════════
    DESKTOP MAGAZINE READER (≥900px)
-   Full viewport · one page · paginate
+   Revista real · volteo 3D · tapa primero
    ═══════════════════════════════════════════════════════════ */
 
 @media (min-width: 900px) {
+  .magazine-desk {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(69, 123, 157, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 80%, rgba(230, 57, 70, 0.08) 0%, transparent 45%),
+      #1e1e1e;
+    pointer-events: none;
+  }
+
   body.magazine-mode {
     overflow: hidden;
     height: 100vh;
     height: 100dvh;
+    background: transparent;
   }
+
+  body.magazine-mode .bg-doodle { opacity: 0.02; }
 
   html:has(body.magazine-mode) {
     scroll-snap-type: none;
@@ -966,9 +1222,21 @@ a:hover { color: var(--red); }
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: clamp(16px, 3vh, 32px) clamp(24px, 5vw, 64px) clamp(64px, 8vh, 88px);
     overflow: hidden;
     z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body.magazine-mode .magazine-book {
+    position: relative;
+    width: min(920px, 92vw);
+    height: min(680px, 82vh);
+    perspective: 2200px;
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.55)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
   }
 
   body.magazine-mode .spread {
@@ -978,110 +1246,152 @@ a:hover { color: var(--red); }
     height: 100%;
     min-height: 0;
     margin: 0;
-    padding: clamp(40px, 6vh, 72px) clamp(48px, 8vw, 96px) clamp(72px, 10vh, 100px);
+    padding: clamp(36px, 5vh, 56px) clamp(40px, 6vw, 72px) clamp(48px, 6vh, 64px);
     display: flex;
     flex-direction: column;
     justify-content: center;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: rotate(var(--tilt, 0deg)) scale(0.97);
-    transition:
-      opacity 0.42s var(--ease),
-      transform 0.42s var(--ease),
-      visibility 0.42s;
+    transform: rotateY(0deg);
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    backface-visibility: hidden;
+    transition: none;
     z-index: 1;
     overflow: hidden;
+    border-radius: 2px 6px 6px 2px;
+    box-shadow:
+      inset -8px 0 24px rgba(0, 0, 0, 0.06),
+      4px 4px 0 var(--shadow),
+      0 0 0 1px rgba(26, 26, 26, 0.08);
   }
 
-  body.magazine-mode .spread.is-active {
+  body.magazine-mode .spread::after {
+    width: 56px;
+    top: -6px;
+  }
+
+  body.magazine-mode .spread.is-active,
+  body.magazine-mode .spread.is-flip-under {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: rotate(var(--tilt, 0deg)) scale(1);
-    z-index: 3;
+    z-index: 4;
   }
 
-  body.magazine-mode .spread.is-entering.is-entering-right {
-    transform: rotate(0deg) translateX(48px) scale(0.98);
-  }
-
-  body.magazine-mode .spread.is-entering.is-entering-left {
-    transform: rotate(0deg) translateX(-48px) scale(0.98);
-  }
-
-  body.magazine-mode .spread.is-active.is-entering {
-    transform: rotate(var(--tilt, 0deg)) translateX(0) scale(1);
-  }
-
-  body.magazine-mode .spread.is-leaving {
-    opacity: 0;
+  body.magazine-mode .spread.is-flip-under {
     z-index: 2;
+    transform: rotateY(0deg);
   }
 
-  body.magazine-mode .spread.is-leaving.is-leaving-right {
-    transform: rotate(0deg) translateX(-40px) scale(0.98);
+  body.magazine-mode .spread.is-flip-out-forward {
+    z-index: 5;
+    pointer-events: none;
+    animation: page-flip-forward 0.72s var(--ease) forwards;
   }
 
-  body.magazine-mode .spread.is-leaving.is-leaving-left {
-    transform: rotate(0deg) translateX(40px) scale(0.98);
+  body.magazine-mode .spread.is-flip-out-back {
+    z-index: 5;
+    pointer-events: none;
+    animation: page-flip-back 0.72s var(--ease) forwards;
   }
 
-  body.magazine-mode .spread:hover {
-    --tilt: var(--tilt, 0deg);
+  @keyframes page-flip-forward {
+    0% {
+      transform: rotateY(0deg);
+      box-shadow: 4px 4px 0 var(--shadow), -2px 0 12px rgba(0,0,0,0.08);
+    }
+    45% {
+      transform: rotateY(-92deg);
+      box-shadow: 16px 8px 32px rgba(0,0,0,0.25);
+    }
+    100% {
+      transform: rotateY(-180deg);
+      opacity: 0;
+      visibility: hidden;
+    }
   }
 
-  body.magazine-mode .spread--cover,
+  @keyframes page-flip-back {
+    0% {
+      transform: rotateY(0deg);
+    }
+    45% {
+      transform: rotateY(92deg);
+      box-shadow: -16px 8px 32px rgba(0,0,0,0.25);
+    }
+    100% {
+      transform: rotateY(180deg);
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  body.magazine-mode .spread:hover { --tilt: 0deg; }
+
+  body.magazine-mode .spread--cover {
+    background:
+      linear-gradient(135deg, #faf6ec 0%, var(--paper) 40%, #e5dfd0 100%);
+    border: 3px solid var(--ink);
+    justify-content: center;
+    align-items: stretch;
+    padding-top: clamp(28px, 4vh, 44px);
+  }
+
+  body.magazine-mode .spread--cover .cover-inner {
+    flex: 1;
+  }
+
+  body.magazine-mode .spread--cover .spread__masthead {
+    font-size: clamp(3rem, 7vw, 4.5rem);
+  }
+
+  body.magazine-mode .cover-collage .collage-photo--cover {
+    width: clamp(100px, 14vw, 150px);
+  }
+
   body.magazine-mode .spread--back {
     justify-content: center;
     align-items: center;
     text-align: center;
-  }
-
-  body.magazine-mode .spread--cover {
     min-height: 0;
   }
 
-  body.magazine-mode .spread--back {
-    min-height: 0;
-  }
-
-  /* Magazine layout: image + text side by side */
+  /* Magazine layout: imágenes + texto */
   body.magazine-mode .spread--product,
   body.magazine-mode .spread--web,
   body.magazine-mode .spread--diary {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: 1fr auto;
-    gap: clamp(24px, 4vw, 48px);
+    gap: clamp(20px, 3vw, 40px);
     align-items: center;
-    justify-content: stretch;
   }
 
-  body.magazine-mode .spread--product .collage-photo--spread,
-  body.magazine-mode .spread--web .collage-photo--spread,
-  body.magazine-mode .spread--diary .collage-photo--spread,
+  body.magazine-mode .spread--product .collage-stack,
+  body.magazine-mode .spread--web .collage-stack,
+  body.magazine-mode .spread--diary .collage-stack,
   body.magazine-mode .spread--product .collage-placeholder,
   body.magazine-mode .spread--web .collage-placeholder,
   body.magazine-mode .spread--diary .collage-placeholder {
-    float: none;
-    width: 100%;
-    max-width: none;
-    margin: 0;
     grid-column: 1;
     grid-row: 1;
     align-self: center;
     justify-self: center;
-    max-height: min(68vh, 520px);
+    max-height: min(70vh, 540px);
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 
-  body.magazine-mode .spread--product .collage-photo--spread img,
-  body.magazine-mode .spread--web .collage-photo--spread img,
-  body.magazine-mode .spread--diary .collage-photo--spread img {
+  body.magazine-mode .collage-stack .collage-photo--spread {
+    max-width: min(100%, 380px);
+  }
+
+  body.magazine-mode .collage-stack .collage-photo--spread img {
+    max-height: min(32vh, 260px);
     width: 100%;
-    max-height: min(64vh, 480px);
     object-fit: contain;
-    object-position: center;
   }
 
   body.magazine-mode .spread--product .panel,
@@ -1089,12 +1399,10 @@ a:hover { color: var(--red); }
   body.magazine-mode .spread--diary .panel {
     grid-column: 2;
     grid-row: 1;
-    overflow: visible;
     margin-bottom: 0;
     max-height: min(72vh, 560px);
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: var(--ink-soft) transparent;
   }
 
   body.magazine-mode .spread--product .spread__page-num,
@@ -1104,13 +1412,11 @@ a:hover { color: var(--red); }
     grid-row: 2;
     position: static;
     justify-self: end;
-    margin-top: 4px;
   }
 
-  /* Alternate image side for even pages */
-  body.magazine-mode .spread--product:nth-child(even) .collage-photo--spread,
-  body.magazine-mode .spread--web:nth-child(even) .collage-photo--spread,
-  body.magazine-mode .spread--diary:nth-child(even) .collage-photo--spread,
+  body.magazine-mode .spread--product:nth-child(even) .collage-stack,
+  body.magazine-mode .spread--web:nth-child(even) .collage-stack,
+  body.magazine-mode .spread--diary:nth-child(even) .collage-stack,
   body.magazine-mode .spread--product:nth-child(even) .collage-placeholder,
   body.magazine-mode .spread--web:nth-child(even) .collage-placeholder,
   body.magazine-mode .spread--diary:nth-child(even) .collage-placeholder {
@@ -1123,9 +1429,9 @@ a:hover { color: var(--red); }
     grid-column: 1;
   }
 
-  body.magazine-mode .spread--product:not(:has(.collage-photo--spread)):not(:has(.collage-placeholder)) .panel,
-  body.magazine-mode .spread--web:not(:has(.collage-photo--spread)):not(:has(.collage-placeholder)) .panel,
-  body.magazine-mode .spread--diary:not(:has(.collage-photo--spread)):not(:has(.collage-placeholder)) .panel {
+  body.magazine-mode .spread--product:not(:has(.collage-stack)):not(:has(.collage-placeholder)) .panel,
+  body.magazine-mode .spread--web:not(:has(.collage-stack)):not(:has(.collage-placeholder)) .panel,
+  body.magazine-mode .spread--diary:not(:has(.collage-stack)):not(:has(.collage-placeholder)) .panel {
     grid-column: 1 / -1;
     max-width: min(640px, 72vw);
     justify-self: center;
@@ -1293,10 +1599,13 @@ a:hover { color: var(--red); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body.magazine-mode .spread {
-    transition: opacity 0.15s, visibility 0.15s;
-    transform: rotate(var(--tilt, 0deg)) !important;
+  body.magazine-mode .spread.is-flip-out-forward,
+  body.magazine-mode .spread.is-flip-out-back {
+    animation: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
   }
+  .cover-cta { animation: none; }
 }
 
 @media (max-width: 560px) {

@@ -13,9 +13,21 @@
       "page": 1,
       "layout": "cover",
       "title": "Construí esto",
-      "hook": "Fanzine #1 — página de venta",
-      "body": "Psicólogo · constructor · Montevideo",
-      "stamp": "2026"
+      "hook": "Herramientas para problemas que tengo de verdad",
+      "body": "Psicólogo · constructor · Montevideo, Uruguay",
+      "coverLines": [
+        "8 proyectos adentro",
+        "Corrector de tesis · Consejo de IAs",
+        "Sitios web · Apps de mi casa",
+        "Local-first — tus datos en tu máquina"
+      ],
+      "coverCollage": [
+        { "src": "IMG/Supercouncil.png", "tilt": -6 },
+        { "src": "IMG/ASISTENTE ACADEMICO.png", "tilt": 4 },
+        { "src": "IMG/vincularmente.png", "tilt": -3 }
+      ],
+      "stamp": "Nº 1 · 2026",
+      "ctaCover": "Pasá la página →"
     },
     {
       "id": "intro",
@@ -38,9 +50,13 @@
       "collage": [
         { "src": "IMG/ASISTENTE ACADEMICO.png", "tilt": -8, "size": "sm" },
         { "src": "IMG/Supercouncil.png", "tilt": 5, "size": "md" },
+        { "src": "IMG/supercounciltelegram.png", "tilt": -4, "size": "sm" },
         { "src": "IMG/vincularmente.png", "tilt": -3, "size": "sm" },
         { "src": "IMG/gonzadiscos.png", "tilt": 7, "size": "sm" },
-        { "src": "IMG/ninera.png", "tilt": -5, "size": "sm" }
+        { "src": "IMG/Gestor de gastos.png", "tilt": 6, "size": "sm" },
+        { "src": "IMG/registros gastos teletgram.png", "tilt": -5, "size": "sm" },
+        { "src": "IMG/ninera.png", "tilt": -5, "size": "sm" },
+        { "src": "IMG/registro jardin.png", "tilt": 3, "size": "sm" }
       ],
       "stamp": "LOCAL-FIRST",
       "note": "Las apps personales no están publicadas. Los dos productos públicos corren en tu computadora."
@@ -62,9 +78,9 @@
         "No ayuda a hacer trampa — es para aprender a escribir mejor"
       ],
       "pullquote": "Mandás vos, no la máquina. Cada cambio en una tarjeta.",
-      "image": "IMG/ASISTENTE ACADEMICO.png",
-      "imageAlt": "Captura del Asistente Académico",
-      "imageTilt": -4,
+      "images": [
+        { "src": "IMG/ASISTENTE ACADEMICO.png", "alt": "Asistente Académico", "tilt": -4 }
+      ],
       "tags": ["Gratis", "Beta", "localhost:4000"],
       "cta": { "label": "Próximamente en GitHub", "url": null, "disabled": true }
     },
@@ -86,9 +102,10 @@
         "USD 49 vitalicio vs USD 240–600/año de un SaaS de IA"
       ],
       "pullquote": "Le pasé mi propio repo al Consejo. Encontró keys expuestas, testimonios inventados y claims falsos en el README. Mi marketing lo editó mi motor de auditoría.",
-      "image": "IMG/supercounciltelegram.png",
-      "imageAlt": "SuperCouncil en Telegram",
-      "imageTilt": 5,
+      "images": [
+        { "src": "IMG/Supercouncil.png", "alt": "SuperCouncil Boardroom", "tilt": -3 },
+        { "src": "IMG/supercounciltelegram.png", "alt": "SuperCouncil en Telegram", "tilt": 5 }
+      ],
       "tags": ["USD 49", "Self-hosted", "localhost:7778"],
       "cta": { "label": "Ver en Gumroad", "url": "https://complexity88.gumroad.com/l/supercouncil", "disabled": false }
     },
@@ -105,9 +122,9 @@
         "Pipeline de publicación automática + revisión humana",
         "Ebooks descargables (PDF)"
       ],
-      "image": "IMG/vincularmente.png",
-      "imageAlt": "Vincularmente",
-      "imageTilt": -3,
+      "images": [
+        { "src": "IMG/vincularmente.png", "alt": "Vincularmente", "tilt": -3 }
+      ],
       "tags": ["En vivo"],
       "cta": { "label": "Visitar sitio", "url": "https://mankuy.github.io/vincularmente-site/index.html", "disabled": false }
     },
@@ -124,9 +141,9 @@
         "Grading visual y catálogo navegable",
         "Pedido directo por WhatsApp"
       ],
-      "image": "IMG/gonzadiscos.png",
-      "imageAlt": "Gonza Discos",
-      "imageTilt": 6,
+      "images": [
+        { "src": "IMG/gonzadiscos.png", "alt": "Gonza Discos", "tilt": 6 }
+      ],
       "tags": ["En prueba", "Para un amigo"],
       "cta": { "label": "Visitar", "url": "https://gonzalodiscos.facundo-galetta.workers.dev/", "disabled": false }
     },
@@ -143,9 +160,10 @@
         "Gráficos y proyección mensual",
         "Versión Telegram para cargar gastos desde el celular"
       ],
-      "image": "IMG/Gestor de gastos.png",
-      "imageAlt": "Gestor de gastos",
-      "imageTilt": -5,
+      "images": [
+        { "src": "IMG/Gestor de gastos.png", "alt": "Gestor de gastos", "tilt": -5 },
+        { "src": "IMG/registros gastos teletgram.png", "alt": "Gastos en Telegram", "tilt": 4 }
+      ],
       "stamp": "USO PERSONAL"
     },
     {
@@ -161,9 +179,9 @@
         "Cálculo automático del mes",
         "Recibo de sueldo listo para imprimir"
       ],
-      "image": "IMG/ninera.png",
-      "imageAlt": "App sueldo niñera",
-      "imageTilt": 4,
+      "images": [
+        { "src": "IMG/ninera.png", "alt": "App sueldo niñera", "tilt": 4 }
+      ],
       "stamp": "USO PERSONAL"
     },
     {
@@ -174,9 +192,9 @@
       "title": "Jardín",
       "hook": "Registro de cosecha de la huerta.",
       "body": "Qué planté, qué salió, cuánto y cuándo. Para saber si la temporada fue buena con datos, no con memoria. La huerta no miente, pero la memoria sí.",
-      "image": "IMG/registro jardin.png",
-      "imageAlt": "Registro de jardín",
-      "imageTilt": -6,
+      "images": [
+        { "src": "IMG/registro jardin.png", "alt": "Registro de jardín", "tilt": -6 }
+      ],
       "stamp": "USO PERSONAL"
     },
     {
