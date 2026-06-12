@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facundo Galetta — Apps para problemas reales</title>
+<meta name="description" content="Psicólogo en Montevideo. Construyo herramientas con IA para problemas reales: tesis, gastos, cosechas, recibos de sueldo. Local-first: tus datos quedan en tu máquina.">
+<meta property="og:title" content="Facundo Galetta — Apps para problemas reales">
+<meta property="og:description" content="Psicólogo en Montevideo. Construyo herramientas con IA para problemas reales. Local-first.">
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #2d333b;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #4dd0e1;
+    --green: #3fb950;
+    --gold: #d29922;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+
+  header { padding: 72px 0 48px; }
+  h1 { font-size: 2.2rem; letter-spacing: -0.5px; }
+  .tagline { color: var(--muted); font-size: 1.15rem; margin-top: 14px; max-width: 640px; }
+  .tagline strong { color: var(--text); font-weight: 600; }
+  .local-first {
+    display: inline-block; margin-top: 18px; padding: 5px 14px;
+    border: 1px solid var(--accent); border-radius: 999px;
+    color: var(--accent); font-size: 0.85rem;
+  }
+
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px; padding-bottom: 16px;
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 22px; display: flex; flex-direction: column;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card h2 { font-size: 1.1rem; margin-bottom: 8px; }
+  .card p { color: var(--muted); font-size: 0.92rem; flex-grow: 1; }
+  .badges { margin: 14px 0 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    font-size: 0.75rem; padding: 3px 10px; border-radius: 999px;
+    border: 1px solid var(--border); color: var(--muted);
+  }
+  .badge.free { border-color: var(--green); color: var(--green); }
+  .badge.paid { border-color: var(--gold); color: var(--gold); }
+  .badge.soon { border-color: var(--muted); }
+  .card a.btn {
+    display: inline-block; text-align: center; padding: 9px 0;
+    border: 1px solid var(--accent); border-radius: 8px;
+    color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 600;
+  }
+  .card a.btn:hover { background: var(--accent); color: var(--bg); }
+  .card span.btn-off {
+    display: inline-block; text-align: center; padding: 9px 0;
+    border: 1px dashed var(--border); border-radius: 8px;
+    color: var(--muted); font-size: 0.9rem;
+  }
+
+  .section-title { font-size: 1.05rem; color: var(--muted); font-weight: 600; margin: 8px 0 16px; text-transform: uppercase; letter-spacing: 1px; }
+  .grid + .section-title { margin-top: 40px; }
+  .hire-note { color: var(--muted); font-size: 0.92rem; margin-top: 18px; max-width: 680px; }
+  .hire-note a { color: var(--accent); text-decoration: none; }
+  .hire-note a:hover { text-decoration: underline; }
+  section.story { padding: 48px 0; border-top: 1px solid var(--border); margin-top: 32px; }
+  section.story h3 { font-size: 1.3rem; margin-bottom: 16px; }
+  section.story p { color: var(--muted); max-width: 680px; margin-bottom: 14px; }
+  section.story p strong { color: var(--text); }
+
+  footer {
+    border-top: 1px solid var(--border); padding: 36px 0 56px;
+    color: var(--muted); font-size: 0.9rem;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .links { display: flex; gap: 24px; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <h1>Facundo Galetta</h1>
+    <p class="tagline">
+      Psicólogo en Montevideo. Hago apps para problemas que tengo de verdad:
+      <strong>corregir una tesis, pagarle a la niñera, registrar la cosecha de la huerta,
+      controlar los gastos de casa</strong>. Si a mí me sirvió, capaz a vos también.
+    </p>
+    <span class="local-first">🔒 Local-first: tus datos quedan en tu máquina</span>
+  </header>
+
+  <h3 class="section-title">Lo que podés usar hoy</h3>
+  <main class="grid">
+
+    <div class="card">
+      <h2>📚 Asistente Académico</h2>
+      <p>Corrector de tesis con IA. Revisa citas APA, redacción y estructura, y te muestra
+      cada cambio en una tarjeta para aceptar o rechazar. Mandás vos, no la IA.
+      Exporta a Word y PDF.</p>
+      <div class="badges">
+        <span class="badge free">Gratis</span>
+        <span class="badge soon">Beta</span>
+      </div>
+      <!-- TODO: cuando el repo sea público, reemplazar por el link de GitHub -->
+      <span class="btn-off">Próximamente en GitHub</span>
+    </div>
+
+    <div class="card">
+      <h2>🏛️ SuperCouncil</h2>
+      <p>Un consejo de IAs que delibera: varios modelos debaten tu problema, se auditan
+      entre sí y un Chairman sintetiza la respuesta. Self-hosted, con fábrica de agentes
+      y bot de Telegram. Para gente técnica.</p>
+      <div class="badges">
+        <span class="badge paid">USD 49</span>
+        <span class="badge">Self-hosted</span>
+      </div>
+      <a class="btn" href="https://complexity88.gumroad.com/l/supercouncil" target="_blank" rel="noopener">Ver en Gumroad</a>
+    </div>
+
+  </main>
+
+  <h3 class="section-title">En la web</h3>
+  <main class="grid">
+
+    <div class="card">
+      <h2>🧠 Vincularmente</h2>
+      <p>Web de psicología y bienestar: vínculos, apego, comunicación. Se actualiza
+      sola con un pipeline de contenido que armé con IA y curo a mano. Acá se juntan
+      mis dos oficios.</p>
+      <div class="badges">
+        <span class="badge free">En vivo</span>
+        <span class="badge">Se actualiza solo</span>
+      </div>
+      <a class="btn" href="https://mankuy.github.io/vincularmente-site/index.html" target="_blank" rel="noopener">Visitar</a>
+    </div>
+
+    <div class="card">
+      <h2>💿 Gonza Discos</h2>
+      <p>Tienda de vinilos usados que le hice a un amigo: catálogo con grading,
+      identificación de discos por foto con IA y pedido por WhatsApp. Toda la app
+      en un solo archivo.</p>
+      <div class="badges">
+        <span class="badge soon">En prueba</span>
+        <span class="badge">Para un amigo</span>
+      </div>
+      <a class="btn" href="https://gonzalodiscos.facundo-galetta.workers.dev/" target="_blank" rel="noopener">Visitar</a>
+    </div>
+
+  </main>
+
+  <h3 class="section-title">Cosas que me construí para mí</h3>
+  <main class="grid">
+
+    <div class="card">
+      <h2>💰 Registro de Gastos</h2>
+      <p>Quería saber a dónde se iba la plata. Cargo gastos a mano o le saco foto al
+      recibo y la app reconoce el monto. Gráficos, proyecciones, capacidad de ahorro.</p>
+      <div class="badges">
+        <span class="badge">Uso personal</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>👶 Sueldo Niñera</h2>
+      <p>Me cansé de calcular a mano las horas de la niñera de mi hija. Ahora registro
+      las horas, la app suma el mes y arma el recibo de sueldo solo.</p>
+      <div class="badges">
+        <span class="badge">Uso personal</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🌱 Jardín</h2>
+      <p>Registro de cosecha de la huerta: qué planté, qué salió, cuánto y cuándo.
+      Para saber si la temporada fue buena con datos y no con memoria.</p>
+      <div class="badges">
+        <span class="badge">Uso personal</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🎉 Salones de Fiesta</h2>
+      <p>Gestión de reservas para salones de fiesta infantiles: agenda, clientes y
+      pagos en un solo lugar.</p>
+      <div class="badges">
+        <span class="badge soon">En desarrollo</span>
+      </div>
+    </div>
+
+  </main>
+
+  <p class="hire-note">Estas no están publicadas: las hice para resolver problemas de mi
+  casa y funcionan en mi máquina. Si te interesa una herramienta así para vos,
+  <a href="https://x.com/SuperCouncil_" target="_blank" rel="noopener">escribime</a>.</p>
+
+  <section class="story">
+    <h3>¿Por qué un psicólogo hace apps?</h3>
+    <p>Porque los problemas no piden título universitario. Escribí mi tesis y sufrí el
+    formato APA como todo el mundo, así que me hice un corrector. Tengo una hija y una
+    niñera, y calcular las horas del mes a mano era un embole: app. Tengo huerta: app.</p>
+    <p>Todo lo que hago sigue la misma regla: <strong>el problema primero, la tecnología
+    después</strong>. Y siempre local-first, porque tus datos son tuyos.</p>
+    <p>El Asistente Académico es gratis y va a estar abierto en GitHub. Si lo usás y
+    encontrás un error o se te ocurre una mejora, escribime: eso vale más que
+    cualquier venta.</p>
+  </section>
+
+  <footer>
+    <div class="links">
+      <a href="https://x.com/SuperCouncil_" target="_blank" rel="noopener">𝕏 / Twitter</a>
+      <a href="https://github.com/Mankuy" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p>Hecho en Montevideo, Uruguay 🇺🇾</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
