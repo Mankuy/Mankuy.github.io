@@ -48,6 +48,21 @@
     <button type="button" id="btn-print" title="Guardar como PDF">PDF</button>
   </div>
 
+  <nav class="magazine-nav" id="magazine-nav" aria-label="Navegación del fanzine" hidden>
+    <button type="button" class="magazine-nav__btn" id="magazine-prev" aria-label="Página anterior" disabled>
+      <span aria-hidden="true">‹</span>
+    </button>
+    <span class="magazine-nav__indicator" id="magazine-indicator" aria-live="polite">1 / 12</span>
+    <button type="button" class="magazine-nav__btn" id="magazine-next" aria-label="Página siguiente">
+      <span aria-hidden="true">›</span>
+    </button>
+  </nav>
+
+  <div class="magazine-edges" id="magazine-edges" hidden aria-hidden="true">
+    <button type="button" class="magazine-edge magazine-edge--prev" id="magazine-edge-prev" tabindex="-1" aria-label="Página anterior"></button>
+    <button type="button" class="magazine-edge magazine-edge--next" id="magazine-edge-next" tabindex="-1" aria-label="Página siguiente"></button>
+  </div>
+
   <main id="zine-root" aria-live="polite">
     <p style="padding:3rem 1.5rem;text-align:center;font-family:'Space Mono',monospace;font-size:0.85rem;color:#f5f0e6">
       Cargando fanzine…
