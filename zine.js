@@ -12,6 +12,10 @@
   let revealObserver = null;
   let pageFlipInstance = null;
   let spreadIds = [];
+  let flipBookHtml = '';
+  let pristineFlipBookHtml = '';
+  let reenableMagazine = null;
+  let magazineDisable = null;
 
   function esc(s) {
     if (s == null) return '';
@@ -76,11 +80,12 @@
     const size = opts.size || 'spread';
     const alt = img.alt || '';
     const gallery = opts.gallery ? ` data-lightbox-gallery="${esc(opts.gallery)}"` : '';
+    const loading = opts.loading || 'lazy';
+    const idx = opts.index != null ? ` collage-photo--n${opts.index + 1}` : '';
     return `
-      <figure class="collage-photo collage-photo--${esc(size)} collage-photo--zoomable" style="--photo-tilt:${tilt}deg">
+      <figure class="collage-photo collage-photo--${esc(size)} collage-photo--zoomable${idx}" style="--photo-tilt:${tilt}deg">
         <button type="button" class="collage-photo__btn" data-lightbox-src="${imgSrc(img.src)}" data-lightbox-alt="${esc(alt)}"${gallery} aria-label="Ver imagen en grande">
-          <img src="${imgSrc(img.src)}" alt="${esc(alt)}" loading="lazy" decoding="async">
-          <span class="collage-photo__hand" aria-hidden="true">✋</span>
+          <img src="${imgSrc(img.src)}" alt="${esc(alt)}" loading="${loading}" decoding="async">
         </button>
       </figure>`;
   }
@@ -89,19 +94,30 @@
     return renderPhoto({ src: item.src, alt: '', tilt: item.tilt }, { size: item.size || 'md', gallery });
   }
 
+  function renderWipStamp(s) {
+    const label = (s.imagePlaceholder || 'EN CONSTRUCCIÓN').replace(/\s+/g, '<br>');
+    return `
+      <figure class="collage-wip" style="--photo-tilt:${s.imageTilt || -5}deg" aria-label="Proyecto en construcción">
+        <div class="collage-wip__tape" aria-hidden="true"></div>
+        <span class="collage-wip__ring">${label}</span>
+        <span class="collage-wip__sub">sin captura todavía</span>
+      </figure>`;
+  }
+
   function renderCollage(s) {
     const imgs = spreadImages(s);
     if (imgs.length) {
       const gallery = `spread-${s.id}`;
-      return `<div class="collage-stack" data-gallery="${gallery}">${imgs.map(img => renderPhoto(img, { gallery })).join('')}</div>`;
+      const stackClass = imgs.length === 1
+        ? 'collage-stack--solo'
+        : imgs.length === 2
+          ? 'collage-stack--duo'
+          : 'collage-stack--multi';
+      return `<div class="collage-stack ${stackClass}" data-gallery="${gallery}">${
+        imgs.map((img, i) => renderPhoto(img, { gallery, loading: 'eager', index: i })).join('')
+      }</div>`;
     }
-    if (s.imagePlaceholder) {
-      return `
-        <figure class="collage-placeholder" style="--photo-tilt:${s.imageTilt || -3}deg">
-          <span class="collage-placeholder__label">${esc(s.imagePlaceholder)}</span>
-          <span class="collage-placeholder__sub">captura próximamente</span>
-        </figure>`;
-    }
+    if (s.imagePlaceholder) return renderWipStamp(s);
     return '';
   }
 
@@ -126,36 +142,35 @@
     const hero = s.coverHero;
     const heroHtml = hero ? `
       <figure class="cover-hero">
-        <img src="${imgSrc(hero.src)}" alt="${esc(hero.alt || s.title)}" loading="eager" decoding="async">
-        <figcaption class="cover-hero__label">SuperCouncil · Boardroom</figcaption>
+        <img src="${imgSrc(hero.src)}" alt="${esc(hero.alt || s.title)}" loading="eager" decoding="async" fetchpriority="high">
+        <figcaption class="cover-hero__label">${esc(hero.alt || 'SuperCouncil')}</figcaption>
       </figure>` : '';
-    const collage = (s.coverCollage || []).map((item, i) => {
+    const polaroids = (s.coverCollage || []).map((item, i) => {
       const src = typeof item === 'string' ? item : item.src;
       const tilt = typeof item === 'object' && item.tilt != null ? item.tilt : (i % 2 ? 5 : -4);
-      return renderPhoto({ src, alt: '', tilt }, { size: 'thumb' });
+      return renderPhoto({ src, alt: '', tilt }, { size: 'polaroid', loading: 'eager', index: i });
     }).join('');
 
     return `
       <article class="spread spread--cover" id="spread-${esc(s.id)}" data-page="${s.page}">
         <div class="cover-spine" aria-hidden="true"></div>
+        <div class="cover-barcode" aria-hidden="true">FG·001·2026</div>
         <div class="cover-inner">
-          <div class="cover-layout">
-            <div class="cover-copy">
-              <header class="cover-top">
-                <span class="cover-kicker">Fanzine · Facundo Galetta</span>
-                <span class="cover-price">${esc(s.stamp || '')}</span>
-              </header>
-              <h1 class="spread__masthead">${esc(s.title)}</h1>
-              <p class="spread__issue">${esc(s.hook)}</p>
-              ${lines ? `<ul class="cover-lines">${lines}</ul>` : ''}
-              <p class="spread__author">${esc(s.body)}</p>
-              <button type="button" class="cover-cta" id="cover-open-btn">${esc(s.ctaCover || 'Pasá la página →')}</button>
-            </div>
-            <div class="cover-visual">
-              ${heroHtml}
-              ${collage ? `<div class="cover-thumbs">${collage}</div>` : ''}
-            </div>
+          <header class="cover-mast">
+            <span class="cover-kicker">Fanzine · Facundo Galetta</span>
+            <span class="cover-price">${esc(s.stamp || '')}</span>
+          </header>
+          <h1 class="spread__masthead">${esc(s.title)}</h1>
+          <p class="spread__issue">${esc(s.hook)}</p>
+          <div class="cover-poster">
+            ${heroHtml}
+            ${polaroids ? `<div class="cover-polaroids">${polaroids}</div>` : ''}
           </div>
+          ${lines ? `<ul class="cover-lines">${lines}</ul>` : ''}
+          <footer class="cover-footer">
+            <p class="spread__author">${esc(s.body)}</p>
+            <button type="button" class="cover-cta" id="cover-open-btn">${esc(s.ctaCover || 'Pasá la página →')}</button>
+          </footer>
         </div>
         ${pageNum(s.page, total)}
       </article>`;
@@ -311,7 +326,7 @@
     const galleryId = btn.getAttribute('data-lightbox-gallery');
     const scope = galleryId
       ? document.querySelector(`[data-gallery="${galleryId}"]`)
-      : btn.closest('.collage-stack, .collage-cluster, .cover-thumbs');
+      : btn.closest('.collage-stack, .collage-cluster, .cover-polaroids');
     if (!scope) {
       return [{
         src: btn.getAttribute('data-lightbox-src'),
@@ -396,9 +411,18 @@
     });
   }
 
-  function wrapFlipPage(html, s) {
+  function wrapFlipPage(html, s, index) {
     const hard = s.layout === 'cover' || s.layout === 'back-cover';
-    return `<div class="flip-page" data-density="${hard ? 'hard' : 'soft'}" data-spread-id="${esc(s.id)}">${html}</div>`;
+    const parity = index % 2 === 0 ? 'even' : 'odd';
+    return `<div class="flip-page" data-density="${hard ? 'hard' : 'soft'}" data-spread-id="${esc(s.id)}" data-page-parity="${parity}">${html}</div>`;
+  }
+
+  function preloadFlipImages(root) {
+    if (!root) return;
+    root.querySelectorAll('img').forEach(img => {
+      img.loading = 'eager';
+      if (!img.complete && img.decode) img.decode().catch(() => {});
+    });
   }
 
   function spreadIndexFromId(id) {
@@ -413,11 +437,21 @@
     return idx >= 0 ? idx : 0;
   }
 
-  function destroyPageFlip() {
-    if (pageFlipInstance) {
-      pageFlipInstance.destroy();
-      pageFlipInstance = null;
+  function restoreFlipBook() {
+    const root = document.getElementById(ROOT_ID);
+    const html = pristineFlipBookHtml || flipBookHtml;
+    if (!root || !html) return null;
+    if (!document.getElementById('flip-book')) {
+      root.innerHTML = `<div class="flip-book" id="flip-book">${html}</div>`;
     }
+    return document.getElementById('flip-book');
+  }
+
+  function destroyPageFlip() {
+    if (!pageFlipInstance) return;
+    pageFlipInstance.destroy();
+    pageFlipInstance = null;
+    restoreFlipBook();
   }
 
   function initMagazine(total) {
@@ -457,9 +491,12 @@
       if (!pageFlipInstance) return;
       const next = Math.max(0, Math.min(index, spreadIds.length - 1));
       if (animate) pageFlipInstance.flip(next);
-      else pageFlipInstance.turnToPage(next);
-      current = next;
-      updateChrome(current);
+      else {
+        pageFlipInstance.turnToPage(next);
+        current = next;
+        updateChrome(current);
+        setHash(current, false);
+      }
     }
 
     function go(delta) {
@@ -513,7 +550,8 @@
     }
 
     function enable() {
-      if (enabled || !flipBook || typeof St === 'undefined' || !St.PageFlip) return;
+      const book = restoreFlipBook() || document.getElementById('flip-book');
+      if (enabled || !book || typeof St === 'undefined' || !St.PageFlip) return;
       enabled = true;
 
       if (revealObserver) {
@@ -528,10 +566,11 @@
         edges.setAttribute('aria-hidden', 'false');
       }
 
-      document.querySelectorAll('.spread').forEach(s => s.classList.add('is-visible'));
+      preloadFlipImages(book);
+      book.querySelectorAll('.spread').forEach(s => s.classList.add('is-visible'));
 
-      const pages = flipBook.querySelectorAll('.flip-page');
-      pageFlipInstance = new St.PageFlip(flipBook, {
+      const pages = book.querySelectorAll('.flip-page');
+      pageFlipInstance = new St.PageFlip(book, {
         width: 480,
         height: 680,
         size: 'stretch',
@@ -539,19 +578,20 @@
         maxWidth: 560,
         minHeight: 460,
         maxHeight: 900,
-        maxShadowOpacity: 0.55,
+        maxShadowOpacity: 0.6,
         showCover: true,
         mobileScrollSupport: false,
         usePortrait: true,
         startZIndex: 0,
         autoSize: true,
         drawShadow: true,
-        flippingTime: 880,
+        flippingTime: 900,
         startPage: spreadIndexFromHash()
       });
 
       pageFlipInstance.loadFromHTML(pages);
       pageFlipInstance.on('flip', onFlip);
+      requestAnimationFrame(() => pageFlipInstance.update());
 
       current = pageFlipInstance.getCurrentPageIndex();
       updateChrome(current);
@@ -560,9 +600,13 @@
       document.addEventListener('keydown', onKeydown);
       document.addEventListener('click', onIndexClick);
       window.addEventListener('hashchange', onHashChange);
-
       window.addEventListener('resize', onResize);
     }
+
+    magazineDisable = disable;
+    reenableMagazine = () => {
+      if (mq.matches) enable();
+    };
 
     function onResize() {
       if (pageFlipInstance) pageFlipInstance.update();
@@ -616,7 +660,8 @@
   }
 
   function preparePrintDOM() {
-    destroyPageFlip();
+    if (magazineDisable) magazineDisable();
+    else destroyPageFlip();
     document.body.classList.remove('magazine-mode');
     document.querySelectorAll('.spread').forEach(s => {
       s.classList.add('is-visible');
@@ -641,6 +686,7 @@
 
   function cleanupPrint() {
     document.body.classList.remove('printing', 'print-prep');
+    if (reenableMagazine) reenableMagazine();
   }
 
   function initPrint() {
@@ -676,11 +722,13 @@
       initChrome(data.meta);
       document.title = `${data.meta?.author || 'Facundo Galetta'} — ${data.meta?.title || 'Fanzine'}`;
 
-      const sorted = spreads.sort((a, b) => a.page - b.page);
+      const sorted = [...spreads].sort((a, b) => a.page - b.page);
       spreadIds = sorted.map(s => s.id);
-      root.innerHTML = `<div class="flip-book" id="flip-book">${
-        sorted.map(s => wrapFlipPage(renderSpread(s, total), s)).join('')
-      }</div>`;
+      const bookHtml = sorted.map((s, i) => wrapFlipPage(renderSpread(s, total), s, i)).join('');
+      pristineFlipBookHtml = bookHtml;
+      flipBookHtml = bookHtml;
+      root.innerHTML = `<div class="flip-book" id="flip-book">${bookHtml}</div>`;
+      preloadFlipImages(root);
 
       initReveal();
       initLightbox();

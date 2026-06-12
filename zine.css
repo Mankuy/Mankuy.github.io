@@ -214,7 +214,7 @@ a:hover { color: var(--red); }
 .spread--cover {
   min-height: 92vh;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   background:
     linear-gradient(145deg, #faf6ec 0%, var(--paper) 35%, var(--paper-dark) 100%);
   border: none;
@@ -239,119 +239,114 @@ a:hover { color: var(--red); }
 .cover-inner {
   position: relative;
   z-index: 1;
-  min-height: inherit;
-  padding: 8px 16px 20px;
-  height: 100%;
-}
-
-.cover-layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-  height: 100%;
-  align-items: stretch;
-}
-
-@media (min-width: 560px) {
-  .spread--cover .cover-layout {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    align-items: center;
-  }
-
-  .spread--cover .cover-copy {
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  .spread--cover .cover-top {
-    max-width: none;
-    width: 100%;
-  }
-
-  .spread--cover .spread__masthead,
-  .spread--cover .spread__issue {
-    text-align: left;
-    max-width: none;
-  }
-
-  .spread--cover .cover-lines {
-    max-width: none;
-    width: 100%;
-  }
-}
-
-.cover-copy {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.cover-visual {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-height: inherit;
+  height: 100%;
+  padding: 10px 14px 16px 20px;
+}
+
+.cover-barcode {
+  position: absolute;
+  bottom: 18px;
+  right: 14px;
+  z-index: 3;
+  font-family: var(--mono);
+  font-size: 7px;
+  letter-spacing: 0.22em;
+  color: var(--ink-soft);
+  opacity: 0.55;
+  transform: rotate(-90deg);
+  transform-origin: right bottom;
+}
+
+.cover-mast {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.cover-poster {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
 .cover-hero {
   position: relative;
   width: 100%;
-  max-width: 100%;
   margin: 0;
-  padding: 6px;
+  padding: 5px;
   background: #fff;
   border: 3px solid var(--ink);
-  box-shadow: 6px 8px 0 var(--shadow), 0 0 0 1px rgba(26, 26, 26, 0.06);
-  transform: rotate(-1.5deg);
+  box-shadow: 7px 9px 0 var(--shadow);
+  transform: rotate(-1deg);
 }
 
 .cover-hero img {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 42vh;
+  min-height: 180px;
+  max-height: min(46vh, 380px);
   object-fit: cover;
   object-position: top center;
-  filter: contrast(1.06) saturate(0.95);
 }
 
 .cover-hero__label {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  bottom: 8px;
+  left: 8px;
   font-family: var(--mono);
   font-size: 7px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 4px 8px;
   background: var(--ink);
   color: var(--paper);
-  transform: rotate(-3deg);
+  transform: rotate(-2deg);
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.cover-thumbs {
+.cover-polaroids {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   justify-content: center;
-  flex-wrap: wrap;
-  width: 100%;
+  margin-top: -18px;
+  padding: 0 8px;
+  position: relative;
+  z-index: 2;
 }
 
-.cover-top {
+.cover-polaroids .collage-photo--polaroid {
+  width: clamp(68px, 20%, 92px);
+  margin: 0;
+  box-shadow: 4px 5px 0 var(--shadow);
+}
+
+.cover-polaroids .collage-photo--polaroid:nth-child(1) { transform: rotate(-8deg) translateY(4px); z-index: 3; }
+.cover-polaroids .collage-photo--polaroid:nth-child(2) { transform: rotate(4deg) translateY(-2px); z-index: 2; }
+.cover-polaroids .collage-photo--polaroid:nth-child(3) { transform: rotate(-3deg) translateY(6px); z-index: 1; }
+
+.cover-footer {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 420px;
-  margin-bottom: 20px;
-  font-family: var(--mono);
-  font-size: 8px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
+  gap: 10px;
+  margin-top: auto;
 }
 
 .cover-kicker { color: var(--red); }
@@ -376,10 +371,10 @@ a:hover { color: var(--red); }
 
 .spread--cover .spread__issue {
   font-family: var(--typewriter);
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-size: clamp(0.95rem, 2.2vw, 1.15rem);
   color: var(--red);
-  margin-bottom: 18px;
-  max-width: 28ch;
+  margin-bottom: 6px;
+  line-height: 1.35;
 }
 
 .cover-lines {
@@ -807,39 +802,75 @@ a:hover { color: var(--red); }
   overflow: hidden;
 }
 
-.collage-photo__hand {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  opacity: 0;
-  background: rgba(26, 26, 26, 0.35);
-  color: var(--paper);
-  transition: opacity 0.2s var(--ease);
-  pointer-events: none;
-}
-
-.collage-photo__btn:hover .collage-photo__hand,
-.collage-photo__btn:focus-visible .collage-photo__hand {
-  opacity: 1;
-}
-
 .collage-photo img {
   display: block;
   width: 100%;
   height: auto;
-  filter: contrast(1.05) saturate(0.92);
+  filter: contrast(1.08) saturate(0.88) grayscale(0.12);
   pointer-events: none;
 }
 
-.collage-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
+.collage-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: radial-gradient(circle, var(--ink) 0.5px, transparent 0.5px);
+  background-size: 3px 3px;
+  mix-blend-mode: multiply;
 }
+
+.collage-stack {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.collage-stack--solo {
+  grid-template-columns: 1fr;
+}
+
+.collage-stack--solo .collage-photo--spread {
+  width: 100%;
+  max-width: 260px;
+}
+
+.collage-stack--duo {
+  grid-template-columns: 1fr;
+  gap: 0;
+  min-height: 220px;
+}
+
+.collage-stack--duo .collage-photo--n1 {
+  transform: rotate(var(--photo-tilt, -5deg)) translate(-6px, 0);
+  z-index: 2;
+  width: 88%;
+  max-width: 240px;
+  justify-self: start;
+}
+
+.collage-stack--duo .collage-photo--n2 {
+  transform: rotate(var(--photo-tilt, 4deg)) translate(18px, -28px);
+  z-index: 1;
+  width: 82%;
+  max-width: 220px;
+  justify-self: end;
+}
+
+.collage-stack--multi {
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+}
+
+.collage-stack--multi .collage-photo--n1 { grid-column: 1 / -1; width: 92%; }
+.collage-stack--multi .collage-photo--n2 { justify-self: start; width: 90%; }
+.collage-stack--multi .collage-photo--n3 { justify-self: end; width: 90%; }
 
 .collage-stack .collage-photo--spread {
   float: none;
@@ -880,7 +911,7 @@ a:hover { color: var(--red); }
   flex-wrap: wrap;
   gap: 6px;
   width: 110px;
-  pointer-events: none;
+  pointer-events: auto;
   z-index: 3;
 }
 
@@ -891,44 +922,60 @@ a:hover { color: var(--red); }
 .collage-cluster .collage-photo:nth-child(odd) { margin-top: 8px; }
 .collage-cluster .collage-photo:nth-child(even) { margin-top: -4px; }
 
-.collage-placeholder {
+.collage-wip {
+  position: relative;
   float: right;
-  width: 42%;
-  max-width: 200px;
-  min-height: 140px;
+  width: 46%;
+  max-width: 210px;
+  min-height: 180px;
   margin: 0 0 14px 16px;
-  padding: 16px;
+  padding: 20px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--paper-dark),
-    var(--paper-dark) 6px,
-    var(--paper) 6px,
-    var(--paper) 12px
-  );
-  border: 2px dashed var(--ink-soft);
-  transform: rotate(var(--photo-tilt, -3deg));
+  gap: 10px;
+  background:
+    repeating-linear-gradient(-45deg, var(--paper-dark), var(--paper-dark) 5px, var(--paper) 5px, var(--paper) 10px);
+  border: 3px dashed var(--ink);
+  transform: rotate(var(--photo-tilt, -5deg));
   text-align: center;
+  box-shadow: 4px 5px 0 var(--shadow);
 }
 
-.collage-placeholder__label {
+.collage-wip__tape {
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 52px;
+  height: 16px;
+  background: var(--tape);
+  box-shadow: 0 1px 2px var(--shadow);
+}
+
+.collage-wip__ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 108px;
+  height: 108px;
+  border: 4px double var(--red);
+  border-radius: 50%;
   font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.14em;
+  font-size: 8px;
+  line-height: 1.35;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  text-align: center;
   color: var(--red);
-  border: 2px double var(--red);
-  padding: 6px 10px;
-  transform: rotate(-4deg);
+  transform: rotate(-12deg);
+  background: rgba(255, 255, 255, 0.85);
 }
 
-.collage-placeholder__sub {
+.collage-wip__sub {
   font-family: var(--hand);
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   color: var(--ink-soft);
 }
 
@@ -1081,13 +1128,13 @@ a:hover { color: var(--red); }
 
   .spread .panel__hook,
   .spread .collage-photo,
-  .spread .collage-placeholder {
+  .spread .collage-wip {
     opacity: 1 !important;
     transition: none !important;
   }
 
   .spread .collage-photo,
-  .spread .collage-placeholder {
+  .spread .collage-wip {
     transform: rotate(var(--photo-tilt, 0deg)) !important;
   }
 
@@ -1101,7 +1148,7 @@ a:hover { color: var(--red); }
   /* Stack images above text — no floats in print */
   .collage-stack,
   .collage-photo--spread,
-  .collage-placeholder,
+  .collage-wip,
   .collage-cluster {
     float: none !important;
     order: -1;
@@ -1259,6 +1306,7 @@ a:hover { color: var(--red); }
   width: auto;
   height: auto;
   object-fit: contain;
+  filter: none;
 }
 
 body.lightbox-open { overflow: hidden; }
@@ -1380,7 +1428,9 @@ body.print-prep.magazine-mode .spread {
     position: relative;
     width: min(520px, 88vw);
     height: min(740px, 84vh);
-    filter: drop-shadow(0 28px 56px rgba(0, 0, 0, 0.6)) drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4));
+    box-shadow:
+      0 28px 56px rgba(0, 0, 0, 0.55),
+      0 6px 16px rgba(0, 0, 0, 0.35);
   }
 
   body.magazine-mode .flip-page {
@@ -1418,48 +1468,38 @@ body.print-prep.magazine-mode .spread {
 
   body.magazine-mode .spread--cover {
     background:
-      linear-gradient(135deg, #faf6ec 0%, var(--paper) 40%, #e5dfd0 100%);
+      linear-gradient(160deg, #faf6ec 0%, var(--paper) 45%, #e5dfd0 100%);
     border: 3px solid var(--ink);
-    padding: clamp(20px, 3vh, 32px) clamp(20px, 3vw, 36px);
-  }
-
-  body.magazine-mode .cover-layout {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-    gap: clamp(16px, 2.5vw, 28px);
-    align-items: center;
-  }
-
-  body.magazine-mode .cover-copy {
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  body.magazine-mode .cover-top {
-    max-width: none;
-    width: 100%;
+    padding: clamp(16px, 2.5vh, 24px) clamp(16px, 2.5vw, 28px);
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 
   body.magazine-mode .spread--cover .spread__masthead {
-    font-size: clamp(2.4rem, 5.5vw, 3.6rem);
-    text-align: left;
+    font-size: clamp(2rem, 4.5vw, 2.8rem);
+    line-height: 0.92;
+    margin-bottom: 4px;
   }
 
   body.magazine-mode .spread--cover .spread__issue {
-    text-align: left;
-    max-width: none;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+  }
+
+  body.magazine-mode .cover-hero img {
+    max-height: min(40vh, 300px);
+    min-height: 140px;
   }
 
   body.magazine-mode .cover-lines {
     max-width: none;
     width: 100%;
+    margin-bottom: 8px;
+    padding: 10px 14px;
   }
 
-  body.magazine-mode .cover-hero img {
-    max-height: min(52vh, 420px);
-  }
-
-  body.magazine-mode .cover-thumbs .collage-photo--thumb {
-    width: clamp(64px, 10vw, 84px);
+  body.magazine-mode .cover-polaroids .collage-photo--polaroid {
+    width: clamp(60px, 18%, 80px);
   }
 
   body.magazine-mode .spread--back {
@@ -1483,9 +1523,9 @@ body.print-prep.magazine-mode .spread {
   body.magazine-mode .spread--product .collage-stack,
   body.magazine-mode .spread--web .collage-stack,
   body.magazine-mode .spread--diary .collage-stack,
-  body.magazine-mode .spread--product .collage-placeholder,
-  body.magazine-mode .spread--web .collage-placeholder,
-  body.magazine-mode .spread--diary .collage-placeholder {
+  body.magazine-mode .spread--product .collage-wip,
+  body.magazine-mode .spread--web .collage-wip,
+  body.magazine-mode .spread--diary .collage-wip {
     grid-column: 1;
     grid-row: 1;
     align-self: center;
@@ -1500,9 +1540,25 @@ body.print-prep.magazine-mode .spread {
   }
 
   body.magazine-mode .collage-stack .collage-photo--spread img {
-    max-height: min(32vh, 260px);
+    max-height: min(40vh, 320px);
     width: 100%;
-    object-fit: contain;
+    object-fit: cover;
+  }
+
+  body.magazine-mode .collage-stack--solo .collage-photo--spread img {
+    max-height: min(44vh, 360px);
+  }
+
+  body.magazine-mode .collage-stack--duo {
+    min-height: 200px;
+    max-width: 240px;
+  }
+
+  body.magazine-mode .collage-wip {
+    float: none;
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto;
   }
 
   body.magazine-mode .spread--product .panel,
@@ -1525,24 +1581,24 @@ body.print-prep.magazine-mode .spread {
     justify-self: end;
   }
 
-  body.magazine-mode .spread--product:nth-child(even) .collage-stack,
-  body.magazine-mode .spread--web:nth-child(even) .collage-stack,
-  body.magazine-mode .spread--diary:nth-child(even) .collage-stack,
-  body.magazine-mode .spread--product:nth-child(even) .collage-placeholder,
-  body.magazine-mode .spread--web:nth-child(even) .collage-placeholder,
-  body.magazine-mode .spread--diary:nth-child(even) .collage-placeholder {
+  body.magazine-mode .flip-page[data-page-parity="odd"] .spread--product .collage-stack,
+  body.magazine-mode .flip-page[data-page-parity="odd"] .spread--web .collage-stack,
+  body.magazine-mode .flip-page[data-page-parity="odd"] .spread--diary .collage-stack,
+  body.magazine-mode .flip-page[data-page-parity="odd"] .spread--product .collage-wip,
+  body.magazine-mode .flip-page[data-page-parity="odd"] .spread--web .collage-wip,
+  body.magazine-mode .flip-page[data-page-parity="odd"] .spread--diary .collage-wip {
     grid-column: 2;
   }
 
-  body.magazine-mode .spread--product:nth-child(even) .panel,
-  body.magazine-mode .spread--web:nth-child(even) .panel,
-  body.magazine-mode .spread--diary:nth-child(even) .panel {
+  body.magazine-mode .flip-page[data-page-parity="odd"] .spread--product .panel,
+  body.magazine-mode .flip-page[data-page-parity="odd"] .spread--web .panel,
+  body.magazine-mode .flip-page[data-page-parity="odd"] .spread--diary .panel {
     grid-column: 1;
   }
 
-  body.magazine-mode .spread--product:not(:has(.collage-stack)):not(:has(.collage-placeholder)) .panel,
-  body.magazine-mode .spread--web:not(:has(.collage-stack)):not(:has(.collage-placeholder)) .panel,
-  body.magazine-mode .spread--diary:not(:has(.collage-stack)):not(:has(.collage-placeholder)) .panel {
+  body.magazine-mode .spread--product:not(:has(.collage-stack)):not(:has(.collage-wip)) .panel,
+  body.magazine-mode .spread--web:not(:has(.collage-stack)):not(:has(.collage-wip)) .panel,
+  body.magazine-mode .spread--diary:not(:has(.collage-stack)):not(:has(.collage-wip)) .panel {
     grid-column: 1 / -1;
     max-width: min(640px, 72vw);
     justify-self: center;
