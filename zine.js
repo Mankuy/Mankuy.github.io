@@ -8,9 +8,10 @@
   const ROOT_ID = 'zine-root';
   const DATA_URL = 'spreads.json';
   const MAGAZINE_BP = '(min-width: 900px)';
-  const FLIP_MS = 720;
 
   let revealObserver = null;
+  let pageFlipInstance = null;
+  let spreadIds = [];
 
   function esc(s) {
     if (s == null) return '';
@@ -74,22 +75,25 @@
     const tilt = img.tilt != null ? img.tilt : 0;
     const size = opts.size || 'spread';
     const alt = img.alt || '';
+    const gallery = opts.gallery ? ` data-lightbox-gallery="${esc(opts.gallery)}"` : '';
     return `
       <figure class="collage-photo collage-photo--${esc(size)} collage-photo--zoomable" style="--photo-tilt:${tilt}deg">
-        <button type="button" class="collage-photo__btn" data-lightbox-src="${imgSrc(img.src)}" data-lightbox-alt="${esc(alt)}" aria-label="Ver imagen en grande">
+        <button type="button" class="collage-photo__btn" data-lightbox-src="${imgSrc(img.src)}" data-lightbox-alt="${esc(alt)}"${gallery} aria-label="Ver imagen en grande">
           <img src="${imgSrc(img.src)}" alt="${esc(alt)}" loading="lazy" decoding="async">
+          <span class="collage-photo__hand" aria-hidden="true">✋</span>
         </button>
       </figure>`;
   }
 
-  function renderCollagePhoto(item) {
-    return renderPhoto({ src: item.src, alt: '', tilt: item.tilt }, { size: item.size || 'md' });
+  function renderCollagePhoto(item, gallery) {
+    return renderPhoto({ src: item.src, alt: '', tilt: item.tilt }, { size: item.size || 'md', gallery });
   }
 
   function renderCollage(s) {
     const imgs = spreadImages(s);
     if (imgs.length) {
-      return `<div class="collage-stack">${imgs.map(img => renderPhoto(img)).join('')}</div>`;
+      const gallery = `spread-${s.id}`;
+      return `<div class="collage-stack" data-gallery="${gallery}">${imgs.map(img => renderPhoto(img, { gallery })).join('')}</div>`;
     }
     if (s.imagePlaceholder) {
       return `
@@ -119,33 +123,47 @@
 
   function renderCover(s, total) {
     const lines = (s.coverLines || []).map(l => `<li>${esc(l)}</li>`).join('');
+    const hero = s.coverHero;
+    const heroHtml = hero ? `
+      <figure class="cover-hero">
+        <img src="${imgSrc(hero.src)}" alt="${esc(hero.alt || s.title)}" loading="eager" decoding="async">
+        <figcaption class="cover-hero__label">SuperCouncil · Boardroom</figcaption>
+      </figure>` : '';
     const collage = (s.coverCollage || []).map((item, i) => {
       const src = typeof item === 'string' ? item : item.src;
       const tilt = typeof item === 'object' && item.tilt != null ? item.tilt : (i % 2 ? 5 : -4);
-      return renderPhoto({ src, alt: '', tilt }, { size: 'cover' });
+      return renderPhoto({ src, alt: '', tilt }, { size: 'thumb' });
     }).join('');
 
     return `
       <article class="spread spread--cover" id="spread-${esc(s.id)}" data-page="${s.page}">
         <div class="cover-spine" aria-hidden="true"></div>
         <div class="cover-inner">
-          <header class="cover-top">
-            <span class="cover-kicker">Fanzine · Facundo Galetta</span>
-            <span class="cover-price">${esc(s.stamp || '')}</span>
-          </header>
-          <h1 class="spread__masthead">${esc(s.title)}</h1>
-          <p class="spread__issue">${esc(s.hook)}</p>
-          ${lines ? `<ul class="cover-lines">${lines}</ul>` : ''}
-          <p class="spread__author">${esc(s.body)}</p>
-          ${collage ? `<div class="cover-collage">${collage}</div>` : ''}
-          <button type="button" class="cover-cta" id="cover-open-btn">${esc(s.ctaCover || 'Pasá la página →')}</button>
+          <div class="cover-layout">
+            <div class="cover-copy">
+              <header class="cover-top">
+                <span class="cover-kicker">Fanzine · Facundo Galetta</span>
+                <span class="cover-price">${esc(s.stamp || '')}</span>
+              </header>
+              <h1 class="spread__masthead">${esc(s.title)}</h1>
+              <p class="spread__issue">${esc(s.hook)}</p>
+              ${lines ? `<ul class="cover-lines">${lines}</ul>` : ''}
+              <p class="spread__author">${esc(s.body)}</p>
+              <button type="button" class="cover-cta" id="cover-open-btn">${esc(s.ctaCover || 'Pasá la página →')}</button>
+            </div>
+            <div class="cover-visual">
+              ${heroHtml}
+              ${collage ? `<div class="cover-thumbs">${collage}</div>` : ''}
+            </div>
+          </div>
         </div>
         ${pageNum(s.page, total)}
       </article>`;
   }
 
   function renderIndex(s, total) {
-    const collage = (s.collage || []).map(renderCollagePhoto).join('');
+    const gallery = `spread-${s.id}`;
+    const collage = (s.collage || []).map(item => renderCollagePhoto(item, gallery)).join('');
     return `
       <article class="spread spread--index" id="spread-${esc(s.id)}" data-page="${s.page}">
         <div class="panel">
@@ -158,7 +176,7 @@
           ${renderStamp(s.stamp, 'blue')}
           ${s.note ? `<div class="note-box">${esc(s.note)}</div>` : ''}
         </div>
-        ${collage ? `<div class="collage-cluster">${collage}</div>` : ''}
+        ${collage ? `<div class="collage-cluster" data-gallery="${gallery}">${collage}</div>` : ''}
         ${pageNum(s.page, total)}
       </article>`;
   }
@@ -289,15 +307,54 @@
     spreads.forEach(el => revealObserver.observe(el));
   }
 
+  function collectGallery(btn) {
+    const galleryId = btn.getAttribute('data-lightbox-gallery');
+    const scope = galleryId
+      ? document.querySelector(`[data-gallery="${galleryId}"]`)
+      : btn.closest('.collage-stack, .collage-cluster, .cover-thumbs');
+    if (!scope) {
+      return [{
+        src: btn.getAttribute('data-lightbox-src'),
+        alt: btn.getAttribute('data-lightbox-alt') || ''
+      }];
+    }
+    return [...scope.querySelectorAll('[data-lightbox-src]')].map(el => ({
+      src: el.getAttribute('data-lightbox-src'),
+      alt: el.getAttribute('data-lightbox-alt') || ''
+    }));
+  }
+
   function initLightbox() {
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lightbox-img');
     const lbClose = document.getElementById('lightbox-close');
+    const lbPrev = document.getElementById('lightbox-prev');
+    const lbNext = document.getElementById('lightbox-next');
+    const lbCounter = document.getElementById('lightbox-counter');
     if (!lb || !lbImg) return;
 
-    function open(src, alt) {
-      lbImg.src = src;
-      lbImg.alt = alt || '';
+    let gallery = [];
+    let galleryIndex = 0;
+
+    function showSlide() {
+      const item = gallery[galleryIndex];
+      if (!item) return;
+      lbImg.src = item.src;
+      lbImg.alt = item.alt;
+      const multi = gallery.length > 1;
+      if (lbPrev) lbPrev.hidden = !multi;
+      if (lbNext) lbNext.hidden = !multi;
+      if (lbCounter) {
+        lbCounter.hidden = !multi;
+        lbCounter.textContent = `${galleryIndex + 1} / ${gallery.length}`;
+      }
+    }
+
+    function openFrom(btn) {
+      gallery = collectGallery(btn);
+      const src = btn.getAttribute('data-lightbox-src');
+      galleryIndex = Math.max(0, gallery.findIndex(item => item.src === src));
+      showSlide();
       lb.hidden = false;
       document.body.classList.add('lightbox-open');
       lbClose?.focus();
@@ -306,7 +363,15 @@
     function close() {
       lb.hidden = true;
       lbImg.src = '';
+      gallery = [];
+      galleryIndex = 0;
       document.body.classList.remove('lightbox-open');
+    }
+
+    function step(delta) {
+      if (gallery.length < 2) return;
+      galleryIndex = (galleryIndex + delta + gallery.length) % gallery.length;
+      showSlide();
     }
 
     document.addEventListener('click', e => {
@@ -314,16 +379,45 @@
       if (!btn) return;
       e.preventDefault();
       e.stopPropagation();
-      open(btn.getAttribute('data-lightbox-src'), btn.getAttribute('data-lightbox-alt'));
+      openFrom(btn);
     });
 
     lbClose?.addEventListener('click', close);
+    lbPrev?.addEventListener('click', e => { e.stopPropagation(); step(-1); });
+    lbNext?.addEventListener('click', e => { e.stopPropagation(); step(1); });
     lb.addEventListener('click', e => {
       if (e.target === lb || e.target.classList.contains('lightbox__backdrop')) close();
     });
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && !lb.hidden) close();
+      if (lb.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
     });
+  }
+
+  function wrapFlipPage(html, s) {
+    const hard = s.layout === 'cover' || s.layout === 'back-cover';
+    return `<div class="flip-page" data-density="${hard ? 'hard' : 'soft'}" data-spread-id="${esc(s.id)}">${html}</div>`;
+  }
+
+  function spreadIndexFromId(id) {
+    if (!id) return -1;
+    return spreadIds.indexOf(id);
+  }
+
+  function spreadIndexFromHash() {
+    const hash = location.hash.replace(/^#/, '').replace(/^spread-/, '');
+    if (!hash) return 0;
+    const idx = spreadIndexFromId(hash);
+    return idx >= 0 ? idx : 0;
+  }
+
+  function destroyPageFlip() {
+    if (pageFlipInstance) {
+      pageFlipInstance.destroy();
+      pageFlipInstance = null;
+    }
   }
 
   function initMagazine(total) {
@@ -336,129 +430,52 @@
     const edgeNext = document.getElementById('magazine-edge-next');
     const indicator = document.getElementById('magazine-indicator');
     const pageChrome = document.getElementById('zine-page-label');
-    const book = document.getElementById('magazine-book');
+    const flipBook = document.getElementById('flip-book');
 
-    let spreads = [];
-    let current = 0;
     let enabled = false;
-    let transitioning = false;
-    let goRef = null;
-
-    function spreadIndexFromId(id) {
-      if (!id) return -1;
-      return spreads.findIndex(s => s.id === id);
-    }
-
-    function spreadIndexFromHash() {
-      const hash = location.hash.replace(/^#/, '');
-      if (!hash) return 0;
-      const idx = spreadIndexFromId(hash);
-      return idx >= 0 ? idx : 0;
-    }
+    let current = 0;
 
     function updateChrome(index) {
-      const page = spreads[index]?.dataset.page || index + 1;
+      const spreadEl = document.querySelector(`[data-spread-id="${spreadIds[index]}"] .spread`);
+      const page = spreadEl?.dataset.page || index + 1;
       if (indicator) indicator.textContent = `${index + 1} / ${total}`;
       if (pageChrome) pageChrome.textContent = `Pág ${page}`;
       if (prevBtn) prevBtn.disabled = index <= 0;
-      if (nextBtn) nextBtn.disabled = index >= spreads.length - 1;
-      if (book) book.dataset.page = String(index + 1);
+      if (nextBtn) nextBtn.disabled = index >= spreadIds.length - 1;
+      if (flipBook) flipBook.dataset.page = String(index + 1);
     }
 
     function setHash(index, replace) {
-      const id = spreads[index]?.id;
+      const id = spreadIds[index];
       if (!id) return;
-      const url = `${location.pathname}${location.search}#${id}`;
+      const url = `${location.pathname}${location.search}#spread-${id}`;
       if (replace) history.replaceState(null, '', url);
       else history.pushState(null, '', url);
     }
 
-    function clearFlipClasses() {
-      spreads.forEach(s => {
-        s.classList.remove(
-          'is-flip-out-forward', 'is-flip-out-back',
-          'is-flip-under', 'is-entering', 'is-leaving',
-          'is-entering-left', 'is-entering-right'
-        );
-      });
-    }
-
-    function showPage(index, opts = {}) {
-      const { animate = true, direction = 0, updateHash = true, replaceHash = false } = opts;
-      if (!spreads.length) return;
-
-      const next = Math.max(0, Math.min(index, spreads.length - 1));
-      if (next === current && enabled && spreads[current]?.classList.contains('is-active')) {
-        updateChrome(current);
-        return;
-      }
-
-      const prev = current;
-      const outgoing = spreads[prev];
-      const incoming = spreads[next];
-
-      if (transitioning) return;
-      transitioning = true;
-
-      clearFlipClasses();
-
-      spreads.forEach((s, i) => {
-        s.classList.remove('is-active');
-        if (i !== next) s.setAttribute('aria-hidden', 'true');
-      });
-
-      if (animate && direction !== 0 && outgoing && prev !== next) {
-        incoming.classList.add('is-flip-under', 'is-visible');
-        incoming.removeAttribute('aria-hidden');
-        outgoing.classList.add(direction > 0 ? 'is-flip-out-forward' : 'is-flip-out-back');
-        incoming.classList.add('is-active');
-
-        window.setTimeout(() => {
-          clearFlipClasses();
-          spreads.forEach((s, i) => {
-            if (i === next) {
-              s.classList.add('is-active', 'is-visible');
-              s.removeAttribute('aria-hidden');
-            } else {
-              s.setAttribute('aria-hidden', 'true');
-            }
-          });
-          current = next;
-          updateChrome(current);
-          if (updateHash) setHash(current, replaceHash);
-          transitioning = false;
-        }, FLIP_MS);
-      } else {
-        spreads.forEach((s, i) => {
-          if (i === next) {
-            s.classList.add('is-active', 'is-visible');
-            s.removeAttribute('aria-hidden');
-          }
-        });
-        current = next;
-        updateChrome(current);
-        if (updateHash) setHash(current, replaceHash);
-        transitioning = false;
-      }
+    function goTo(index, animate = true) {
+      if (!pageFlipInstance) return;
+      const next = Math.max(0, Math.min(index, spreadIds.length - 1));
+      if (animate) pageFlipInstance.flip(next);
+      else pageFlipInstance.turnToPage(next);
+      current = next;
+      updateChrome(current);
     }
 
     function go(delta) {
-      if (transitioning) return;
-      const next = current + delta;
-      if (next < 0 || next >= spreads.length) return;
-      showPage(next, { direction: delta });
+      if (!pageFlipInstance) return;
+      if (delta > 0) pageFlipInstance.flipNext();
+      else pageFlipInstance.flipPrev();
     }
 
-    goRef = go;
-
-    function onWheel(e) {
-      if (!enabled) return;
-      if (e.target.closest('.panel, .collage-stack, .cover-inner')) return;
-      e.preventDefault();
+    function onFlip(e) {
+      current = e.data;
+      updateChrome(current);
+      setHash(current, false);
     }
 
     function onKeydown(e) {
-      if (!enabled) return;
+      if (!enabled || !pageFlipInstance) return;
       if (e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
       const lb = document.getElementById('lightbox');
       if (lb && !lb.hidden) return;
@@ -470,10 +487,10 @@
         go(1);
       } else if (e.key === 'Home') {
         e.preventDefault();
-        showPage(0, { direction: -1 });
+        goTo(0);
       } else if (e.key === 'End') {
         e.preventDefault();
-        showPage(spreads.length - 1, { direction: 1 });
+        goTo(spreadIds.length - 1);
       }
     }
 
@@ -482,24 +499,22 @@
       const link = e.target.closest('.index-list__link');
       if (!link) return;
       e.preventDefault();
-      const idx = spreadIndexFromId(link.getAttribute('href')?.slice(1));
+      const href = link.getAttribute('href') || '';
+      const id = href.replace(/^#spread-/, '');
+      const idx = spreadIndexFromId(id);
       if (idx < 0) return;
-      showPage(idx, { direction: idx > current ? 1 : idx < current ? -1 : 0 });
+      goTo(idx);
     }
 
     function onHashChange() {
-      if (!enabled) return;
+      if (!enabled || !pageFlipInstance) return;
       const idx = spreadIndexFromHash();
-      if (idx !== current) {
-        showPage(idx, { direction: idx > current ? 1 : -1, updateHash: false });
-      }
+      if (idx !== current) goTo(idx, false);
     }
 
     function enable() {
-      if (enabled) return;
+      if (enabled || !flipBook || typeof St === 'undefined' || !St.PageFlip) return;
       enabled = true;
-      spreads = Array.from(document.querySelectorAll('.spread'));
-      if (!spreads.length) return;
 
       if (revealObserver) {
         revealObserver.disconnect();
@@ -513,28 +528,56 @@
         edges.setAttribute('aria-hidden', 'false');
       }
 
-      spreads.forEach(s => s.classList.add('is-visible'));
+      document.querySelectorAll('.spread').forEach(s => s.classList.add('is-visible'));
 
-      const start = spreadIndexFromHash();
-      current = -1;
-      showPage(start, { animate: false, direction: 0, replaceHash: !location.hash });
+      const pages = flipBook.querySelectorAll('.flip-page');
+      pageFlipInstance = new St.PageFlip(flipBook, {
+        width: 480,
+        height: 680,
+        size: 'stretch',
+        minWidth: 320,
+        maxWidth: 560,
+        minHeight: 460,
+        maxHeight: 900,
+        maxShadowOpacity: 0.55,
+        showCover: true,
+        mobileScrollSupport: false,
+        usePortrait: true,
+        startZIndex: 0,
+        autoSize: true,
+        drawShadow: true,
+        flippingTime: 880,
+        startPage: spreadIndexFromHash()
+      });
+
+      pageFlipInstance.loadFromHTML(pages);
+      pageFlipInstance.on('flip', onFlip);
+
+      current = pageFlipInstance.getCurrentPageIndex();
+      updateChrome(current);
+      if (!location.hash) setHash(current, true);
 
       document.addEventListener('keydown', onKeydown);
       document.addEventListener('click', onIndexClick);
-      document.addEventListener('wheel', onWheel, { passive: false });
       window.addEventListener('hashchange', onHashChange);
 
-      const coverBtn = document.getElementById('cover-open-btn');
-      if (coverBtn) {
-        coverBtn.addEventListener('click', () => go(1));
-      }
+      window.addEventListener('resize', onResize);
+    }
+
+    function onResize() {
+      if (pageFlipInstance) pageFlipInstance.update();
     }
 
     function disable() {
       if (!enabled) return;
       enabled = false;
-      transitioning = false;
-      clearFlipClasses();
+
+      window.removeEventListener('resize', onResize);
+      document.removeEventListener('keydown', onKeydown);
+      document.removeEventListener('click', onIndexClick);
+      window.removeEventListener('hashchange', onHashChange);
+
+      destroyPageFlip();
 
       document.body.classList.remove('magazine-mode');
       if (nav) nav.hidden = true;
@@ -542,16 +585,6 @@
         edges.hidden = true;
         edges.setAttribute('aria-hidden', 'true');
       }
-
-      spreads.forEach(s => {
-        s.classList.remove('is-active', 'is-flip-under', 'is-flip-out-forward', 'is-flip-out-back');
-        s.removeAttribute('aria-hidden');
-      });
-
-      document.removeEventListener('keydown', onKeydown);
-      document.removeEventListener('click', onIndexClick);
-      document.removeEventListener('wheel', onWheel);
-      window.removeEventListener('hashchange', onHashChange);
 
       initReveal();
     }
@@ -583,12 +616,19 @@
   }
 
   function preparePrintDOM() {
+    destroyPageFlip();
+    document.body.classList.remove('magazine-mode');
     document.querySelectorAll('.spread').forEach(s => {
       s.classList.add('is-visible');
       s.classList.remove('is-active', 'is-flip-under', 'is-flip-out-forward', 'is-flip-out-back');
       s.removeAttribute('aria-hidden');
       s.style.visibility = '';
       s.style.opacity = '';
+    });
+    document.querySelectorAll('.flip-page').forEach(p => {
+      p.style.display = 'block';
+      p.style.position = 'static';
+      p.style.transform = 'none';
     });
   }
 
@@ -636,8 +676,10 @@
       initChrome(data.meta);
       document.title = `${data.meta?.author || 'Facundo Galetta'} — ${data.meta?.title || 'Fanzine'}`;
 
-      root.innerHTML = `<div class="magazine-book" id="magazine-book">${
-        spreads.sort((a, b) => a.page - b.page).map(s => renderSpread(s, total)).join('')
+      const sorted = spreads.sort((a, b) => a.page - b.page);
+      spreadIds = sorted.map(s => s.id);
+      root.innerHTML = `<div class="flip-book" id="flip-book">${
+        sorted.map(s => wrapFlipPage(renderSpread(s, total), s)).join('')
       }</div>`;
 
       initReveal();
@@ -646,7 +688,9 @@
       initPrint();
 
       document.getElementById('cover-open-btn')?.addEventListener('click', () => {
-        if (!window.matchMedia(MAGAZINE_BP).matches) {
+        if (window.matchMedia(MAGAZINE_BP).matches && pageFlipInstance) {
+          pageFlipInstance.flipNext();
+        } else {
           document.getElementById('spread-intro')?.scrollIntoView({ behavior: 'smooth' });
         }
       });

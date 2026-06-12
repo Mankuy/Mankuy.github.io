@@ -15,6 +15,10 @@
       "title": "Construí esto",
       "hook": "Herramientas para problemas que tengo de verdad",
       "body": "Psicólogo · constructor · Montevideo, Uruguay",
+      "coverHero": {
+        "src": "IMG/Supercouncil.png",
+        "alt": "SuperCouncil — Boardroom de IAs"
+      },
       "coverLines": [
         "8 proyectos adentro",
         "Corrector de tesis · Consejo de IAs",
@@ -22,9 +26,9 @@
         "Local-first — tus datos en tu máquina"
       ],
       "coverCollage": [
-        { "src": "IMG/Supercouncil.png", "tilt": -6 },
         { "src": "IMG/ASISTENTE ACADEMICO.png", "tilt": 4 },
-        { "src": "IMG/vincularmente.png", "tilt": -3 }
+        { "src": "IMG/vincularmente.png", "tilt": -3 },
+        { "src": "IMG/gonzadiscos.png", "tilt": 6 }
       ],
       "stamp": "Nº 1 · 2026",
       "ctaCover": "Pasá la página →"

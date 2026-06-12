@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Patrick+Hand&family=Special+Elite&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/page-flip.css">
   <link rel="stylesheet" href="zine.css">
 </head>
 <body>
@@ -74,11 +75,15 @@
   <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Imagen ampliada">
     <div class="lightbox__backdrop"></div>
     <button type="button" class="lightbox__close" id="lightbox-close" aria-label="Cerrar">✕</button>
+    <button type="button" class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" aria-label="Imagen anterior" hidden>‹</button>
+    <button type="button" class="lightbox__nav lightbox__nav--next" id="lightbox-next" aria-label="Imagen siguiente" hidden>›</button>
     <figure class="lightbox__frame">
       <img id="lightbox-img" src="" alt="">
+      <figcaption class="lightbox__counter" id="lightbox-counter" hidden></figcaption>
     </figure>
   </div>
 
+  <script src="vendor/page-flip.browser.js"></script>
   <script src="zine.js"></script>
 </body>
 </html>
