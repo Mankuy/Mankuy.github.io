@@ -20,12 +20,29 @@
     {
       "id": "intro",
       "page": 2,
-      "layout": "editorial",
+      "layout": "index",
       "title": "De qué va esto",
-      "hook": "Armo herramientas para problemas que tengo de verdad.",
-      "body": "Ayudar a quien sigue en la facultad. Pagarle a la niñera. Registrar la huerta. Saber a dónde se va la plata. Si a mí me sirvió, capaz a vos también.",
+      "hook": "Armo herramientas para problemas que tengo de verdad — y algunas las comparto.",
+      "body": "Soy psicólogo y constructor en Montevideo. Este fanzine es la página de venta de lo que hago: apps, sitios y sistemas que nacen de necesidades concretas, no de moda tech.\n\nEn este número hay ocho piezas. Tres son públicas (podés usarlas o comprarlas hoy). Dos son sitios web en vivo. Tres son apps personales que armé para mi casa — y una más en desarrollo.",
+      "index": [
+        { "id": "asistente", "name": "Asistente Académico", "page": 3, "tier": "Público", "note": "Corrector de tesis con IA — gratis" },
+        { "id": "supercouncil", "name": "SuperCouncil", "page": 4, "tier": "Público", "note": "Consejo de IAs — USD 49" },
+        { "id": "vincularmente", "name": "Vincularmente", "page": 5, "tier": "Web", "note": "Psicología y bienestar" },
+        { "id": "gonza-discos", "name": "Gonza Discos", "page": 6, "tier": "Web", "note": "Tienda de vinilos" },
+        { "id": "gastos", "name": "Registro de Gastos", "page": 7, "tier": "Personal", "note": "A dónde se va la plata" },
+        { "id": "ninera", "name": "Sueldo Niñera", "page": 8, "tier": "Personal", "note": "Horas y recibo del mes" },
+        { "id": "jardin", "name": "Jardín", "page": 9, "tier": "Personal", "note": "Cosecha de la huerta" },
+        { "id": "salones", "name": "Salones de Fiesta", "page": 10, "tier": "En desarrollo", "note": "Reservas de salones infantiles" }
+      ],
+      "collage": [
+        { "src": "IMG/ASISTENTE ACADEMICO.png", "tilt": -8, "size": "sm" },
+        { "src": "IMG/Supercouncil.png", "tilt": 5, "size": "md" },
+        { "src": "IMG/vincularmente.png", "tilt": -3, "size": "sm" },
+        { "src": "IMG/gonzadiscos.png", "tilt": 7, "size": "sm" },
+        { "src": "IMG/ninera.png", "tilt": -5, "size": "sm" }
+      ],
       "stamp": "LOCAL-FIRST",
-      "note": "Tus datos quedan en tu máquina."
+      "note": "Tus datos quedan en tu máquina. Las apps personales no están publicadas."
     },
     {
       "id": "asistente",
@@ -35,6 +52,9 @@
       "title": "Asistente Académico",
       "hook": "Corrector de tesis con IA.",
       "body": "Revisa citas APA, redacción y estructura. Cada cambio en una tarjeta: aceptás o rechazás vos, no la máquina. Exporta a Word y PDF.",
+      "image": "IMG/ASISTENTE ACADEMICO.png",
+      "imageAlt": "Captura del Asistente Académico",
+      "imageTilt": -4,
       "tags": ["Gratis", "Beta"],
       "cta": { "label": "Próximamente en GitHub", "url": null, "disabled": true }
     },
@@ -46,6 +66,9 @@
       "title": "SuperCouncil",
       "hook": "Un consejo de IAs que delibera.",
       "body": "Varios modelos debaten tu problema, se auditan entre sí y un Chairman sintetiza la respuesta. Self-hosted, fábrica de agentes y bot de Telegram. Para gente técnica.",
+      "image": "IMG/supercounciltelegram.png",
+      "imageAlt": "SuperCouncil en Telegram",
+      "imageTilt": 5,
       "tags": ["USD 49", "Self-hosted"],
       "cta": { "label": "Ver en Gumroad", "url": "https://complexity88.gumroad.com/l/supercouncil", "disabled": false }
     },
@@ -57,6 +80,9 @@
       "title": "Vincularmente",
       "hook": "Psicología y bienestar en la web.",
       "body": "Sitio sobre vínculos, apego y comunicación. Se actualiza solo con un pipeline que armé con IA y curo a mano. Acá se cruzan mis dos oficios.",
+      "image": "IMG/vincularmente.png",
+      "imageAlt": "Vincularmente",
+      "imageTilt": -3,
       "tags": ["En vivo"],
       "cta": { "label": "Visitar sitio", "url": "https://mankuy.github.io/vincularmente-site/index.html", "disabled": false }
     },
@@ -68,6 +94,9 @@
       "title": "Gonza Discos",
       "hook": "Tienda de vinilos para un amigo.",
       "body": "Catálogo con grading, identificación de discos por foto con IA y pedido por WhatsApp. Toda la app en un solo archivo.",
+      "image": "IMG/gonzadiscos.png",
+      "imageAlt": "Gonza Discos",
+      "imageTilt": 6,
       "tags": ["En prueba", "Para un amigo"],
       "cta": { "label": "Visitar", "url": "https://gonzalodiscos.facundo-galetta.workers.dev/", "disabled": false }
     },
@@ -79,6 +108,9 @@
       "title": "Registro de Gastos",
       "hook": "Quería saber a dónde se iba la plata.",
       "body": "Cargo gastos a mano o le saco foto al recibo y la app reconoce el monto. Gráficos, proyecciones, capacidad de ahorro.",
+      "image": "IMG/Gestor de gastos.png",
+      "imageAlt": "Gestor de gastos",
+      "imageTilt": -5,
       "stamp": "USO PERSONAL"
     },
     {
@@ -89,6 +121,9 @@
       "title": "Sueldo Niñera",
       "hook": "Me cansé de calcular a mano las horas de la niñera de mi hija.",
       "body": "Registro las horas, la app suma el mes y arma el recibo de sueldo solo.",
+      "image": "IMG/ninera.png",
+      "imageAlt": "App sueldo niñera",
+      "imageTilt": 4,
       "stamp": "USO PERSONAL"
     },
     {
@@ -99,6 +134,9 @@
       "title": "Jardín",
       "hook": "Registro de cosecha de la huerta.",
       "body": "Qué planté, qué salió, cuánto y cuándo. Para saber si la temporada fue buena con datos, no con memoria.",
+      "image": "IMG/registro jardin.png",
+      "imageAlt": "Registro de jardín",
+      "imageTilt": -6,
       "stamp": "USO PERSONAL"
     },
     {
@@ -108,7 +146,8 @@
       "tier": "personal",
       "title": "Salones de Fiesta",
       "hook": "Gestión de reservas para salones infantiles.",
-      "body": "Agenda, clientes y pagos en un solo lugar.",
+      "body": "Agenda, clientes y pagos en un solo lugar. Todavía en fase primaria — la captura viene cuando tenga algo que mostrar.",
+      "imagePlaceholder": "EN DESARROLLO",
       "stamp": "EN DESARROLLO"
     },
     {

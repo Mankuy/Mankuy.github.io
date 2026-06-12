@@ -15,6 +15,11 @@
     return d.innerHTML;
   }
 
+  function imgSrc(path) {
+    if (!path) return '';
+    return path.split('/').map(seg => encodeURIComponent(seg)).join('/');
+  }
+
   function bodyHtml(text) {
     if (!text) return '';
     return text.split('\n\n').map(p => `<p>${esc(p)}</p>`).join('');
@@ -43,6 +48,49 @@
     return `<span class="spread__page-num">— ${String(n).padStart(2, '0')} / ${String(total).padStart(2, '0')} —</span>`;
   }
 
+  function renderCollagePhoto(item) {
+    const tilt = item.tilt != null ? item.tilt : 0;
+    const size = item.size || 'md';
+    return `
+      <figure class="collage-photo collage-photo--${esc(size)}" style="--photo-tilt:${tilt}deg">
+        <img src="${imgSrc(item.src)}" alt="" loading="lazy" decoding="async">
+      </figure>`;
+  }
+
+  function renderCollage(s) {
+    if (s.image) {
+      const tilt = s.imageTilt != null ? s.imageTilt : 0;
+      return `
+        <figure class="collage-photo collage-photo--spread" style="--photo-tilt:${tilt}deg">
+          <img src="${imgSrc(s.image)}" alt="${esc(s.imageAlt || s.title)}" loading="lazy" decoding="async">
+        </figure>`;
+    }
+    if (s.imagePlaceholder) {
+      return `
+        <figure class="collage-placeholder" style="--photo-tilt:${s.imageTilt || -3}deg">
+          <span class="collage-placeholder__label">${esc(s.imagePlaceholder)}</span>
+          <span class="collage-placeholder__sub">captura próximamente</span>
+        </figure>`;
+    }
+    return '';
+  }
+
+  function renderIndexList(items) {
+    if (!items || !items.length) return '';
+    return `
+      <ol class="index-list">
+        ${items.map(it => `
+          <li class="index-list__item">
+            <a class="index-list__link" href="#spread-${esc(it.id)}">
+              <span class="index-list__page">${String(it.page).padStart(2, '0')}</span>
+              <span class="index-list__name">${esc(it.name)}</span>
+              <span class="index-list__tier index-list__tier--${esc(it.tier.toLowerCase().replace(/\s+/g, '-'))}">${esc(it.tier)}</span>
+            </a>
+            <span class="index-list__note">${esc(it.note)}</span>
+          </li>`).join('')}
+      </ol>`;
+  }
+
   function renderCover(s, total) {
     return `
       <article class="spread spread--cover" id="spread-${esc(s.id)}" data-page="${s.page}">
@@ -50,6 +98,23 @@
         <p class="spread__issue">${esc(s.hook)}</p>
         <p class="spread__author">${esc(s.body)}</p>
         ${s.stamp ? `<span class="spread__stamp">${esc(s.stamp)}</span>` : ''}
+        ${pageNum(s.page, total)}
+      </article>`;
+  }
+
+  function renderIndex(s, total) {
+    const collage = (s.collage || []).map(renderCollagePhoto).join('');
+    return `
+      <article class="spread spread--index" id="spread-${esc(s.id)}" data-page="${s.page}">
+        <div class="panel">
+          <h2 class="panel__title">${esc(s.title)}</h2>
+          <p class="panel__hook">${esc(s.hook)}</p>
+          <div class="panel__body">${bodyHtml(s.body)}</div>
+          ${renderIndexList(s.index)}
+          ${renderStamp(s.stamp, 'blue')}
+          ${s.note ? `<div class="note-box">${esc(s.note)}</div>` : ''}
+        </div>
+        ${collage ? `<div class="collage-cluster" aria-hidden="true">${collage}</div>` : ''}
         ${pageNum(s.page, total)}
       </article>`;
   }
@@ -73,6 +138,7 @@
     return `
       <article class="spread spread--product" id="spread-${esc(s.id)}" data-page="${s.page}">
         ${cut}
+        ${renderCollage(s)}
         <div class="panel">
           <h2 class="panel__title">${esc(s.title)}</h2>
           <p class="panel__hook">${esc(s.hook)}</p>
@@ -87,6 +153,7 @@
   function renderWeb(s, total) {
     return `
       <article class="spread spread--web" id="spread-${esc(s.id)}" data-page="${s.page}">
+        ${renderCollage(s)}
         <div class="panel">
           <h2 class="panel__title">${esc(s.title)}</h2>
           <p class="panel__hook">${esc(s.hook)}</p>
@@ -101,6 +168,7 @@
   function renderDiary(s, total) {
     return `
       <article class="spread spread--diary" id="spread-${esc(s.id)}" data-page="${s.page}">
+        ${renderCollage(s)}
         <div class="panel">
           <h2 class="panel__title">${esc(s.title)}</h2>
           <p class="panel__hook">${esc(s.hook)}</p>
@@ -130,6 +198,7 @@
 
   const RENDERERS = {
     cover: renderCover,
+    index: renderIndex,
     editorial: renderEditorial,
     product: renderProduct,
     web: renderWeb,
@@ -171,9 +240,25 @@
     spreads.forEach(el => obs.observe(el));
   }
 
+  function preparePrint() {
+    document.querySelectorAll('.spread').forEach(s => s.classList.add('is-visible'));
+    document.body.classList.add('printing');
+  }
+
+  function cleanupPrint() {
+    document.body.classList.remove('printing');
+  }
+
   function initPrint() {
     const btn = document.getElementById('btn-print');
-    if (btn) btn.addEventListener('click', () => window.print());
+    if (btn) {
+      btn.addEventListener('click', () => {
+        preparePrint();
+        window.print();
+      });
+    }
+    window.addEventListener('beforeprint', preparePrint);
+    window.addEventListener('afterprint', cleanupPrint);
   }
 
   async function boot() {
