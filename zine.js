@@ -36,6 +36,9 @@
 
   function spreadImages(s) {
     if (s.images && s.images.length) return s.images;
+    if (s.collage && s.collage.length) {
+      return s.collage.map(c => ({ src: c.src, alt: c.alt || '', tilt: c.tilt }));
+    }
     if (s.image) {
       return [{ src: s.image, alt: s.imageAlt || s.title, tilt: s.imageTilt }];
     }
@@ -100,7 +103,6 @@
       <figure class="collage-wip" style="--photo-tilt:${s.imageTilt || -5}deg" aria-label="Proyecto en construcción">
         <div class="collage-wip__tape" aria-hidden="true"></div>
         <span class="collage-wip__ring">${label}</span>
-        <span class="collage-wip__sub">sin captura todavía</span>
       </figure>`;
   }
 
@@ -112,7 +114,9 @@
         ? 'collage-stack--solo'
         : imgs.length === 2
           ? 'collage-stack--duo'
-          : 'collage-stack--multi';
+          : imgs.length >= 4
+            ? 'collage-stack--mosaic'
+            : 'collage-stack--multi';
       return `<div class="collage-stack ${stackClass}" data-gallery="${gallery}">${
         imgs.map((img, i) => renderPhoto(img, { gallery, loading: 'eager', index: i })).join('')
       }</div>`;
@@ -199,6 +203,7 @@
   function renderEditorial(s, total) {
     return `
       <article class="spread spread--editorial" id="spread-${esc(s.id)}" data-page="${s.page}">
+        ${renderCollage(s)}
         <div class="panel">
           <h2 class="panel__title">${esc(s.title)}</h2>
           <p class="panel__hook">${esc(s.hook)}</p>
@@ -265,11 +270,14 @@
   }
 
   function renderBackCover(s, total) {
+    const gallery = `spread-${s.id}`;
+    const collage = (s.collage || []).map(item => renderCollagePhoto(item, gallery)).join('');
     const links = (s.links || []).map(l =>
       `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`
     ).join('');
     return `
       <article class="spread spread--back" id="spread-${esc(s.id)}" data-page="${s.page}">
+        ${collage ? `<div class="collage-cluster collage-cluster--back" data-gallery="${gallery}">${collage}</div>` : ''}
         <div class="panel">
           <h2 class="panel__title">${esc(s.title)}</h2>
           <p class="panel__hook">${esc(s.hook)}</p>
@@ -412,9 +420,8 @@
   }
 
   function wrapFlipPage(html, s, index) {
-    const hard = s.layout === 'cover' || s.layout === 'back-cover';
     const parity = index % 2 === 0 ? 'even' : 'odd';
-    return `<div class="flip-page" data-density="${hard ? 'hard' : 'soft'}" data-spread-id="${esc(s.id)}" data-page-parity="${parity}">${html}</div>`;
+    return `<div class="flip-page" data-density="soft" data-spread-id="${esc(s.id)}" data-page-parity="${parity}">${html}</div>`;
   }
 
   function preloadFlipImages(root) {
@@ -422,6 +429,19 @@
     root.querySelectorAll('img').forEach(img => {
       img.loading = 'eager';
       if (!img.complete && img.decode) img.decode().catch(() => {});
+    });
+  }
+
+  function auditImages(root) {
+    if (!root) return;
+    root.querySelectorAll('img[src]').forEach(img => {
+      const src = img.getAttribute('src') || '';
+      const warn = () => console.warn('[zine] Imagen 404 o inválida:', src);
+      if (img.complete) {
+        if (img.naturalWidth === 0) warn();
+      } else {
+        img.addEventListener('error', warn, { once: true });
+      }
     });
   }
 
@@ -579,7 +599,7 @@
         minHeight: 460,
         maxHeight: 900,
         maxShadowOpacity: 0.6,
-        showCover: true,
+        showCover: false,
         mobileScrollSupport: false,
         usePortrait: true,
         startZIndex: 0,
@@ -729,6 +749,7 @@
       flipBookHtml = bookHtml;
       root.innerHTML = `<div class="flip-book" id="flip-book">${bookHtml}</div>`;
       preloadFlipImages(root);
+      auditImages(root);
 
       initReveal();
       initLightbox();

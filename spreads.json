@@ -27,8 +27,13 @@
       ],
       "coverCollage": [
         { "src": "IMG/ASISTENTE ACADEMICO.png", "tilt": 4 },
+        { "src": "IMG/supercounciltelegram.png", "tilt": -5 },
         { "src": "IMG/vincularmente.png", "tilt": -3 },
-        { "src": "IMG/gonzadiscos.png", "tilt": 6 }
+        { "src": "IMG/gonzadiscos.png", "tilt": 6 },
+        { "src": "IMG/Gestor de gastos.png", "tilt": -4 },
+        { "src": "IMG/registros gastos teletgram.png", "tilt": 5 },
+        { "src": "IMG/ninera.png", "tilt": -6 },
+        { "src": "IMG/registro jardin.png", "tilt": 3 }
       ],
       "stamp": "Nº 1 · 2026",
       "ctaCover": "Pasá la página →"
@@ -208,7 +213,7 @@
       "tier": "personal",
       "title": "Salones de Fiesta",
       "hook": "Gestión de reservas para salones infantiles.",
-      "body": "Agenda, clientes y pagos en un solo lugar. Todavía en fase primaria — la captura viene cuando tenga algo que mostrar.",
+      "body": "Agenda, clientes y pagos en un solo lugar. Todavía en fase primaria.",
       "imagePlaceholder": "EN CONSTRUCCIÓN",
       "stamp": "EN DESARROLLO"
     },
@@ -220,6 +225,17 @@
       "hook": "Porque los problemas no piden título universitario.",
       "body": "Mi tesis la escribí hace años; el APA me comió la cabeza en su momento, como a cualquiera. Pero el corrector no lo hice para eso: lo armé después, para amigos que siguen estudiando y para cuando yo mismo reviso trabajos.\n\nSuperCouncil nació del mismo lugar. Donde los ingenieros vieron \"¿cómo consultamos más modelos?\", yo vi un problema de arquitectura cognitiva: ¿cómo obligás a las IAs a ser honestas? La respuesta vino de la revisión por pares académica — fricción intencional, desacuerdo como mecanismo.\n\nTengo una hija y una niñera: app. Huerta: app. Gastos que se evaporan: app. Misma regla siempre.\n\nLocal-first, porque tus datos son tuyos. El Asistente Académico va a estar abierto en GitHub. Si lo usás y encontrás un error, escribime: eso vale más que cualquier venta.",
       "pullquote": "Mientras cada empresa de IA te vende un asistente más inteligente, yo te vendo un sistema que audita tu pensamiento.",
+      "collage": [
+        { "src": "IMG/ASISTENTE ACADEMICO.png", "alt": "Asistente Académico", "tilt": -4 },
+        { "src": "IMG/Supercouncil.png", "alt": "SuperCouncil", "tilt": 3 },
+        { "src": "IMG/supercounciltelegram.png", "alt": "SuperCouncil Telegram", "tilt": 5 },
+        { "src": "IMG/vincularmente.png", "alt": "Vincularmente", "tilt": -3 },
+        { "src": "IMG/gonzadiscos.png", "alt": "Gonza Discos", "tilt": 6 },
+        { "src": "IMG/Gestor de gastos.png", "alt": "Gestor de gastos", "tilt": -5 },
+        { "src": "IMG/registros gastos teletgram.png", "alt": "Gastos Telegram", "tilt": 4 },
+        { "src": "IMG/ninera.png", "alt": "Sueldo niñera", "tilt": -6 },
+        { "src": "IMG/registro jardin.png", "alt": "Registro jardín", "tilt": 3 }
+      ],
       "stamp": null,
       "note": null
     },
@@ -233,6 +249,12 @@
       "links": [
         { "label": "X / Twitter", "url": "https://x.com/SuperCouncil_" },
         { "label": "GitHub", "url": "https://github.com/Mankuy" }
+      ],
+      "collage": [
+        { "src": "IMG/ASISTENTE ACADEMICO.png", "tilt": -4, "size": "sm" },
+        { "src": "IMG/Supercouncil.png", "tilt": 5, "size": "sm" },
+        { "src": "IMG/vincularmente.png", "tilt": -3, "size": "sm" },
+        { "src": "IMG/gonzadiscos.png", "tilt": 6, "size": "sm" }
       ],
       "note": "Hecho en Montevideo, Uruguay"
     }
