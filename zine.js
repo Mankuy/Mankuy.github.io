@@ -44,6 +44,16 @@
     return `<span class="${cls}">${esc(stamp)}</span>`;
   }
 
+  function renderFeatures(features) {
+    if (!features || !features.length) return '';
+    return `<ul class="feature-list">${features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>`;
+  }
+
+  function renderPullquote(text) {
+    if (!text) return '';
+    return `<blockquote class="pullquote">${esc(text)}</blockquote>`;
+  }
+
   function pageNum(n, total) {
     return `<span class="spread__page-num">— ${String(n).padStart(2, '0')} / ${String(total).padStart(2, '0')} —</span>`;
   }
@@ -111,6 +121,8 @@
           <p class="panel__hook">${esc(s.hook)}</p>
           <div class="panel__body">${bodyHtml(s.body)}</div>
           ${renderIndexList(s.index)}
+          ${renderFeatures(s.features)}
+          ${renderPullquote(s.pullquote)}
           ${renderStamp(s.stamp, 'blue')}
           ${s.note ? `<div class="note-box">${esc(s.note)}</div>` : ''}
         </div>
@@ -126,6 +138,8 @@
           <h2 class="panel__title">${esc(s.title)}</h2>
           <p class="panel__hook">${esc(s.hook)}</p>
           <div class="panel__body">${bodyHtml(s.body)}</div>
+          ${renderFeatures(s.features)}
+          ${renderPullquote(s.pullquote)}
           ${renderStamp(s.stamp, 'blue')}
           ${s.note ? `<div class="note-box">${esc(s.note)}</div>` : ''}
         </div>
@@ -143,6 +157,8 @@
           <h2 class="panel__title">${esc(s.title)}</h2>
           <p class="panel__hook">${esc(s.hook)}</p>
           <div class="panel__body">${bodyHtml(s.body)}</div>
+          ${renderFeatures(s.features)}
+          ${renderPullquote(s.pullquote)}
           ${renderTags(s.tags)}
           ${renderCta(s.cta)}
         </div>
@@ -158,6 +174,8 @@
           <h2 class="panel__title">${esc(s.title)}</h2>
           <p class="panel__hook">${esc(s.hook)}</p>
           <div class="panel__body">${bodyHtml(s.body)}</div>
+          ${renderFeatures(s.features)}
+          ${renderPullquote(s.pullquote)}
           ${renderTags(s.tags)}
           ${renderCta(s.cta)}
         </div>
@@ -173,6 +191,8 @@
           <h2 class="panel__title">${esc(s.title)}</h2>
           <p class="panel__hook">${esc(s.hook)}</p>
           <div class="panel__body">${bodyHtml(s.body)}</div>
+          ${renderFeatures(s.features)}
+          ${renderPullquote(s.pullquote)}
           ${renderStamp(s.stamp)}
         </div>
         ${pageNum(s.page, total)}

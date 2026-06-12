@@ -14,5 +14,7 @@
   "image": "IMG/mi-captura.png",
   "imageAlt": "Descripción de la captura",
   "imageTilt": -4,
-  "imagePlaceholder": null
+  "imagePlaceholder": null,
+  "features": ["Bullet de feature 1", "Bullet de feature 2"],
+  "pullquote": "Cita destacada opcional"
 }
