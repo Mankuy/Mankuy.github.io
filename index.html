@@ -3,230 +3,760 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Facundo Galetta — Apps para problemas reales</title>
-<meta name="description" content="Psicólogo en Montevideo. Construyo herramientas con IA para problemas reales: tesis, gastos, cosechas, recibos de sueldo. Local-first: tus datos quedan en tu máquina.">
-<meta property="og:title" content="Facundo Galetta — Apps para problemas reales">
-<meta property="og:description" content="Psicólogo en Montevideo. Construyo herramientas con IA para problemas reales. Local-first.">
+<title>Facundo Galetta — Herramientas para problemas reales</title>
+<meta name="description" content="Psicólogo en Montevideo. Construyo herramientas con IA para problemas concretos: tesis, gastos, cosechas, recibos. Local-first.">
+<meta property="og:title" content="Facundo Galetta — Herramientas para problemas reales">
+<meta property="og:description" content="Psicólogo en Montevideo. Apps que nacen de problemas de verdad. Tus datos quedan en tu máquina.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d1117;
-    --card: #161b22;
-    --border: #2d333b;
-    --text: #e6edf3;
-    --muted: #8b949e;
-    --accent: #4dd0e1;
-    --green: #3fb950;
-    --gold: #d29922;
+    --bg: #12100e;
+    --bg-elevated: #1c1916;
+    --paper: #ede6d6;
+    --paper-muted: #d4cbb8;
+    --ink: #f4efe6;
+    --ink-soft: #b8aea0;
+    --line: #2e2924;
+    --accent: #d4643f;
+    --accent-dim: #a8482e;
+    --gold: #c4a574;
+    --green: #6b9e78;
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
   body {
     background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.6;
-  }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
-
-  header { padding: 72px 0 48px; }
-  h1 { font-size: 2.2rem; letter-spacing: -0.5px; }
-  .tagline { color: var(--muted); font-size: 1.15rem; margin-top: 14px; max-width: 640px; }
-  .tagline strong { color: var(--text); font-weight: 600; }
-  .local-first {
-    display: inline-block; margin-top: 18px; padding: 5px 14px;
-    border: 1px solid var(--accent); border-radius: 999px;
-    color: var(--accent); font-size: 0.85rem;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
-  .grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px; padding-bottom: 16px;
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   }
-  .card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 10px; padding: 22px; display: flex; flex-direction: column;
-    transition: border-color 0.15s;
+
+  a { color: inherit; text-decoration: none; }
+
+  .shell { max-width: 1180px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 0;
+    background: rgba(18, 16, 14, 0.82);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.4s var(--ease);
   }
-  .card:hover { border-color: var(--accent); }
-  .card h2 { font-size: 1.1rem; margin-bottom: 8px; }
-  .card p { color: var(--muted); font-size: 0.92rem; flex-grow: 1; }
-  .badges { margin: 14px 0 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  nav.scrolled { border-bottom-color: var(--line); }
+
+  .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 48px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .nav-mark {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .nav-mark strong { color: var(--ink); font-weight: 500; }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 3vw, 36px);
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px;
+    color: var(--ink-soft);
+    transition: color 0.25s;
+    position: relative;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 100%; height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s var(--ease);
+  }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 1px solid var(--line);
+    transition: border-color 0.25s, background 0.25s;
+  }
+  .nav-cta:hover {
+    border-color: var(--accent);
+    background: rgba(212, 100, 63, 0.08);
+  }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 140px 0 80px;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .hero-eyebrow::before {
+    content: "";
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: clamp(3.2rem, 11vw, 7.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    font-variation-settings: "opsz" 144;
+    max-width: 14ch;
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold);
+    display: block;
+    margin-top: 0.06em;
+  }
+
+  .hero-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+  @media (max-width: 720px) {
+    .hero-bottom { grid-template-columns: 1fr; gap: 28px; }
+  }
+
+  .hero-lead {
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+    color: var(--ink-soft);
+    max-width: 42ch;
+  }
+  .hero-lead strong { color: var(--ink); font-weight: 500; }
+
+  .hero-meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .pill span { color: var(--green); }
+
+  .scroll-hint {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+  .scroll-hint::after {
+    content: "↓";
+    font-size: 14px;
+    color: var(--accent);
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* ── Section rule ── */
+  .rule {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 100px 0 48px;
+  }
+  .rule-line { flex: 1; height: 1px; background: var(--line); }
+  .rule-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .rule-num { color: var(--accent); margin-right: 8px; }
+
+  /* ── Featured bento ── */
+  .bento {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 2px;
+    background: var(--line);
+  }
+  @media (max-width: 860px) {
+    .bento { grid-template-columns: 1fr; }
+  }
+
+  .bento-card {
+    background: var(--bg-elevated);
+    padding: clamp(32px, 5vw, 52px);
+    display: flex;
+    flex-direction: column;
+    min-height: 340px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s var(--ease);
+  }
+  .bento-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--accent);
+    transition: height 0.5s var(--ease);
+  }
+  .bento-card:hover { background: #221e1a; }
+  .bento-card:hover::before { height: 100%; }
+
+  .bento-card.featured {
+    grid-row: span 1;
+    min-height: 400px;
+  }
+
+  .card-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .card-tag.muted { color: var(--ink-soft); }
+
+  .bento-card h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    font-variation-settings: "opsz" 72;
+  }
+
+  .bento-card p {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    flex-grow: 1;
+    max-width: 48ch;
+  }
+
+  .card-foot {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; }
   .badge {
-    font-size: 0.75rem; padding: 3px 10px; border-radius: 999px;
-    border: 1px solid var(--border); color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
   }
-  .badge.free { border-color: var(--green); color: var(--green); }
+  .badge.live { border-color: var(--green); color: var(--green); }
   .badge.paid { border-color: var(--gold); color: var(--gold); }
-  .badge.soon { border-color: var(--muted); }
-  .card a.btn {
-    display: inline-block; text-align: center; padding: 9px 0;
-    border: 1px solid var(--accent); border-radius: 8px;
-    color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 600;
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 22px;
+    border: 1px solid var(--ink-soft);
+    color: var(--ink);
+    transition: all 0.3s var(--ease);
+    display: inline-block;
   }
-  .card a.btn:hover { background: var(--accent); color: var(--bg); }
-  .card span.btn-off {
-    display: inline-block; text-align: center; padding: 9px 0;
-    border: 1px dashed var(--border); border-radius: 8px;
-    color: var(--muted); font-size: 0.9rem;
+  .btn:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .btn.ghost {
+    border-color: var(--line);
+    color: var(--ink-soft);
+    cursor: default;
+  }
+  .btn.ghost:hover {
+    border-color: var(--line);
+    background: transparent;
+    color: var(--ink-soft);
   }
 
-  .section-title { font-size: 1.05rem; color: var(--muted); font-weight: 600; margin: 8px 0 16px; text-transform: uppercase; letter-spacing: 1px; }
-  .grid + .section-title { margin-top: 40px; }
-  .hire-note { color: var(--muted); font-size: 0.92rem; margin-top: 18px; max-width: 680px; }
-  .hire-note a { color: var(--accent); text-decoration: none; }
-  .hire-note a:hover { text-decoration: underline; }
-  section.story { padding: 48px 0; border-top: 1px solid var(--border); margin-top: 32px; }
-  section.story h3 { font-size: 1.3rem; margin-bottom: 16px; }
-  section.story p { color: var(--muted); max-width: 680px; margin-bottom: 14px; }
-  section.story p strong { color: var(--text); }
+  /* ── Web projects row ── */
+  .duo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--line);
+  }
+  @media (max-width: 720px) {
+    .duo { grid-template-columns: 1fr; }
+  }
 
+  .duo-card {
+    background: var(--bg-elevated);
+    padding: clamp(28px, 4vw, 44px);
+    transition: background 0.35s var(--ease);
+  }
+  .duo-card:hover { background: #221e1a; }
+
+  .duo-card h3 {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .duo-card p {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    margin-bottom: 24px;
+    max-width: 40ch;
+  }
+
+  /* ── Personal list ── */
+  .personal {
+    border-top: 1px solid var(--line);
+  }
+
+  .personal-item {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: clamp(16px, 3vw, 32px);
+    padding: 36px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+    transition: padding-left 0.35s var(--ease);
+  }
+  .personal-item:hover { padding-left: 8px; }
+
+  .personal-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    padding-top: 4px;
+  }
+
+  .personal-item h3 {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .personal-item p {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    max-width: 52ch;
+  }
+
+  .personal-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding-top: 6px;
+    white-space: nowrap;
+  }
+
+  .hire-note {
+    margin-top: 40px;
+    padding: 28px 32px;
+    background: var(--bg-elevated);
+    border-left: 2px solid var(--gold);
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+  .hire-note a {
+    color: var(--accent);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .hire-note a:hover { border-bottom-color: var(--accent); }
+
+  /* ── Story (paper band) ── */
+  .story-band {
+    margin: 120px 0 0;
+    background: var(--paper);
+    color: #1a1612;
+    padding: clamp(64px, 10vw, 100px) 0;
+    position: relative;
+  }
+  .story-band::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    pointer-events: none;
+  }
+
+  .story-inner { position: relative; z-index: 1; }
+
+  .story-band h2 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 36px;
+    max-width: 16ch;
+    font-variation-settings: "opsz" 144;
+  }
+
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+  @media (max-width: 720px) {
+    .story-grid { grid-template-columns: 1fr; gap: 28px; }
+  }
+
+  .story-band p {
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: #4a433c;
+  }
+  .story-band p + p { margin-top: 18px; }
+  .story-band strong { color: #1a1612; font-weight: 600; }
+
+  .story-closing {
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--paper-muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: #6b6258;
+    max-width: 55ch;
+  }
+
+  /* ── Footer ── */
   footer {
-    border-top: 1px solid var(--border); padding: 36px 0 56px;
-    color: var(--muted); font-size: 0.9rem;
+    padding: 56px 0 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 24px;
   }
-  footer a { color: var(--accent); text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
-  .links { display: flex; gap: 24px; margin-bottom: 16px; }
+
+  .footer-left {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    transition: color 0.25s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ── Reveal on scroll ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 </style>
 </head>
 <body>
 
-<div class="wrap">
+<nav id="nav">
+  <div class="nav-inner">
+    <span class="nav-mark"><strong>FG</strong> · Montevideo</span>
+    <ul class="nav-links">
+      <li><a href="#hoy">Hoy</a></li>
+      <li><a href="#web">Web</a></li>
+      <li><a href="#personal">Personal</a></li>
+      <li><a href="#historia">Historia</a></li>
+    </ul>
+    <a class="nav-cta" href="https://x.com/SuperCouncil_" target="_blank" rel="noopener">Escribime</a>
+  </div>
+</nav>
 
-  <header>
-    <h1>Facundo Galetta</h1>
-    <p class="tagline">
-      Psicólogo en Montevideo. Hago apps para problemas que tengo de verdad:
-      <strong>corregir una tesis, pagarle a la niñera, registrar la cosecha de la huerta,
-      controlar los gastos de casa</strong>. Si a mí me sirvió, capaz a vos también.
+<section class="hero shell">
+  <p class="hero-eyebrow">Psicólogo · constructor</p>
+  <h1>Facundo<br><em>Galetta</em></h1>
+  <div class="hero-bottom">
+    <p class="hero-lead">
+      Armo herramientas para problemas que tengo de verdad:
+      <strong>ayudar a quien sigue en la facultad, pagarle a la niñera,
+      registrar la huerta, saber a dónde se va la plata</strong>.
+      Si a mí me sirvió, capaz a vos también.
     </p>
-    <span class="local-first">🔒 Local-first: tus datos quedan en tu máquina</span>
-  </header>
+    <div class="hero-meta">
+      <span class="pill">Local-first · <span>tus datos en tu máquina</span></span>
+      <span class="scroll-hint">Ver proyectos</span>
+    </div>
+  </div>
+</section>
 
-  <h3 class="section-title">Lo que podés usar hoy</h3>
-  <main class="grid">
+<div class="shell">
+  <div class="rule reveal" id="hoy">
+    <span class="rule-label"><span class="rule-num">01</span>Lo que podés usar hoy</span>
+    <div class="rule-line"></div>
+  </div>
 
-    <div class="card">
-      <h2>📚 Asistente Académico</h2>
-      <p>Corrector de tesis con IA. Revisa citas APA, redacción y estructura, y te muestra
-      cada cambio en una tarjeta para aceptar o rechazar. Mandás vos, no la IA.
+  <div class="bento reveal">
+    <article class="bento-card featured">
+      <span class="card-tag">Gratis · beta</span>
+      <h2>Asistente Académico</h2>
+      <p>Corrector de tesis con IA. Revisa citas APA, redacción y estructura.
+      Cada cambio aparece en una tarjeta: aceptás o rechazás vos, no la máquina.
       Exporta a Word y PDF.</p>
-      <div class="badges">
-        <span class="badge free">Gratis</span>
-        <span class="badge soon">Beta</span>
+      <div class="card-foot">
+        <div class="badges">
+          <span class="badge live">Gratis</span>
+          <span class="badge">Beta</span>
+        </div>
+        <span class="btn ghost">Próximamente en GitHub</span>
       </div>
-      <!-- TODO: cuando el repo sea público, reemplazar por el link de GitHub -->
-      <span class="btn-off">Próximamente en GitHub</span>
-    </div>
+    </article>
 
-    <div class="card">
-      <h2>🏛️ SuperCouncil</h2>
-      <p>Un consejo de IAs que delibera: varios modelos debaten tu problema, se auditan
-      entre sí y un Chairman sintetiza la respuesta. Self-hosted, con fábrica de agentes
-      y bot de Telegram. Para gente técnica.</p>
-      <div class="badges">
-        <span class="badge paid">USD 49</span>
-        <span class="badge">Self-hosted</span>
+    <article class="bento-card">
+      <span class="card-tag muted">Self-hosted</span>
+      <h2>SuperCouncil</h2>
+      <p>Varios modelos debaten tu problema, se auditan entre sí y un Chairman
+      sintetiza la respuesta. Fábrica de agentes y bot de Telegram. Para gente técnica.</p>
+      <div class="card-foot">
+        <div class="badges">
+          <span class="badge paid">USD 49</span>
+        </div>
+        <a class="btn" href="https://complexity88.gumroad.com/l/supercouncil" target="_blank" rel="noopener">Gumroad</a>
       </div>
-      <a class="btn" href="https://complexity88.gumroad.com/l/supercouncil" target="_blank" rel="noopener">Ver en Gumroad</a>
-    </div>
+    </article>
+  </div>
 
-  </main>
+  <div class="rule reveal" id="web">
+    <span class="rule-label"><span class="rule-num">02</span>En la web</span>
+    <div class="rule-line"></div>
+  </div>
 
-  <h3 class="section-title">En la web</h3>
-  <main class="grid">
-
-    <div class="card">
-      <h2>🧠 Vincularmente</h2>
-      <p>Web de psicología y bienestar: vínculos, apego, comunicación. Se actualiza
-      sola con un pipeline de contenido que armé con IA y curo a mano. Acá se juntan
-      mis dos oficios.</p>
-      <div class="badges">
-        <span class="badge free">En vivo</span>
-        <span class="badge">Se actualiza solo</span>
+  <div class="duo reveal">
+    <article class="duo-card">
+      <span class="card-tag">Psicología · contenido</span>
+      <h3>Vincularmente</h3>
+      <p>Sitio sobre vínculos, apego y bienestar. Se actualiza solo con un pipeline
+      que armé con IA y curo a mano. Acá se cruzan mis dos oficios.</p>
+      <div class="badges" style="margin-bottom:20px">
+        <span class="badge live">En vivo</span>
       </div>
-      <a class="btn" href="https://mankuy.github.io/vincularmente-site/index.html" target="_blank" rel="noopener">Visitar</a>
-    </div>
+      <a class="btn" href="https://mankuy.github.io/vincularmente-site/index.html" target="_blank" rel="noopener">Visitar sitio</a>
+    </article>
 
-    <div class="card">
-      <h2>💿 Gonza Discos</h2>
-      <p>Tienda de vinilos usados que le hice a un amigo: catálogo con grading,
-      identificación de discos por foto con IA y pedido por WhatsApp. Toda la app
-      en un solo archivo.</p>
-      <div class="badges">
-        <span class="badge soon">En prueba</span>
-        <span class="badge">Para un amigo</span>
+    <article class="duo-card">
+      <span class="card-tag muted">Para un amigo · prueba</span>
+      <h3>Gonza Discos</h3>
+      <p>Tienda de vinilos usados: catálogo con grading, identificación por foto con IA
+      y pedido por WhatsApp. Toda la app en un solo archivo.</p>
+      <div class="badges" style="margin-bottom:20px">
+        <span class="badge">En prueba</span>
       </div>
       <a class="btn" href="https://gonzalodiscos.facundo-galetta.workers.dev/" target="_blank" rel="noopener">Visitar</a>
-    </div>
+    </article>
+  </div>
 
-  </main>
+  <div class="rule reveal" id="personal">
+    <span class="rule-label"><span class="rule-num">03</span>Cosas que me construí para mí</span>
+    <div class="rule-line"></div>
+  </div>
 
-  <h3 class="section-title">Cosas que me construí para mí</h3>
-  <main class="grid">
-
-    <div class="card">
-      <h2>💰 Registro de Gastos</h2>
-      <p>Quería saber a dónde se iba la plata. Cargo gastos a mano o le saco foto al
-      recibo y la app reconoce el monto. Gráficos, proyecciones, capacidad de ahorro.</p>
-      <div class="badges">
-        <span class="badge">Uso personal</span>
+  <div class="personal reveal">
+    <article class="personal-item">
+      <span class="personal-num">01</span>
+      <div>
+        <h3>Registro de Gastos</h3>
+        <p>Quería saber a dónde se iba la plata. Cargo gastos a mano o le saco foto al
+        recibo y la app reconoce el monto. Gráficos, proyecciones, capacidad de ahorro.</p>
       </div>
-    </div>
+      <span class="personal-tag">Uso personal</span>
+    </article>
 
-    <div class="card">
-      <h2>👶 Sueldo Niñera</h2>
-      <p>Me cansé de calcular a mano las horas de la niñera de mi hija. Ahora registro
-      las horas, la app suma el mes y arma el recibo de sueldo solo.</p>
-      <div class="badges">
-        <span class="badge">Uso personal</span>
+    <article class="personal-item">
+      <span class="personal-num">02</span>
+      <div>
+        <h3>Sueldo Niñera</h3>
+        <p>Me cansé de calcular a mano las horas de la niñera de mi hija. Registro las horas,
+        la app suma el mes y arma el recibo de sueldo solo.</p>
       </div>
-    </div>
+      <span class="personal-tag">Uso personal</span>
+    </article>
 
-    <div class="card">
-      <h2>🌱 Jardín</h2>
-      <p>Registro de cosecha de la huerta: qué planté, qué salió, cuánto y cuándo.
-      Para saber si la temporada fue buena con datos y no con memoria.</p>
-      <div class="badges">
-        <span class="badge">Uso personal</span>
+    <article class="personal-item">
+      <span class="personal-num">03</span>
+      <div>
+        <h3>Jardín</h3>
+        <p>Registro de cosecha de la huerta: qué planté, qué salió, cuánto y cuándo.
+        Para saber si la temporada fue buena con datos, no con memoria.</p>
       </div>
-    </div>
+      <span class="personal-tag">Uso personal</span>
+    </article>
 
-    <div class="card">
-      <h2>🎉 Salones de Fiesta</h2>
-      <p>Gestión de reservas para salones de fiesta infantiles: agenda, clientes y
-      pagos en un solo lugar.</p>
-      <div class="badges">
-        <span class="badge soon">En desarrollo</span>
+    <article class="personal-item">
+      <span class="personal-num">04</span>
+      <div>
+        <h3>Salones de Fiesta</h3>
+        <p>Gestión de reservas para salones de fiesta infantiles: agenda, clientes y
+        pagos en un solo lugar.</p>
       </div>
-    </div>
+      <span class="personal-tag">En desarrollo</span>
+    </article>
+  </div>
 
-  </main>
-
-  <p class="hire-note">Estas no están publicadas: las hice para resolver problemas de mi
-  casa y funcionan en mi máquina. Si te interesa una herramienta así para vos,
-  <a href="https://x.com/SuperCouncil_" target="_blank" rel="noopener">escribime</a>.</p>
-
-  <section class="story">
-    <h3>¿Por qué un psicólogo hace apps?</h3>
-    <p>Porque los problemas no piden título universitario. Escribí mi tesis y sufrí el
-    formato APA como todo el mundo, así que me hice un corrector. Tengo una hija y una
-    niñera, y calcular las horas del mes a mano era un embole: app. Tengo huerta: app.</p>
-    <p>Todo lo que hago sigue la misma regla: <strong>el problema primero, la tecnología
-    después</strong>. Y siempre local-first, porque tus datos son tuyos.</p>
-    <p>El Asistente Académico es gratis y va a estar abierto en GitHub. Si lo usás y
-    encontrás un error o se te ocurre una mejora, escribime: eso vale más que
-    cualquier venta.</p>
-  </section>
-
-  <footer>
-    <div class="links">
-      <a href="https://x.com/SuperCouncil_" target="_blank" rel="noopener">𝕏 / Twitter</a>
-      <a href="https://github.com/Mankuy" target="_blank" rel="noopener">GitHub</a>
-    </div>
-    <p>Hecho en Montevideo, Uruguay 🇺🇾</p>
-  </footer>
-
+  <p class="hire-note reveal">
+    Estas no están publicadas: las hice para resolver problemas de mi casa y funcionan
+    en mi máquina. Si te interesa una herramienta así para vos,
+    <a href="https://x.com/SuperCouncil_" target="_blank" rel="noopener">escribime</a>.
+  </p>
 </div>
+
+<section class="story-band" id="historia">
+  <div class="shell story-inner reveal">
+    <h2>¿Por qué un psicólogo hace apps?</h2>
+    <div class="story-grid">
+      <div>
+        <p>Porque los problemas no piden título universitario. Mi tesis la escribí hace años;
+        el APA me comió la cabeza en su momento, como a cualquiera. Pero el corrector no lo
+        hice para eso: lo armé después, para amigos que siguen estudiando y para cuando yo
+        mismo reviso trabajos.</p>
+        <p>Tengo una hija y una niñera, y sumar las horas del mes a mano era un embole: app.
+        Tengo huerta: app. Misma regla siempre: <strong>el problema primero, la tecnología
+        después</strong>.</p>
+      </div>
+      <div>
+        <p>Local-first, porque tus datos son tuyos. No te vendo una nube que después cobra
+        por devolverte lo que ya era tuyo.</p>
+        <p>El Asistente Académico va a estar abierto en GitHub. Si lo usás y encontrás un
+        error o se te ocurre una mejora, escribime: eso vale más que cualquier venta.</p>
+      </div>
+    </div>
+    <p class="story-closing">Montevideo, Uruguay · Hecho con las manos que también atienden consulta</p>
+  </div>
+</section>
+
+<footer class="shell">
+  <span class="footer-left">© 2026 Facundo Galetta</span>
+  <ul class="footer-links">
+    <li><a href="https://x.com/SuperCouncil_" target="_blank" rel="noopener">X</a></li>
+    <li><a href="https://github.com/Mankuy" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
