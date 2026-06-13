@@ -49,4 +49,26 @@ Botón **PDF** arriba a la derecha, o `Ctrl+P`. CSS `@media print` optimizado.
 
 ## Publicar
 
-Subir a `Mankuy.github.io` (GitHub Pages). El fanzine funciona sin build step.
+**Live:** https://mankuy.github.io/  
+**Repo:** https://github.com/Mankuy/Mankuy.github.io  
+**Branch:** `main` (GitHub Pages, root `/`)
+
+El repo `Mankuy.github.io` se creó el 2026-06-13 para este fanzine — antes no había ningún proyecto en esa URL.
+
+### Sync / deploy (agentes y local)
+
+```bash
+# Desde WSL — ruta del proyecto
+cd /mnt/d/PROYECTOS/facundo-galetta-landing
+
+# Preview
+node scripts/serve.js   # → http://localhost:8787
+
+# Publicar cambios
+git add -A && git commit -m "descripción"
+git push pages master:main
+# o: git push origin master:main  (mismo remote)
+```
+
+Remotes: `pages` y `origin` → `git@github.com:Mankuy/Mankuy.github.io.git`  
+Sin build step. OG image: `IMG/og-image.png` (regenerar con `node scripts/generate-og.mjs`).
