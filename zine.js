@@ -41,6 +41,10 @@
     return src.replace(/\.png$/i, '.webp');
   }
 
+  function flipDurationMs() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 700;
+  }
+
   function renderPicture(path, attrs = {}) {
     if (!path) return '';
     const src = imgSrc(path);
@@ -924,7 +928,7 @@
         startZIndex: 0,
         autoSize: false,
         drawShadow: true,
-        flippingTime: 700,
+        flippingTime: flipDurationMs(),
         startPage
       });
 

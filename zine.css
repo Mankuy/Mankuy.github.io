@@ -499,10 +499,16 @@ a:hover { color: var(--red); }
     linear-gradient(155deg, #f8f4ea 0%, var(--paper) 40%, #e6e0d4 100%);
 }
 
+.spread--front-cover .cover-inner--front {
+  justify-content: space-between;
+  gap: 0;
+}
+
 .spread--front-cover .cover-mast--front {
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .spread--front-cover .cover-kicker {
@@ -516,24 +522,61 @@ a:hover { color: var(--red); }
   font-size: clamp(0.88rem, 2vw, 1rem);
   line-height: 1.4;
   color: var(--ink-soft);
-  max-width: 28ch;
+  max-width: 36ch;
+}
+
+.spread--front-cover .cover-zone--center {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 0;
+  width: 100%;
+}
+
+.spread--front-cover .cover-stage {
+  grid-template-columns: 1fr;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.spread--front-cover .cover-poster--front {
+  width: 100%;
+  max-width: none;
+  gap: clamp(14px, 2.5vh, 22px);
 }
 
 .spread--front-cover .spread__masthead--name {
   font-family: var(--display);
   font-size: clamp(2.8rem, 11vw, 5rem);
   font-weight: 900;
-  line-height: 0.9;
+  line-height: 0.92;
   letter-spacing: -0.02em;
   text-transform: uppercase;
   color: var(--ink);
-  margin: 0 0 12px;
+  margin: clamp(18px, 3vh, 28px) 0 clamp(16px, 2.5vh, 24px);
   text-shadow: 2px 2px 0 rgba(230, 57, 70, 0.1);
 }
 
 .spread--front-cover .cover-deck--front {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
   font-size: clamp(1.15rem, 2.8vw, 1.45rem);
-  margin-bottom: 0;
+  color: var(--ink);
+  line-height: 1.38;
+  margin: 0;
+  padding-left: 14px;
+  border-left: 3px solid var(--red);
+  max-width: 38ch;
+  width: 100%;
+}
+
+.spread--front-cover .cover-footer {
+  align-items: flex-start;
+  flex-shrink: 0;
 }
 
 .spread--front-cover .spread__author {
@@ -2050,7 +2093,7 @@ body.print-prep .flip-page + .flip-page {
   }
 
   body.magazine-mode .flip-page .spread--front-cover .cover-mast--front {
-    gap: 5px;
+    gap: 6px;
   }
 
   body.magazine-mode .flip-page .spread--front-cover .cover-kicker {
@@ -2061,20 +2104,44 @@ body.print-prep .flip-page + .flip-page {
   body.magazine-mode .flip-page .spread--front-cover .cover-eyebrow {
     font-size: clamp(0.62rem, 1.3vw, 0.72rem);
     line-height: 1.35;
-    max-width: 26ch;
+    max-width: 34ch;
+  }
+
+  body.magazine-mode .flip-page .spread--front-cover .cover-zone--center {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: clamp(6px, 1.2vh, 14px) 0;
+  }
+
+  body.magazine-mode .flip-page .spread--front-cover .cover-stage {
+    grid-template-columns: 1fr;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  body.magazine-mode .flip-page .spread--front-cover .cover-poster--front {
+    width: 100%;
+    max-width: 100%;
+    gap: clamp(12px, 2vh, 18px);
   }
 
   body.magazine-mode .flip-page .spread--front-cover .spread__masthead--name {
     font-size: clamp(1.85rem, 4.8vw, 2.75rem);
-    line-height: 0.9;
-    margin-bottom: 10px;
+    line-height: 0.92;
+    margin: clamp(14px, 2.2vh, 20px) 0 clamp(12px, 2vh, 18px);
   }
 
   body.magazine-mode .flip-page .spread--front-cover .cover-deck--front {
     font-size: clamp(0.82rem, 1.9vw, 0.98rem);
     padding-left: 10px;
-    border-left-width: 3px;
-    line-height: 1.32;
+    border-left: 3px solid var(--red);
+    line-height: 1.38;
+    max-width: 38ch;
+    width: 100%;
   }
 
   body.magazine-mode .flip-page .spread--front-cover .spread__author {

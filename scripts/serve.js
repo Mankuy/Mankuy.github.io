@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const PORT = 8787;
+const PORT = Number(process.env.PORT) || 8787;
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -19,6 +19,9 @@ const MIME = {
   '.json': 'application/json; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
+  '.webp': 'image/webp',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
 };
 
 const server = http.createServer((req, res) => {
