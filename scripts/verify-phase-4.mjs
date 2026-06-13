@@ -72,7 +72,7 @@ async function evaluatePrintPrep(page) {
 async function testIndexScroll(page) {
   await page.setViewport({ width: 375, height: 812 });
   await page.goto(`${URL}#spread-intro`, { waitUntil: 'domcontentloaded', timeout: 30000 });
-  await page.waitForFunction(() => document.querySelectorAll('.spread').length >= 21, { timeout: 60000 });
+  await page.waitForFunction(() => document.querySelectorAll('.spread').length >= 22, { timeout: 60000 });
 
   const before = await page.evaluate(() => {
     const index = document.getElementById('spread-intro');
@@ -109,15 +109,15 @@ async function main() {
   try {
     await page.setViewport({ width: 375, height: 812 });
     await page.goto(URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await page.waitForFunction(() => document.querySelectorAll('.spread').length >= 21, { timeout: 60000 });
+    await page.waitForFunction(() => document.querySelectorAll('.spread').length >= 22, { timeout: 60000 });
 
     const mobile = await evaluateMobile(page);
     console.log('Mobile 375×812:', mobile);
 
     if (!mobile.scrollMode) errors.push('mobile: falta body.scroll-mode');
     if (mobile.magazineMode) errors.push('mobile: magazine-mode activo en <600px');
-    if (mobile.spreadCount !== 21) errors.push(`mobile: esperaba 21 spreads, hay ${mobile.spreadCount}`);
-    if (mobile.flipPageCount !== 21) errors.push(`mobile: esperaba 21 flip-pages, hay ${mobile.flipPageCount}`);
+    if (mobile.spreadCount !== 22) errors.push(`mobile: esperaba 22 spreads, hay ${mobile.spreadCount}`);
+    if (mobile.flipPageCount !== 22) errors.push(`mobile: esperaba 22 flip-pages, hay ${mobile.flipPageCount}`);
     if (mobile.stfItemCount > 0) errors.push('mobile: PageFlip no destruido (.stf__item presente)');
     if (mobile.featurePairs < 7) errors.push(`mobile: pocos pares feature (${mobile.featurePairs})`);
     if (mobile.minHeroH > 0 && mobile.minHeroH < 80) errors.push(`mobile: hero colapsada (${mobile.minHeroH}px)`);
@@ -129,13 +129,13 @@ async function main() {
 
     await page.setViewport({ width: 1280, height: 800 });
     await page.goto(URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await page.waitForFunction(() => document.querySelectorAll('.stf__item').length >= 21, { timeout: 60000 });
+    await page.waitForFunction(() => document.querySelectorAll('.stf__item').length >= 22, { timeout: 60000 });
 
     const print = await evaluatePrintPrep(page);
     console.log('Print prep:', print);
 
-    if (print.flipPageCount !== 21) errors.push(`print: esperaba 21 flip-pages, hay ${print.flipPageCount}`);
-    if (print.visibleSpreadCount !== 21) errors.push(`print: spreads visibles ${print.visibleSpreadCount}/21`);
+    if (print.flipPageCount !== 22) errors.push(`print: esperaba 22 flip-pages, hay ${print.flipPageCount}`);
+    if (print.visibleSpreadCount !== 22) errors.push(`print: spreads visibles ${print.visibleSpreadCount}/22`);
     if (!print.allFlipPagesBlock) errors.push('print: flip-pages no en display:block');
     if (print.loadedImageCount < print.imageCount * 0.9) {
       errors.push(`print: imágenes cargadas ${print.loadedImageCount}/${print.imageCount}`);

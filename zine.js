@@ -181,6 +181,32 @@
       </ol>`;
   }
 
+  function renderFrontCover(s, total) {
+    return `
+      <article class="spread spread--front-cover" id="spread-${esc(s.id)}" data-page="${s.page}">
+        <div class="cover-spine" aria-hidden="true">
+          <span class="cover-barcode">FG·001·2026</span>
+        </div>
+        <div class="cover-inner cover-inner--composed cover-inner--front">
+          <header class="cover-zone cover-zone--top cover-mast cover-mast--front">
+            <span class="cover-kicker">${esc(s.kicker || 'Fanzine Nº1 · Construí esto')}</span>
+            <p class="cover-eyebrow">${esc(s.eyebrow || '')}</p>
+          </header>
+          <div class="cover-zone cover-zone--center cover-stage">
+            <div class="cover-poster cover-poster--core cover-poster--front">
+              <h1 class="spread__masthead spread__masthead--name">${esc(s.title || 'Facundo Galetta')}</h1>
+              <p class="cover-deck cover-deck--front">${esc(s.hook)}</p>
+            </div>
+          </div>
+          <footer class="cover-zone cover-zone--bottom cover-footer">
+            <p class="spread__author">${esc(s.body || 'Montevideo · 2026')}</p>
+            <button type="button" class="cover-cta" id="cover-open-btn">${esc(s.ctaCover || 'Pasá la página →')}</button>
+          </footer>
+        </div>
+        ${pageNum(s.page, total)}
+      </article>`;
+  }
+
   function renderCover(s, total) {
     const leadHtml = s.lead ? `<p class="cover-lead">${esc(s.lead)}</p>` : '';
 
@@ -203,7 +229,7 @@
           </div>
           <footer class="cover-zone cover-zone--bottom cover-footer">
             <p class="spread__author">${esc(s.body)}</p>
-            <button type="button" class="cover-cta" id="cover-open-btn">${esc(s.ctaCover || 'Pasá la página →')}</button>
+            <button type="button" class="cover-cta cover-cta--inner">${esc(s.ctaCover || 'Pasá la página →')}</button>
           </footer>
         </div>
         ${pageNum(s.page, total)}
@@ -422,6 +448,7 @@
   }
 
   const RENDERERS = {
+    'front-cover': renderFrontCover,
     cover: renderCover,
     index: renderIndex,
     editorial: renderEditorial,
@@ -888,7 +915,7 @@
         minHeight: pageH,
         maxHeight: pageH,
         maxShadowOpacity: 0.4,
-        showCover: false,
+        showCover: true,
         mobileScrollSupport: false,
         usePortrait: true,
         useMouseEvents: true,
@@ -1170,7 +1197,9 @@
       initMagazine(flipPageTotal);
       initPrint();
 
-      document.getElementById('cover-open-btn')?.addEventListener('click', () => {
+      document.addEventListener('click', e => {
+        const btn = e.target.closest('.cover-cta');
+        if (!btn) return;
         document.getElementById('flip-hint')?.setAttribute('hidden', '');
         localStorage.setItem(FLIP_HINT_KEY, '1');
         if (window.matchMedia(MAGAZINE_BP).matches && pageFlipInstance) {

@@ -69,7 +69,7 @@ function checkResult(browser, vp, data) {
   if (!data.hasText) errors.push('libro en blanco o sin texto visible');
   if (!data.sizeFixed) errors.push('#flip-book sin dimensiones inline px (size:fixed)');
   if (data.totalItems === 0) errors.push('sin .stf__item en DOM');
-  if (data.flipPageTotal !== 21) errors.push(`esperaba 21 flip-pages, hay ${data.flipPageTotal}`);
+  if (data.flipPageTotal !== 22) errors.push(`esperaba 22 flip-pages, hay ${data.flipPageTotal}`);
   if (vp.expectLandscape && data.minHeroH > 0 && data.minHeroH < 120) {
     errors.push(`hero colapsada (${data.minHeroH}px alto)`);
   }
@@ -107,7 +107,7 @@ async function checkNoInternalScroll(page) {
   await page.goto(URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForFunction(() => {
     if (!document.body.classList.contains('magazine-mode')) return false;
-    return document.querySelectorAll('.stf__item').length === 21;
+    return document.querySelectorAll('.stf__item').length === 22;
   }, { timeout: 45000 });
   await new Promise(r => setTimeout(r, 600));
 
