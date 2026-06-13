@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 1680px;
+      height: 800px;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: #f3f4f6;
+      color: #1f2937;
+      overflow: hidden;
+    }
+    .top {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .pills { display: flex; gap: 8px; font-size: 11px; font-weight: 500; color: #6b7280; }
+    .pill { padding: 4px 10px; border: 1px solid #e5e7eb; border-radius: 999px; background: #fafafa; }
+    .grid {
+      display: grid;
+      grid-template-columns: 260px 1fr 420px;
+      height: calc(100% - 52px);
+      gap: 0;
+    }
+    .side, .center, .panel {
+      background: #fff;
+      border-right: 1px solid #e5e7eb;
+      padding: 16px;
+    }
+    .panel { border-right: none; background: #fafafa; }
+    h2 { font-size: 13px; margin-bottom: 10px; }
+    .session {
+      border: 1px solid #dbeafe;
+      background: #eff6ff;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 11px;
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+    .editor {
+      margin-top: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      min-height: 520px;
+      padding: 16px;
+      font-size: 15px;
+      line-height: 1.6;
+      background: #fff;
+    }
+    .editor u { text-decoration: underline wavy #ef4444; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+    .tag {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+    }
+    .tag.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .cards { display: flex; flex-direction: column; gap: 10px; }
+    .card {
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .card-head { display: flex; justify-content: space-between; font-size: 10px; color: #6b7280; margin-bottom: 8px; }
+    .sev { color: #dc2626; font-weight: 700; }
+    .quote {
+      font-size: 12px;
+      background: #fef2f2;
+      border-left: 3px solid #ef4444;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .fix { font-size: 12px; color: #111827; margin-bottom: 6px; }
+    .norm { font-size: 10px; color: #6b7280; }
+    .actions { display: flex; gap: 6px; margin-top: 10px; }
+    .btn { font-size: 11px; padding: 5px 10px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; }
+    .btn.ok { background: #16a34a; color: #fff; border-color: #16a34a; }
+    .veredicto { font-size: 11px; color: #b45309; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div>Asistente de Escritura Académica</div>
+    <div class="pills">
+      <span class="pill">Fuente de datos</span>
+      <span class="pill">Base normativa</span>
+      <span class="pill">Evaluación de intención</span>
+    </div>
+    <div style="font-size:11px;color:#9ca3af;">APA 7ª · Tesis de Grado</div>
+  </div>
+  <div class="grid">
+    <div class="side">
+      <h2>Sesiones</h2>
+      <div class="session"><strong>Tesis — Cap. Introducción</strong><br>12 fragmentos · USD 0.14</div>
+      <div class="session" style="opacity:.55;border-color:#e5e7eb;background:#fff">Monografía piloto · 4 frag.</div>
+    </div>
+    <div class="center">
+      <div class="row">
+        <span class="tag active">Modo Tesis</span>
+        <span class="tag">APA 7ª ed.</span>
+        <span class="tag">Trabajo Final de Grado</span>
+      </div>
+      <div class="editor">
+        La <u>prevención del delito</u> focalizada requiere definir con precisión la población objetivo.
+        En este trabajo analizo el programa estatal de 2013–2017 y su articulación con <u>políticas de inclusión</u> para adolescentes con registros en comisarías seleccionadas.
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Tarjetas de corrección</h2>
+      <p class="veredicto">Veredicto: APTO CON RESERVAS · 3 sugerencias</p>
+      <div class="cards">
+        <div class="card">
+          <div class="card-head"><span class="sev">CRÍTICO</span><span>APA 7ª §2.12</span></div>
+          <div class="quote">"prevención del delito"</div>
+          <div class="fix"><strong>Propuesta:</strong> prevención del delito (minúscula en título de tesis salvo nombres propios).</div>
+          <div class="norm">Norma: títulos de nivel 1–5 en título case según APA 7ª.</div>
+          <div class="actions"><span class="btn ok">✓ Aceptar</span><span class="btn">✕ Rechazar</span></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="sev">IMPORTANTE</span><span>Estilo académico</span></div>
+          <div class="quote">"población objetivo"</div>
+          <div class="fix"><strong>Propuesta:</strong> población meta (más preciso en contexto de intervención).</div>
+          <div class="actions"><span class="btn ok">✓ Aceptar</span><span class="btn">✕ Rechazar</span></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="sev">MENOR</span><span>Coherencia</span></div>
+          <div class="quote">"políticas de inclusión"</div>
+          <div class="fix"><strong>Propuesta:</strong> políticas inclusivas (concordancia con el sustantivo siguiente).</div>
+          <div class="actions"><span class="btn">✓ Aceptar</span><span class="btn">✕ Rechazar</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

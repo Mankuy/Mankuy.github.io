@@ -5,7 +5,7 @@
     "subtitle": "Fanzine de herramientas para problemas reales",
     "author": "Facundo Galetta",
     "location": "Montevideo, Uruguay",
-    "updated": "2026-06-12"
+    "updated": "2026-06-13"
   },
   "spreads": [
     {
@@ -13,248 +13,280 @@
       "page": 1,
       "layout": "cover",
       "title": "Construí esto",
-      "hook": "Herramientas para problemas que tengo de verdad",
+      "hook": "Un psicólogo que programa. Mirá lo que le sale.",
+      "lead": "Ocho herramientas, cada una nacida de un problema que tuve en serio: corregir mi tesis, pagarle a la niñera, registrar la huerta, hacer que una IA deje de darme la razón. Ninguna vive en la nube. Todas corren en tu máquina.",
       "body": "Psicólogo · constructor · Montevideo, Uruguay",
-      "coverHero": {
-        "src": "IMG/Supercouncil.png",
-        "alt": "SuperCouncil — Boardroom de IAs"
-      },
       "coverLines": [
-        "8 proyectos adentro",
-        "Corrector de tesis · Consejo de IAs",
-        "Sitios web · Apps de mi casa",
-        "Local-first — tus datos en tu máquina"
+        { "text": "El corrector de tesis que te explica cada error", "page": 3 },
+        { "text": "Una IA que no te da la razón (a propósito)", "page": 5 },
+        { "text": "El sueldo de la niñera, calculado solo", "page": 13 }
       ],
-      "coverCollage": [
-        { "src": "IMG/ASISTENTE ACADEMICO.png", "tilt": 4 },
-        { "src": "IMG/supercounciltelegram.png", "tilt": -5 },
-        { "src": "IMG/vincularmente.png", "tilt": -3 },
-        { "src": "IMG/gonzadiscos.png", "tilt": 6 },
-        { "src": "IMG/Gestor de gastos.png", "tilt": -4 },
-        { "src": "IMG/registros gastos teletgram.png", "tilt": 5 },
-        { "src": "IMG/ninera.png", "tilt": -6 },
-        { "src": "IMG/registro jardin.png", "tilt": 3 }
-      ],
-      "stamp": "Nº 1 · 2026",
+      "stamp": "GRATIS · Nº1 · MVD · 2026",
       "ctaCover": "Pasá la página →"
     },
     {
       "id": "intro",
       "page": 2,
       "layout": "index",
-      "title": "De qué va esto",
-      "hook": "Armo herramientas para problemas que tengo de verdad — y algunas las comparto.",
-      "body": "Soy psicólogo y constructor en Montevideo. Este fanzine es la vitrina de lo que hago: apps, sitios y sistemas que nacen de necesidades concretas, no de moda tech.\n\nLa regla es simple: el problema primero, la tecnología después. Local-first siempre — tus datos en tu máquina.\n\nEn este número hay ocho piezas:",
+      "title": "De qué va",
+      "hook": "Herramientas para problemas reales — algunas las comparto.",
+      "body": "Psicólogo y constructor en Montevideo. Ocho proyectos en este número, todos local-first.",
       "index": [
-        { "id": "asistente", "name": "Asistente Académico", "page": 3, "tier": "Público", "note": "Corrector de tesis — tarjetas, APA/MLA, Word/PDF" },
-        { "id": "supercouncil", "name": "SuperCouncil", "page": 4, "tier": "Público", "note": "Boardroom + Fábrica + Telegram — USD 49 vitalicio" },
-        { "id": "vincularmente", "name": "Vincularmente", "page": 5, "tier": "Web", "note": "Psicología y bienestar en vivo" },
-        { "id": "gonza-discos", "name": "Gonza Discos", "page": 6, "tier": "Web", "note": "Tienda de vinilos con IA" },
-        { "id": "gastos", "name": "Registro de Gastos", "page": 7, "tier": "Personal", "note": "Foto al recibo, gráficos, proyecciones" },
-        { "id": "ninera", "name": "Sueldo Niñera", "page": 8, "tier": "Personal", "note": "Horas del mes → recibo automático" },
-        { "id": "jardin", "name": "Jardín", "page": 9, "tier": "Personal", "note": "Cosecha de la huerta con datos" },
-        { "id": "salones", "name": "Salones de Fiesta", "page": 10, "tier": "En desarrollo", "note": "Reservas de salones infantiles" }
+        { "id": "asistente", "name": "Asistente Académico", "page": 3, "tier": "Público", "note": "Tarjetas de corrección — APA/MLA, Word/PDF" },
+        { "id": "supercouncil", "name": "SuperCouncil", "page": 5, "tier": "Público", "note": "Boardroom + Fábrica + Telegram" },
+        { "id": "vincularmente", "name": "Vincularmente", "page": 7, "tier": "Web", "note": "Psicología y bienestar en vivo" },
+        { "id": "gonza-discos", "name": "Gonza Discos", "page": 9, "tier": "Web", "note": "Tienda de vinilos con IA" },
+        { "id": "gastos", "name": "Registro de Gastos", "page": 11, "tier": "Personal", "note": "Foto al recibo y proyecciones" },
+        { "id": "ninera", "name": "Sueldo Niñera", "page": 13, "tier": "Personal", "note": "Horas del mes → recibo" },
+        { "id": "jardin", "name": "Jardín", "page": 15, "tier": "Personal", "note": "Cosecha con datos" },
+        { "id": "salones", "name": "Salones de Fiesta", "page": 17, "tier": "En desarrollo", "note": "Reservas de salones infantiles" }
       ],
-      "pullquote": "Dejá de alquilar opiniones. Sé dueño del consejo — y de la fábrica.",
+      "pullquote": "Sé dueño del consejo — y de la fábrica.",
       "collage": [
         { "src": "IMG/ASISTENTE ACADEMICO.png", "tilt": -8, "size": "sm" },
         { "src": "IMG/Supercouncil.png", "tilt": 5, "size": "md" },
-        { "src": "IMG/supercounciltelegram.png", "tilt": -4, "size": "sm" },
-        { "src": "IMG/vincularmente.png", "tilt": -3, "size": "sm" },
         { "src": "IMG/gonzadiscos.png", "tilt": 7, "size": "sm" },
-        { "src": "IMG/Gestor de gastos.png", "tilt": 6, "size": "sm" },
-        { "src": "IMG/registros gastos teletgram.png", "tilt": -5, "size": "sm" },
-        { "src": "IMG/ninera.png", "tilt": -5, "size": "sm" },
-        { "src": "IMG/registro jardin.png", "tilt": 3, "size": "sm" }
+        { "src": "IMG/Gestor de gastos.png", "tilt": 6, "size": "sm" }
       ],
       "stamp": "LOCAL-FIRST",
-      "note": "Las apps personales no están publicadas. Los dos productos públicos corren en tu computadora."
+      "note": "Las apps personales no están publicadas."
     },
     {
       "id": "asistente",
       "page": 3,
-      "layout": "product",
+      "layout": "feature",
       "tier": "public",
       "title": "Asistente Académico",
+      "logo": { "src": "IMG/logos/asistente.png", "alt": "Asistente Académico" },
       "hook": "Un tutor exigente que corrige tu tesis — y te explica por qué.",
-      "body": "Corrige trabajos académicos (tesis, ensayos, monografías) con IA, pero vos mandás: cada error viene en una tarjeta con la norma que lo respalda, y aceptás o rechazás cada sugerencia. Al final exportás Word o PDF con formato académico listo.\n\nTodo corre en tu computadora. Tus textos no se suben a ningún servidor nuestro.",
+      "body": "Cada error en una tarjeta con la norma; aceptás o rechazás. Vos mandás.\n\nTodo en tu máquina — tus textos no suben a ningún servidor.",
       "features": [
-        "Normativas APA, MLA y más — por nivel (ensayo, grado, maestría)",
-        "Modo Tesis: subís el PDF entero, procesa por partes con costo estimado antes",
-        "Dictamen de pares: pegás la corrección recibida y armás la respuesta punto por punto",
-        "17 proveedores BYOK (OpenRouter, OpenAI, Ollama…) — modelos :free disponibles",
-        "Modo Búnker: cero conexión saliente, solo IA local",
-        "No ayuda a hacer trampa — es para aprender a escribir mejor"
+        "APA, MLA y más — por nivel académico",
+        "Modo Tesis: PDF entero con costo estimado previo",
+        "Dictamen de pares: respuesta punto por punto",
+        "Modo Búnker: solo IA local, cero conexión saliente"
       ],
-      "pullquote": "Mandás vos, no la máquina. Cada cambio en una tarjeta.",
-      "images": [
-        { "src": "IMG/ASISTENTE ACADEMICO.png", "alt": "Asistente Académico", "tilt": -4 }
-      ],
+      "hero": {
+        "src": "IMG/ASISTENTE ACADEMICO.png",
+        "alt": "Tarjetas de corrección del Asistente",
+        "caption": "fig. 01 — Tarjetas APA/MLA con aceptar o rechazar",
+        "url": "localhost:4000"
+      },
+      "secondaryImage": {
+        "src": "IMG/asistente-tarjetas-vertical.png",
+        "alt": "Detalle de tarjeta de corrección",
+        "tilt": -4,
+        "frame": "phone"
+      },
       "tags": ["Gratis", "Beta", "localhost:4000"],
       "cta": { "label": "Próximamente en GitHub", "url": null, "disabled": true }
     },
     {
       "id": "supercouncil",
-      "page": 4,
-      "layout": "product",
+      "page": 5,
+      "layout": "feature",
       "tier": "public",
       "title": "SuperCouncil",
+      "logo": { "src": "IMG/logos/supercouncil.png", "alt": "SuperCouncil" },
       "hook": "Dejá de pagar por una IA que te da la razón.",
-      "body": "Lo armé porque vi la misma falla en todos los LLM: están diseñados para complacerte. En un consultorio, un profesional que solo valida las distorsiones del paciente hace mala praxis. La solución no es un prompt mejor — es estructura: varios modelos deliberan, se puntúan a ciegas (0–100) y un Chairman sintetiza el desacuerdo.\n\nDos motores, una máquina. 100% en tu máquina. Un pago, para siempre.",
+      "body": "Modelos que deliberan, se puntúan a ciegas y un Chairman sintetiza el desacuerdo.\n\n100% en tu máquina. Un pago, para siempre.",
       "features": [
-        "⚖️ Boardroom: peer-review ciego, Chairman le da la razón al que disiente",
-        "🏭 Fábrica: Arquitecto → DAG → Audit Gates con Auto-Fix hasta que pasa",
-        "📱 El Bolsillo: bot Telegram con voz, /fabrica, pairing obligatorio",
-        "🌙 Fábrica Nocturna: tareas programadas, te despertás con el entregable",
-        "Certificado SHA-256 + Cost Meter en vivo por cada corrida",
-        "MCP (Cursor, VS Code), RAG local, 250+ especialistas, 11 idiomas",
+        "Boardroom: peer-review ciego, Chairman favorece al disidente",
+        "Fábrica: Arquitecto → DAG → Audit Gates con Auto-Fix",
+        "El Bolsillo: bot Telegram con voz y /fabrica",
         "USD 49 vitalicio vs USD 240–600/año de un SaaS de IA"
       ],
-      "pullquote": "Le pasé mi propio repo al Consejo. Encontró keys expuestas, testimonios inventados y claims falsos en el README. Mi marketing lo editó mi motor de auditoría.",
-      "images": [
-        { "src": "IMG/Supercouncil.png", "alt": "SuperCouncil Boardroom", "tilt": -3 },
-        { "src": "IMG/supercounciltelegram.png", "alt": "SuperCouncil en Telegram", "tilt": 5 }
-      ],
+      "hero": {
+        "src": "IMG/Supercouncil.png",
+        "alt": "SuperCouncil Boardroom",
+        "caption": "fig. 02 — Boardroom en vivo",
+        "url": "localhost:7778"
+      },
+      "secondaryImage": {
+        "src": "IMG/supercounciltelegram.png",
+        "alt": "SuperCouncil en Telegram",
+        "tilt": 5,
+        "frame": "phone"
+      },
       "tags": ["USD 49", "Self-hosted", "localhost:7778"],
       "cta": { "label": "Ver en Gumroad", "url": "https://complexity88.gumroad.com/l/supercouncil", "disabled": false }
     },
     {
       "id": "vincularmente",
-      "page": 5,
-      "layout": "web",
+      "page": 7,
+      "layout": "feature",
       "tier": "web",
       "title": "Vincularmente",
       "hook": "Psicología y bienestar en la web.",
-      "body": "Sitio sobre vínculos, apego y comunicación. Se actualiza solo con un pipeline que armé con IA y curo a mano. Acá se cruzan mis dos oficios: el clínico y el constructor.\n\nArtículos, ebooks y recursos para gente que quiere entender por qué repite patrones, por qué le cuesta pedir ayuda, o por qué corre de lo que le hace bien.",
+      "body": "Sitio sobre vínculos, apego y comunicación. Pipeline con IA y curaduría humana.\n\nArtículos y ebooks para entender patrones y pedir ayuda.",
       "features": [
-        "Contenido curado sobre relaciones, apego y autoconocimiento",
-        "Pipeline de publicación automática + revisión humana",
-        "Ebooks descargables (PDF)"
+        "Relaciones, apego y autoconocimiento",
+        "Publicación automática + revisión humana",
+        "Ebooks descargables (PDF)",
+        "Sin registro — leer y bajar directo"
       ],
-      "images": [
-        { "src": "IMG/vincularmente.png", "alt": "Vincularmente", "tilt": -3 }
-      ],
+      "hero": {
+        "src": "IMG/vincularmente.png",
+        "alt": "Vincularmente",
+        "caption": "fig. 03 — Psicología y bienestar en vivo",
+        "url": "vincularmente.site"
+      },
       "tags": ["En vivo"],
       "cta": { "label": "Visitar sitio", "url": "https://mankuy.github.io/vincularmente-site/index.html", "disabled": false }
     },
     {
       "id": "gonza-discos",
-      "page": 6,
-      "layout": "web",
+      "page": 9,
+      "layout": "feature",
       "tier": "web",
       "title": "Gonza Discos",
       "hook": "Tienda de vinilos para un amigo.",
-      "body": "Catálogo con grading, identificación de discos por foto con IA y pedido por WhatsApp. Toda la app en un solo archivo — sin framework, sin dependencias pesadas.\n\nArmé esto porque Gonza necesitaba mostrar su colección y vender sin depender de MercadoLibre ni de un dev externo.",
+      "body": "Catálogo con grading, identificación por foto con IA y pedido por WhatsApp.\n\nUn solo HTML — Gonza vende sin MercadoLibre ni dev externo.",
       "features": [
         "Identificación de disco por foto (IA)",
         "Grading visual y catálogo navegable",
-        "Pedido directo por WhatsApp"
+        "Pedido directo por WhatsApp",
+        "Deploy en Cloudflare Workers"
       ],
-      "images": [
-        { "src": "IMG/gonzadiscos.png", "alt": "Gonza Discos", "tilt": 6 }
-      ],
+      "hero": {
+        "src": "IMG/gonzadiscos.png",
+        "alt": "Gonza Discos",
+        "caption": "fig. 04 — Catálogo de vinilos con IA",
+        "url": "gonzalodiscos.facundo-galetta.workers.dev"
+      },
       "tags": ["En prueba", "Para un amigo"],
       "cta": { "label": "Visitar", "url": "https://gonzalodiscos.facundo-galetta.workers.dev/", "disabled": false }
     },
     {
       "id": "gastos",
-      "page": 7,
-      "layout": "diary",
+      "page": 11,
+      "layout": "feature",
       "tier": "personal",
       "title": "Registro de Gastos",
       "hook": "Quería saber a dónde se iba la plata.",
-      "body": "Cargo gastos a mano o le saco foto al recibo y la app reconoce el monto. Gráficos, proyecciones, capacidad de ahorro. Sin banco conectado, sin suscripción, sin nube.",
+      "body": "Foto al recibo o carga manual; la app reconoce el monto. Gráficos y proyección mensual.\n\nSin banco conectado, sin suscripción, sin nube.",
       "features": [
         "OCR de recibos por foto",
         "Gráficos y proyección mensual",
-        "Versión Telegram para cargar gastos desde el celular"
+        "Versión Telegram para cargar desde el celular",
+        "Export CSV cuando lo necesito"
       ],
-      "images": [
-        { "src": "IMG/Gestor de gastos.png", "alt": "Gestor de gastos", "tilt": -5 },
-        { "src": "IMG/registros gastos teletgram.png", "alt": "Gastos en Telegram", "tilt": 4 }
-      ],
+      "hero": {
+        "src": "IMG/Gestor de gastos.png",
+        "alt": "Gestor de gastos",
+        "caption": "fig. 05 — Dashboard de gastos"
+      },
+      "secondaryImage": {
+        "src": "IMG/registros gastos teletgram.png",
+        "alt": "Gastos en Telegram",
+        "tilt": 4,
+        "frame": "phone"
+      },
       "stamp": "USO PERSONAL"
     },
     {
       "id": "ninera",
-      "page": 8,
-      "layout": "diary",
+      "page": 13,
+      "layout": "feature",
       "tier": "personal",
       "title": "Sueldo Niñera",
-      "hook": "Me cansé de calcular a mano las horas de la niñera de mi hija.",
-      "body": "Registro las horas, la app suma el mes y arma el recibo de sueldo solo. Antes era Excel + calculadora + dudas sobre feriados. Ahora es un click.",
+      "hook": "Horas del mes → recibo automático.",
+      "body": "Registro las horas y la app arma el recibo de sueldo. Antes era Excel + calculadora.\n\nUn click y listo para imprimir.",
       "features": [
         "Registro de horas por día",
         "Cálculo automático del mes",
-        "Recibo de sueldo listo para imprimir"
+        "Recibo listo para imprimir",
+        "Feriados y extras configurables"
       ],
-      "images": [
-        { "src": "IMG/ninera.png", "alt": "App sueldo niñera", "tilt": 4 }
-      ],
+      "hero": {
+        "src": "IMG/ninera.png",
+        "alt": "App sueldo niñera",
+        "caption": "fig. 06 — Recibo de sueldo automático"
+      },
       "stamp": "USO PERSONAL"
     },
     {
       "id": "jardin",
-      "page": 9,
-      "layout": "diary",
+      "page": 15,
+      "layout": "feature",
       "tier": "personal",
       "title": "Jardín",
-      "hook": "Registro de cosecha de la huerta.",
-      "body": "Qué planté, qué salió, cuánto y cuándo. Para saber si la temporada fue buena con datos, no con memoria. La huerta no miente, pero la memoria sí.",
-      "images": [
-        { "src": "IMG/registro jardin.png", "alt": "Registro de jardín", "tilt": -6 }
+      "hook": "La huerta con datos, no con memoria.",
+      "body": "Qué planté, qué salió, cuánto y cuándo. Para saber si la temporada rindió.\n\nLa huerta no miente — la memoria sí.",
+      "features": [
+        "Registro de siembra y cosecha",
+        "Totales por cultivo y temporada",
+        "Fotos opcionales por entrada",
+        "Todo en un JSON local"
       ],
+      "hero": {
+        "src": "IMG/registro jardin.png",
+        "alt": "Registro de jardín",
+        "caption": "fig. 07 — Cosecha de la huerta"
+      },
       "stamp": "USO PERSONAL"
     },
     {
       "id": "salones",
-      "page": 10,
-      "layout": "diary",
+      "page": 17,
+      "layout": "feature",
       "tier": "personal",
       "title": "Salones de Fiesta",
-      "hook": "Gestión de reservas para salones infantiles.",
-      "body": "Agenda, clientes y pagos en un solo lugar. Todavía en fase primaria.",
+      "hook": "Reservas de salones infantiles — en construcción.",
+      "body": "Agenda, clientes y pagos en un solo lugar. Todavía en fase primaria.\n\nLo incluyo porque el problema es real.",
+      "features": [
+        "Calendario de reservas",
+        "Ficha de cliente y seña",
+        "Estado de pagos por evento",
+        "Export para contador"
+      ],
       "imagePlaceholder": "EN CONSTRUCCIÓN",
       "stamp": "EN DESARROLLO"
     },
     {
       "id": "historia",
-      "page": 11,
+      "page": 19,
       "layout": "editorial",
       "title": "¿Por qué un psicólogo hace apps?",
       "hook": "Porque los problemas no piden título universitario.",
-      "body": "Mi tesis la escribí hace años; el APA me comió la cabeza en su momento, como a cualquiera. Pero el corrector no lo hice para eso: lo armé después, para amigos que siguen estudiando y para cuando yo mismo reviso trabajos.\n\nSuperCouncil nació del mismo lugar. Donde los ingenieros vieron \"¿cómo consultamos más modelos?\", yo vi un problema de arquitectura cognitiva: ¿cómo obligás a las IAs a ser honestas? La respuesta vino de la revisión por pares académica — fricción intencional, desacuerdo como mecanismo.\n\nTengo una hija y una niñera: app. Huerta: app. Gastos que se evaporan: app. Misma regla siempre.\n\nLocal-first, porque tus datos son tuyos. El Asistente Académico va a estar abierto en GitHub. Si lo usás y encontrás un error, escribime: eso vale más que cualquier venta.",
-      "pullquote": "Mientras cada empresa de IA te vende un asistente más inteligente, yo te vendo un sistema que audita tu pensamiento.",
+      "body": "Herramientas honestas, local-first. Misma regla para tesis, huerta y gastos.",
+      "pullquote": "Un sistema que audita tu pensamiento.",
       "collage": [
-        { "src": "IMG/ASISTENTE ACADEMICO.png", "alt": "Asistente Académico", "tilt": -4 },
-        { "src": "IMG/Supercouncil.png", "alt": "SuperCouncil", "tilt": 3 },
-        { "src": "IMG/supercounciltelegram.png", "alt": "SuperCouncil Telegram", "tilt": 5 },
-        { "src": "IMG/vincularmente.png", "alt": "Vincularmente", "tilt": -3 },
-        { "src": "IMG/gonzadiscos.png", "alt": "Gonza Discos", "tilt": 6 },
-        { "src": "IMG/Gestor de gastos.png", "alt": "Gestor de gastos", "tilt": -5 },
-        { "src": "IMG/registros gastos teletgram.png", "alt": "Gastos Telegram", "tilt": 4 },
-        { "src": "IMG/ninera.png", "alt": "Sueldo niñera", "tilt": -6 },
-        { "src": "IMG/registro jardin.png", "alt": "Registro jardín", "tilt": 3 }
+        { "src": "IMG/Supercouncil.png", "alt": "SuperCouncil", "tilt": 3 }
       ],
       "stamp": null,
       "note": null
     },
     {
+      "id": "colofon",
+      "page": 20,
+      "layout": "editorial",
+      "title": "Cómo se hizo",
+      "hook": "Sin frameworks. Hecho a mano.",
+      "body": "Vanilla JS, StPageFlip, cero frameworks. Un JSON de spreads alimenta renderers que arman flip-pages.\n\nDiseñado y armado en Montevideo — mismo espíritu local-first que las apps de adentro.",
+      "features": [
+        "Vanilla JS + StPageFlip, sin frameworks",
+        "spreads.json → renderers → flip-pages",
+        "WebP, hash replaceState, verificado Chrome/Firefox",
+        "Armado en Montevideo, 2026"
+      ],
+      "stamp": "MVD · 2026",
+      "note": "Si encontrás un bug, escribime."
+    },
+    {
       "id": "back-cover",
-      "page": 12,
+      "page": 21,
       "layout": "back-cover",
       "title": "Fin del fanzine #1",
-      "hook": "Estas apps personales no están publicadas: las hice para mi casa.",
-      "body": "Si te interesa una herramienta así para vos, o querés hablar de SuperCouncil o el Asistente, escribime.",
+      "hook": "Las apps personales no están publicadas — las hice para mi casa.",
+      "body": "Si te interesa una herramienta así, o querés hablar de SuperCouncil o el Asistente, escribime.",
       "links": [
         { "label": "X / Twitter", "url": "https://x.com/SuperCouncil_" },
         { "label": "GitHub", "url": "https://github.com/Mankuy" }
       ],
       "collage": [
         { "src": "IMG/ASISTENTE ACADEMICO.png", "tilt": -4, "size": "sm" },
-        { "src": "IMG/Supercouncil.png", "tilt": 5, "size": "sm" },
-        { "src": "IMG/vincularmente.png", "tilt": -3, "size": "sm" },
-        { "src": "IMG/gonzadiscos.png", "tilt": 6, "size": "sm" }
+        { "src": "IMG/Supercouncil.png", "tilt": 5, "size": "sm" }
       ],
       "note": "Hecho en Montevideo, Uruguay"
     }

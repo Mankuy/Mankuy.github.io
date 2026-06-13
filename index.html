@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Patrick+Hand&family=Special+Elite&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="vendor/page-flip.css">
   <link rel="stylesheet" href="zine.css">
 </head>
@@ -46,14 +46,17 @@
   <div class="zine-chrome zine-chrome--page" id="zine-page-label">Pág 1</div>
 
   <div class="zine-toolbar">
+    <button type="button" id="btn-flip-sound" title="Sonido al voltear página" aria-pressed="false">🔇</button>
     <button type="button" id="btn-print" title="Guardar como PDF">PDF</button>
   </div>
+
+  <p id="flip-hint" class="flip-hint" hidden>→ Pasá la página (o arrastrá la esquina)</p>
 
   <nav class="magazine-nav" id="magazine-nav" aria-label="Navegación del fanzine" hidden>
     <button type="button" class="magazine-nav__btn" id="magazine-prev" aria-label="Página anterior" disabled>
       <span aria-hidden="true">‹</span>
     </button>
-    <span class="magazine-nav__indicator" id="magazine-indicator" aria-live="polite">1 / 12</span>
+    <span class="magazine-nav__indicator" id="magazine-indicator" aria-live="polite">1 / 21</span>
     <button type="button" class="magazine-nav__btn" id="magazine-next" aria-label="Página siguiente">
       <span aria-hidden="true">›</span>
     </button>
