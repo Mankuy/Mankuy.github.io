@@ -1960,11 +1960,11 @@ body.print-prep .flip-page + .flip-page {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MAGAZINE READER (≥600px) — dimensiones del libro en zine.js
+   MAGAZINE READER (≥360px + flip) — dimensiones del libro en zine.js
    Revista real · volteo 3D · tapa primero
    ═══════════════════════════════════════════════════════════ */
 
-@media (min-width: 600px) {
+@media (min-width: 360px) {
   .magazine-desk {
     display: block;
     position: fixed;
@@ -2873,12 +2873,49 @@ body.print-prep .flip-page + .flip-page {
   }
 }
 
+/* Portrait móvil/tablet — scroll interno + nav táctil */
+@media (min-width: 360px) and (max-width: 1023px) {
+  body.magazine-mode--portrait #zine-root {
+    padding: 10px 6px 76px;
+  }
+
+  body.magazine-mode--portrait .magazine-edges {
+    display: none !important;
+  }
+
+  body.magazine-mode--portrait .magazine-nav__btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  body.magazine-mode--portrait .flip-hint {
+    bottom: 84px;
+    font-size: 10px;
+    max-width: calc(100vw - 24px);
+    text-align: center;
+  }
+
+  body.magazine-mode--portrait .flip-page .spread {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    overscroll-behavior: contain;
+  }
+
+  body.magazine-mode--portrait .flip-page .spread--feature-visual {
+    overflow: hidden;
+    justify-content: center;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cover-cta { animation: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SCROLL MODE (<600px) — hero arriba, texto abajo, sin flip
+   SCROLL MODE (fallback accesible + <360px) — scroll vertical
    ═══════════════════════════════════════════════════════════ */
 
 @media (max-width: 599px) {

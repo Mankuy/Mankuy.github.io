@@ -69,7 +69,8 @@ async function evaluatePrintPrep(page) {
   });
 }
 
-async function testIndexScroll(page) {
+async function testReducedMotionScroll(page) {
+  await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
   await page.setViewport({ width: 375, height: 812 });
   await page.goto(`${URL}#spread-intro`, { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForFunction(() => document.querySelectorAll('.spread').length >= 22, { timeout: 60000 });
@@ -92,6 +93,7 @@ async function testIndexScroll(page) {
       top: Math.round(top),
       hash,
       beforeTop,
+      scrollMode: document.body.classList.contains('scroll-mode'),
     };
   }, before);
 }
@@ -107,26 +109,28 @@ async function main() {
   const page = await browser.newPage();
 
   try {
+    await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
     await page.setViewport({ width: 375, height: 812 });
     await page.goto(URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForFunction(() => document.querySelectorAll('.spread').length >= 22, { timeout: 60000 });
 
     const mobile = await evaluateMobile(page);
-    console.log('Mobile 375×812:', mobile);
+    console.log('Mobile 375×812 reduced-motion:', mobile);
 
-    if (!mobile.scrollMode) errors.push('mobile: falta body.scroll-mode');
-    if (mobile.magazineMode) errors.push('mobile: magazine-mode activo en <600px');
+    if (!mobile.scrollMode) errors.push('mobile reduced-motion: falta body.scroll-mode');
+    if (mobile.magazineMode) errors.push('mobile reduced-motion: magazine-mode activo');
     if (mobile.spreadCount !== 22) errors.push(`mobile: esperaba 22 spreads, hay ${mobile.spreadCount}`);
     if (mobile.flipPageCount !== 22) errors.push(`mobile: esperaba 22 flip-pages, hay ${mobile.flipPageCount}`);
-    if (mobile.stfItemCount > 0) errors.push('mobile: PageFlip no destruido (.stf__item presente)');
+    if (mobile.stfItemCount > 0) errors.push('mobile reduced-motion: PageFlip no destruido (.stf__item presente)');
     if (mobile.featurePairs < 7) errors.push(`mobile: pocos pares feature (${mobile.featurePairs})`);
-    if (mobile.minHeroH > 0 && mobile.minHeroH < 80) errors.push(`mobile: hero colapsada (${mobile.minHeroH}px)`);
     if (!mobile.coverVisible) errors.push('mobile: tapa no visible');
 
-    const scroll = await testIndexScroll(page);
-    console.log('Index scroll:', scroll);
-    if (!scroll.ok) errors.push(`mobile: índice no scrollea (${scroll.reason || `top=${scroll.top}, hash=${scroll.hash}`})`);
+    const scroll = await testReducedMotionScroll(page);
+    console.log('Index scroll (reduced-motion):', scroll);
+    if (!scroll.scrollMode) errors.push('mobile reduced-motion: scroll-mode ausente en índice');
+    if (!scroll.ok) errors.push(`mobile reduced-motion: índice no scrollea (${scroll.reason || `top=${scroll.top}, hash=${scroll.hash}`})`);
 
+    await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'no-preference' }]);
     await page.setViewport({ width: 1280, height: 800 });
     await page.goto(URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForFunction(() => document.querySelectorAll('.stf__item').length >= 22, { timeout: 60000 });

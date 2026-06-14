@@ -7,12 +7,13 @@
 
   const ROOT_ID = 'zine-root';
   const DATA_URL = 'spreads.json';
-  const MAGAZINE_BP = '(min-width: 600px)';
-  const SCROLL_MAX = 599;
+  const MAGAZINE_MIN = 360;
+  const MAGAZINE_BP = `(min-width: ${MAGAZINE_MIN}px)`;
+  const SCROLL_MAX = MAGAZINE_MIN - 1;
   const LANDSCAPE_MIN = 1024;
   const PAGE_RATIO = 10 / 14;
   const PAGE_MAX_H = 760;
-  const PAGE_VH_RATIO = 0.84;
+  const RESIZE_HEIGHT_SOFT = 80;
 
   let revealObserver = null;
   let pageFlipInstance = null;
@@ -43,6 +44,22 @@
 
   function flipDurationMs() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 700;
+  }
+
+  function prefersReducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function viewportWidth() {
+    return window.visualViewport?.width ?? window.innerWidth;
+  }
+
+  function viewportHeight() {
+    return window.visualViewport?.height ?? window.innerHeight;
+  }
+
+  function shouldUseMagazine() {
+    return window.matchMedia(MAGAZINE_BP).matches && !prefersReducedMotion();
   }
 
   function renderPicture(path, attrs = {}) {
@@ -648,15 +665,21 @@
   }
 
   function getViewBucket() {
-    const w = window.innerWidth;
+    const w = viewportWidth();
     if (w <= SCROLL_MAX) return 'scroll';
     if (w < LANDSCAPE_MIN) return 'portrait';
     return 'landscape';
   }
 
   function computePageDimensions() {
-    const pageH = Math.min(window.innerHeight * PAGE_VH_RATIO, PAGE_MAX_H);
-    const pageW = pageH * PAGE_RATIO;
+    const maxW = viewportWidth() * 0.92;
+    const maxH = Math.min(viewportHeight() * 0.86, PAGE_MAX_H);
+    let pageW = Math.min(maxW, maxH * PAGE_RATIO);
+    let pageH = pageW / PAGE_RATIO;
+    if (pageH > maxH) {
+      pageH = maxH;
+      pageW = pageH * PAGE_RATIO;
+    }
     return { pageW, pageH };
   }
 
@@ -704,7 +727,7 @@
     }
 
     function showHintIfNeeded() {
-      if (!hint || !window.matchMedia(MAGAZINE_BP).matches) return;
+      if (!hint || !document.body.classList.contains('magazine-mode')) return;
       if (localStorage.getItem(FLIP_HINT_KEY)) return;
       hint.hidden = false;
     }
@@ -747,6 +770,7 @@
 
   function initMagazine(total) {
     const mq = window.matchMedia(MAGAZINE_BP);
+    const motionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
     const flipUx = initFlipUx();
     let scrollModeActive = false;
     const nav = document.getElementById('magazine-nav');
@@ -763,6 +787,8 @@
     let current = 0;
     let lastBucket = null;
     let lastDimsKey = null;
+    let lastResizeW = null;
+    let lastResizeH = null;
     let resizeTimer = null;
     let skipInitialHashSync = !location.hash;
     let listeningFlip = false;
@@ -920,7 +946,7 @@
         maxHeight: pageH,
         maxShadowOpacity: 0.4,
         showCover: true,
-        mobileScrollSupport: false,
+        mobileScrollSupport: true,
         usePortrait: true,
         useMouseEvents: true,
         clickEventForward: true,
@@ -996,10 +1022,17 @@
 
       teardownScrollMode();
 
+      lastResizeW = Math.round(viewportWidth());
+      lastResizeH = Math.round(viewportHeight());
+
       document.addEventListener('keydown', onKeydown);
       document.addEventListener('click', onIndexClick);
       window.addEventListener('hashchange', onHashChange);
       window.addEventListener('resize', onResize);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', onResize);
+        window.visualViewport.addEventListener('scroll', onResize);
+      }
     }
 
     function setScrollChrome(hidden) {
@@ -1031,7 +1064,7 @@
 
     magazineDisable = disable;
     reenableMagazine = () => {
-      if (mq.matches) enable();
+      if (shouldUseMagazine()) enable();
       else enableScrollMode();
     };
 
@@ -1041,12 +1074,31 @@
       resizeTimer = setTimeout(() => {
         if (!enabled || !pageFlipInstance) return;
         const bucket = getViewBucket();
-        const dims = computePageDimensions();
-        const dimsKey = `${Math.round(dims.pageW)}x${Math.round(dims.pageH)}`;
-        if (bucket === lastBucket && dimsKey === lastDimsKey) {
-          pageFlipInstance.update();
+        if (bucket === 'scroll') {
+          disable();
           return;
         }
+        const dims = computePageDimensions();
+        const dimsKey = `${Math.round(dims.pageW)}x${Math.round(dims.pageH)}`;
+        const w = Math.round(viewportWidth());
+        const h = Math.round(viewportHeight());
+        const heightDelta = lastResizeH == null ? RESIZE_HEIGHT_SOFT : Math.abs(h - lastResizeH);
+
+        if (bucket === lastBucket && dimsKey === lastDimsKey) {
+          pageFlipInstance.update();
+          lastResizeW = w;
+          lastResizeH = h;
+          return;
+        }
+
+        if (bucket === lastBucket && w === lastResizeW && heightDelta < RESIZE_HEIGHT_SOFT) {
+          pageFlipInstance.update();
+          lastResizeH = h;
+          return;
+        }
+
+        lastResizeW = w;
+        lastResizeH = h;
         reinitPageFlip(pageFlipInstance.getCurrentPageIndex());
       }, 200);
     }
@@ -1061,8 +1113,14 @@
       settleTimer = null;
       lastBucket = null;
       lastDimsKey = null;
+      lastResizeW = null;
+      lastResizeH = null;
 
       window.removeEventListener('resize', onResize);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', onResize);
+        window.visualViewport.removeEventListener('scroll', onResize);
+      }
       document.removeEventListener('keydown', onKeydown);
       document.removeEventListener('click', onIndexClick);
       window.removeEventListener('hashchange', onHashChange);
@@ -1085,9 +1143,19 @@
       initReveal();
     }
 
-    function onMqChange(e) {
-      if (e.matches) enable();
-      else disable();
+    function onModeChange() {
+      if (shouldUseMagazine()) {
+        if (scrollModeActive) {
+          teardownScrollMode();
+          enable();
+        } else if (!enabled) {
+          enable();
+        }
+      } else if (enabled) {
+        disable();
+      } else {
+        enableScrollMode();
+      }
     }
 
     if (prevBtn) prevBtn.addEventListener('click', () => go(-1));
@@ -1095,9 +1163,10 @@
     if (edgePrev) edgePrev.addEventListener('click', () => go(-1));
     if (edgeNext) edgeNext.addEventListener('click', () => go(1));
 
-    if (mq.matches) enable();
+    if (shouldUseMagazine()) enable();
     else enableScrollMode();
-    mq.addEventListener('change', onMqChange);
+    mq.addEventListener('change', onModeChange);
+    motionMq.addEventListener('change', onModeChange);
   }
 
   function waitForPrintImages() {
@@ -1206,7 +1275,7 @@
         if (!btn) return;
         document.getElementById('flip-hint')?.setAttribute('hidden', '');
         localStorage.setItem(FLIP_HINT_KEY, '1');
-        if (window.matchMedia(MAGAZINE_BP).matches && pageFlipInstance) {
+        if (pageFlipInstance) {
           pageFlipInstance.flipNext();
         } else {
           document.getElementById('spread-intro')?.scrollIntoView({ behavior: 'smooth' });
