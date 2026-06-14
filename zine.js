@@ -14,6 +14,11 @@
   const PAGE_RATIO = 10 / 14;
   const PAGE_MAX_H = 760;
   const RESIZE_HEIGHT_SOFT = 80;
+  const LOGO_SRC = 'IMG/logo.png';
+
+  function coverLogoImg() {
+    return `<img class="cover-logo" src="${LOGO_SRC}" alt="" width="30" height="36" decoding="async">`;
+  }
 
   let revealObserver = null;
   let pageFlipInstance = null;
@@ -211,7 +216,10 @@
         <div class="cover-inner cover-inner--composed cover-inner--front">
           <header class="cover-zone cover-zone--top cover-mast cover-mast--front">
             <span class="cover-kicker">${esc(s.kicker || 'Fanzine Nº1 · Construí esto')}</span>
-            <p class="cover-eyebrow">${esc(s.eyebrow || '')}</p>
+            <div class="cover-brand-row">
+              <p class="cover-eyebrow">${esc(s.eyebrow || '')}</p>
+              ${coverLogoImg()}
+            </div>
           </header>
           <div class="cover-zone cover-zone--center cover-stage">
             <div class="cover-poster cover-poster--core cover-poster--front">
@@ -456,13 +464,22 @@
     ).join('');
     return `
       <article class="spread spread--back" id="spread-${esc(s.id)}" data-page="${s.page}">
-        ${collage ? `<div class="collage-cluster collage-cluster--back" data-gallery="${gallery}">${collage}</div>` : ''}
-        <div class="panel">
-          <h2 class="panel__title">${esc(s.title)}</h2>
-          <p class="panel__hook">${esc(s.hook)}</p>
-          <div class="panel__body"><p>${esc(s.body)}</p></div>
-          <ul class="links">${links}</ul>
-          ${s.note ? `<p class="footer-note">${esc(s.note)}</p>` : ''}
+        <header class="cover-mast cover-mast--back">
+          <span class="cover-kicker cover-kicker--spacer" aria-hidden="true">Fanzine Nº1 · Construí esto</span>
+          <div class="cover-brand-row">
+            <span class="cover-eyebrow cover-eyebrow--spacer" aria-hidden="true">Para cada problema, una solución a tu medida.</span>
+            ${coverLogoImg()}
+          </div>
+        </header>
+        <div class="cover-back-main">
+          ${collage ? `<div class="collage-cluster collage-cluster--back" data-gallery="${gallery}">${collage}</div>` : ''}
+          <div class="panel">
+            <h2 class="panel__title">${esc(s.title)}</h2>
+            <p class="panel__hook">${esc(s.hook)}</p>
+            <div class="panel__body"><p>${esc(s.body)}</p></div>
+            <ul class="links">${links}</ul>
+            ${s.note ? `<p class="footer-note">${esc(s.note)}</p>` : ''}
+          </div>
         </div>
         ${pageNum(s.page, total)}
       </article>`;
