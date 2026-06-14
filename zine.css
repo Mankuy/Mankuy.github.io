@@ -121,6 +121,12 @@ a:hover { color: var(--red); }
   border-color: var(--red);
 }
 
+.zine-toolbar button:disabled {
+  opacity: 0.38;
+  cursor: default;
+  pointer-events: none;
+}
+
 /* ── Stage (columna centrada) ── */
 #zine-root {
   position: relative;
@@ -517,30 +523,35 @@ a:hover { color: var(--red); }
 }
 
 .cover-brand-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  position: relative;
   width: 100%;
+  min-height: 1.4em;
 }
 
 .cover-logo {
-  width: clamp(22px, 3.8vw, 30px);
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  width: clamp(66px, 11.4vw, 90px);
   height: auto;
-  flex-shrink: 0;
   object-fit: contain;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
+  pointer-events: none;
+  opacity: 0.88;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
 
 .spread--front-cover .cover-eyebrow {
+  position: relative;
+  z-index: 2;
   margin: 0;
   font-family: var(--body);
   font-size: clamp(0.88rem, 2vw, 1rem);
   line-height: 1.4;
   color: rgba(245, 240, 230, 0.8);
   max-width: none;
-  flex: 1 1 auto;
-  min-width: 0;
+  width: 100%;
 }
 
 .spread--front-cover .cover-zone--center {
@@ -1102,47 +1113,24 @@ a:hover { color: var(--red); }
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
+  justify-content: center;
+  align-items: center;
   background: var(--ink);
   color: var(--paper);
+  --cover-logo-top: 62px;
+  --cover-logo-right: 38px;
 }
 
-.spread--back .cover-mast--back {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  width: 100%;
-  padding: 0 14px 0 20px;
-  margin-bottom: 4px;
+.spread--back .cover-logo--back {
+  top: var(--cover-logo-top);
+  right: var(--cover-logo-right);
+  transform: none;
 }
 
-.spread--back .cover-kicker--spacer,
-.spread--back .cover-eyebrow--spacer {
-  visibility: hidden;
-  user-select: none;
-  pointer-events: none;
-}
-
-.spread--back .cover-eyebrow--spacer {
-  margin: 0;
-  font-family: var(--body);
-  font-size: clamp(0.88rem, 2vw, 1rem);
-  line-height: 1.4;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.spread--back .cover-back-main {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  min-height: 0;
+.spread--back .collage-cluster--back,
+.spread--back .panel {
+  position: relative;
+  z-index: 2;
 }
 
 .spread--back .panel__title {
@@ -2793,39 +2781,13 @@ body.print-prep .flip-page:last-child {
 
   body.magazine-mode .spread--back {
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
-    gap: clamp(8px, 1.2vh, 12px) clamp(16px, 2.5vw, 28px);
-    align-items: stretch;
-    overflow: hidden;
-    justify-content: flex-start;
-  }
-
-  body.magazine-mode .spread--back .cover-mast--back {
-    grid-column: 1;
-    grid-row: 1;
-    padding: 0;
-    margin: 0;
-    gap: 6px;
-  }
-
-  body.magazine-mode .spread--back .cover-kicker--spacer {
-    font-size: 9px;
-  }
-
-  body.magazine-mode .spread--back .cover-eyebrow--spacer {
-    font-size: clamp(0.62rem, 1.3vw, 0.72rem);
-  }
-
-  body.magazine-mode .spread--back .cover-back-main {
-    grid-column: 1;
-    grid-row: 2;
-    display: grid;
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-rows: 1fr auto;
     gap: clamp(16px, 2.5vw, 28px);
     align-items: center;
-    min-height: 0;
-    flex: none;
+    overflow: hidden;
+    --cover-logo-top: clamp(38px, 5vh, 52px);
+    --cover-logo-right: clamp(20px, 3vw, 32px);
   }
 
   body.magazine-mode .spread--back .collage-cluster--back {
@@ -2845,15 +2807,15 @@ body.print-prep .flip-page:last-child {
   }
 
   body.magazine-mode .spread--back .spread__page-num {
-    grid-column: 1;
-    grid-row: 3;
+    grid-column: 1 / -1;
+    grid-row: 2;
     position: static;
     justify-self: end;
   }
 
   body.magazine-mode .flip-page .spread--front-cover .cover-logo,
   body.magazine-mode .spread--back .cover-logo {
-    width: clamp(18px, 3.2vw, 24px);
+    width: clamp(54px, 9.6vw, 72px);
   }
 
   body.magazine-mode .flip-page[data-page-parity="odd"] .spread--back .collage-cluster--back {

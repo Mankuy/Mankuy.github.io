@@ -16,8 +16,9 @@
   const RESIZE_HEIGHT_SOFT = 80;
   const LOGO_SRC = 'IMG/logo.png';
 
-  function coverLogoImg() {
-    return `<img class="cover-logo" src="${LOGO_SRC}" alt="" width="30" height="36" decoding="async">`;
+  function coverLogoImg(extraClass = '') {
+    const cls = extraClass ? `cover-logo ${extraClass}` : 'cover-logo';
+    return `<img class="${cls}" src="${LOGO_SRC}" alt="" width="90" height="108" decoding="async">`;
   }
 
   let revealObserver = null;
@@ -464,22 +465,14 @@
     ).join('');
     return `
       <article class="spread spread--back" id="spread-${esc(s.id)}" data-page="${s.page}">
-        <header class="cover-mast cover-mast--back">
-          <span class="cover-kicker cover-kicker--spacer" aria-hidden="true">Fanzine Nº1 · Construí esto</span>
-          <div class="cover-brand-row">
-            <span class="cover-eyebrow cover-eyebrow--spacer" aria-hidden="true">Para cada problema, una solución a tu medida.</span>
-            ${coverLogoImg()}
-          </div>
-        </header>
-        <div class="cover-back-main">
-          ${collage ? `<div class="collage-cluster collage-cluster--back" data-gallery="${gallery}">${collage}</div>` : ''}
-          <div class="panel">
-            <h2 class="panel__title">${esc(s.title)}</h2>
-            <p class="panel__hook">${esc(s.hook)}</p>
-            <div class="panel__body"><p>${esc(s.body)}</p></div>
-            <ul class="links">${links}</ul>
-            ${s.note ? `<p class="footer-note">${esc(s.note)}</p>` : ''}
-          </div>
+        ${coverLogoImg('cover-logo--back')}
+        ${collage ? `<div class="collage-cluster collage-cluster--back" data-gallery="${gallery}">${collage}</div>` : ''}
+        <div class="panel">
+          <h2 class="panel__title">${esc(s.title)}</h2>
+          <p class="panel__hook">${esc(s.hook)}</p>
+          <div class="panel__body"><p>${esc(s.body)}</p></div>
+          <ul class="links">${links}</ul>
+          ${s.note ? `<p class="footer-note">${esc(s.note)}</p>` : ''}
         </div>
         ${pageNum(s.page, total)}
       </article>`;
@@ -790,10 +783,11 @@
 
   async function initBgMusic() {
     const audio = document.getElementById('bg-music');
-    const toggleBtn = document.getElementById('btn-music');
+    const playBtn = document.getElementById('btn-music-play');
+    const pauseBtn = document.getElementById('btn-music-pause');
     const prevBtn = document.getElementById('btn-music-prev');
     const nextBtn = document.getElementById('btn-music-next');
-    if (!audio || !toggleBtn) return;
+    if (!audio || !playBtn || !pauseBtn) return;
 
     let playlist = [];
     let trackIndex = 0;
@@ -819,12 +813,15 @@
       if (nextBtn) nextBtn.hidden = !visible || playlist.length < 2;
     }
 
-    function updateToggleUi() {
-      toggleBtn.setAttribute('aria-pressed', musicOn ? 'true' : 'false');
-      toggleBtn.textContent = musicOn ? '🔈' : '🎵';
-      toggleBtn.title = musicOn
-        ? `Música de fondo — ${playlist[trackIndex]?.title || 'Mozart'}`
-        : 'Música de fondo';
+    function updateTransportUi() {
+      const playing = musicOn && !audio.paused && !audio.ended;
+      playBtn.disabled = playing;
+      pauseBtn.disabled = !playing;
+      playBtn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+      pauseBtn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+      const trackTitle = playlist[trackIndex]?.title || 'Mozart';
+      playBtn.title = playing ? `Reproduciendo — ${trackTitle}` : 'Reproducir música';
+      pauseBtn.title = playing ? 'Pausar música' : 'Música en pausa';
       setSkipVisibility(musicOn);
     }
 
@@ -835,24 +832,27 @@
       audio.src = `audio/${track.file}`;
       audio.volume = BG_MUSIC_VOLUME;
       localStorage.setItem(BG_MUSIC_TRACK_KEY, String(trackIndex));
-      updateToggleUi();
+      updateTransportUi();
       if (autoplay) {
         audio.play().catch(() => { /* autoplay policy */ });
       }
     }
 
-    function playFromUserGesture() {
+    function startPlayback() {
       if (!playlist.length) return;
+      musicOn = true;
       armed = true;
+      localStorage.setItem(BG_MUSIC_KEY, '1');
       if (!audio.src) loadTrack(trackIndex, false);
-      if (musicOn) audio.play().catch(() => { /* noop */ });
+      audio.play().catch(() => { /* noop */ });
+      updateTransportUi();
     }
 
     function bindFirstGesture() {
       if (gestureBound) return;
       gestureBound = true;
       const onGesture = () => {
-        if (musicOn && !armed) playFromUserGesture();
+        if (musicOn && !armed) startPlayback();
         document.removeEventListener('click', onGesture);
         document.removeEventListener('keydown', onGesture);
         document.removeEventListener('touchstart', onGesture);
@@ -871,15 +871,14 @@
       loadTrack(trackIndex + 1, true);
     });
 
-    toggleBtn.addEventListener('click', () => {
-      musicOn = !musicOn;
-      localStorage.setItem(BG_MUSIC_KEY, musicOn ? '1' : '0');
-      updateToggleUi();
-      if (musicOn) {
-        playFromUserGesture();
-      } else {
-        audio.pause();
-      }
+    audio.addEventListener('play', updateTransportUi);
+    audio.addEventListener('pause', updateTransportUi);
+
+    playBtn.addEventListener('click', startPlayback);
+
+    pauseBtn.addEventListener('click', () => {
+      audio.pause();
+      updateTransportUi();
     });
 
     if (prevBtn) {
@@ -896,7 +895,7 @@
       });
     }
 
-    updateToggleUi();
+    updateTransportUi();
     setSkipVisibility(false);
     if (musicOn) bindFirstGesture();
   }

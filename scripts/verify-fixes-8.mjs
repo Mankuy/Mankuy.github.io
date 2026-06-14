@@ -70,13 +70,15 @@ async function checkFrontCoverDark(page, label) {
 
 async function checkMusicControls(page) {
   return page.evaluate(() => {
-    const toggle = document.getElementById('btn-music');
+    const play = document.getElementById('btn-music-play');
+    const pause = document.getElementById('btn-music-pause');
     const prev = document.getElementById('btn-music-prev');
     const next = document.getElementById('btn-music-next');
     const audio = document.getElementById('bg-music');
     return {
-      ok: !!(toggle && prev && next && audio),
-      togglePressed: toggle?.getAttribute('aria-pressed'),
+      ok: !!(play && pause && prev && next && audio),
+      playDisabled: play?.disabled,
+      pauseDisabled: pause?.disabled,
       prevHidden: prev?.hidden,
       playlistFetchable: true,
     };
