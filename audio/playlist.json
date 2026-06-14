@@ -1,0 +1,18 @@
+{
+  "title": "Mozart — Sonata para piano K.545 (Sonata facile)",
+  "source": "Wikimedia Commons / Musopen (dominio público)",
+  "tracks": [
+    {
+      "file": "mozart/k545-01-allegro.ogg",
+      "title": "K.545 — I. Allegro"
+    },
+    {
+      "file": "mozart/k545-02-andante.ogg",
+      "title": "K.545 — II. Andante"
+    },
+    {
+      "file": "mozart/k545-03-rondo.ogg",
+      "title": "K.545 — III. Rondo allegretto"
+    }
+  ]
+}

@@ -714,6 +714,9 @@
 
   const FLIP_HINT_KEY = 'zine-flip-hint-seen';
   const FLIP_SOUND_KEY = 'zine-flip-sound';
+  const BG_MUSIC_KEY = 'zine-bg-music';
+  const BG_MUSIC_TRACK_KEY = 'zine-bg-music-track';
+  const BG_MUSIC_VOLUME = 0.2;
 
   function initFlipUx() {
     const hint = document.getElementById('flip-hint');
@@ -766,6 +769,119 @@
     }
 
     return { dismissHint, showHintIfNeeded, playFlipSound };
+  }
+
+  async function initBgMusic() {
+    const audio = document.getElementById('bg-music');
+    const toggleBtn = document.getElementById('btn-music');
+    const prevBtn = document.getElementById('btn-music-prev');
+    const nextBtn = document.getElementById('btn-music-next');
+    if (!audio || !toggleBtn) return;
+
+    let playlist = [];
+    let trackIndex = 0;
+    let musicOn = localStorage.getItem(BG_MUSIC_KEY) === '1';
+    let armed = false;
+    let gestureBound = false;
+
+    try {
+      const res = await fetch('audio/playlist.json');
+      if (res.ok) {
+        const data = await res.json();
+        playlist = data.tracks || [];
+      }
+    } catch (_) { /* noop */ }
+
+    const savedTrack = Number.parseInt(localStorage.getItem(BG_MUSIC_TRACK_KEY) || '0', 10);
+    if (Number.isFinite(savedTrack) && savedTrack >= 0 && savedTrack < playlist.length) {
+      trackIndex = savedTrack;
+    }
+
+    function setSkipVisibility(visible) {
+      if (prevBtn) prevBtn.hidden = !visible || playlist.length < 2;
+      if (nextBtn) nextBtn.hidden = !visible || playlist.length < 2;
+    }
+
+    function updateToggleUi() {
+      toggleBtn.setAttribute('aria-pressed', musicOn ? 'true' : 'false');
+      toggleBtn.textContent = musicOn ? '🔈' : '🎵';
+      toggleBtn.title = musicOn
+        ? `Música de fondo — ${playlist[trackIndex]?.title || 'Mozart'}`
+        : 'Música de fondo';
+      setSkipVisibility(musicOn);
+    }
+
+    function loadTrack(index, autoplay) {
+      if (!playlist.length) return;
+      trackIndex = ((index % playlist.length) + playlist.length) % playlist.length;
+      const track = playlist[trackIndex];
+      audio.src = `audio/${track.file}`;
+      audio.volume = BG_MUSIC_VOLUME;
+      localStorage.setItem(BG_MUSIC_TRACK_KEY, String(trackIndex));
+      updateToggleUi();
+      if (autoplay) {
+        audio.play().catch(() => { /* autoplay policy */ });
+      }
+    }
+
+    function playFromUserGesture() {
+      if (!playlist.length) return;
+      armed = true;
+      if (!audio.src) loadTrack(trackIndex, false);
+      if (musicOn) audio.play().catch(() => { /* noop */ });
+    }
+
+    function bindFirstGesture() {
+      if (gestureBound) return;
+      gestureBound = true;
+      const onGesture = () => {
+        if (musicOn && !armed) playFromUserGesture();
+        document.removeEventListener('click', onGesture);
+        document.removeEventListener('keydown', onGesture);
+        document.removeEventListener('touchstart', onGesture);
+      };
+      document.addEventListener('click', onGesture, { once: false });
+      document.addEventListener('keydown', onGesture, { once: false });
+      document.addEventListener('touchstart', onGesture, { once: false, passive: true });
+    }
+
+    audio.addEventListener('ended', () => {
+      if (!musicOn || playlist.length < 2) {
+        audio.currentTime = 0;
+        if (musicOn) audio.play().catch(() => { /* noop */ });
+        return;
+      }
+      loadTrack(trackIndex + 1, true);
+    });
+
+    toggleBtn.addEventListener('click', () => {
+      musicOn = !musicOn;
+      localStorage.setItem(BG_MUSIC_KEY, musicOn ? '1' : '0');
+      updateToggleUi();
+      if (musicOn) {
+        playFromUserGesture();
+      } else {
+        audio.pause();
+      }
+    });
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (!musicOn || playlist.length < 2) return;
+        loadTrack(trackIndex - 1, true);
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (!musicOn || playlist.length < 2) return;
+        loadTrack(trackIndex + 1, true);
+      });
+    }
+
+    updateToggleUi();
+    setSkipVisibility(false);
+    if (musicOn) bindFirstGesture();
   }
 
   function initMagazine(total) {
@@ -1269,6 +1385,7 @@
       initLightbox();
       initMagazine(flipPageTotal);
       initPrint();
+      initBgMusic();
 
       document.addEventListener('click', e => {
         const btn = e.target.closest('.cover-cta');

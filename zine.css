@@ -495,8 +495,8 @@ a:hover { color: var(--red); }
 /* ── Front cover (página 0 — portada de marca) ── */
 .spread--front-cover {
   min-height: 92vh;
-  background:
-    linear-gradient(155deg, #f8f4ea 0%, var(--paper) 40%, #e6e0d4 100%);
+  background: linear-gradient(155deg, #1f1f1f 0%, var(--ink) 42%, #141414 100%);
+  color: var(--paper);
 }
 
 .spread--front-cover .cover-inner--front {
@@ -521,7 +521,7 @@ a:hover { color: var(--red); }
   font-family: var(--body);
   font-size: clamp(0.88rem, 2vw, 1rem);
   line-height: 1.4;
-  color: var(--ink-soft);
+  color: rgba(245, 240, 230, 0.8);
   max-width: 36ch;
 }
 
@@ -555,9 +555,9 @@ a:hover { color: var(--red); }
   line-height: 0.92;
   letter-spacing: -0.02em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--paper);
   margin: clamp(18px, 3vh, 28px) 0 clamp(16px, 2.5vh, 24px);
-  text-shadow: 2px 2px 0 rgba(230, 57, 70, 0.1);
+  text-shadow: 2px 2px 0 rgba(230, 57, 70, 0.22);
 }
 
 .spread--front-cover .cover-deck--front {
@@ -565,7 +565,7 @@ a:hover { color: var(--red); }
   font-style: italic;
   font-weight: 500;
   font-size: clamp(1.15rem, 2.8vw, 1.45rem);
-  color: var(--ink);
+  color: rgba(245, 240, 230, 0.9);
   line-height: 1.38;
   margin: 0;
   padding-left: 14px;
@@ -582,6 +582,31 @@ a:hover { color: var(--red); }
 .spread--front-cover .spread__author {
   font-size: 1rem;
   margin-bottom: 0;
+  color: rgba(245, 240, 230, 0.8);
+}
+
+.spread--front-cover .cover-spine {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03), transparent);
+}
+
+.spread--front-cover .cover-barcode {
+  color: rgba(245, 240, 230, 0.42);
+  opacity: 1;
+}
+
+.spread--front-cover .cover-cta {
+  background: var(--red);
+  color: var(--paper);
+  border: 2px solid rgba(245, 240, 230, 0.35);
+  box-shadow: 4px 4px 0 rgba(245, 240, 230, 0.15);
+}
+
+.spread--front-cover .cover-cta:hover {
+  box-shadow: 6px 6px 0 rgba(245, 240, 230, 0.2);
+}
+
+.spread--front-cover .spread__page-num {
+  color: rgba(245, 240, 230, 0.5);
 }
 
 .cover-teasers {
@@ -1493,7 +1518,7 @@ a:hover { color: var(--red); }
 /* ── Print / PDF ── */
 @page {
   size: A4 portrait;
-  margin: 14mm 12mm;
+  margin: 0;
 }
 
 @media print {
@@ -1539,8 +1564,9 @@ a:hover { color: var(--red); }
     visibility: visible !important;
     pointer-events: auto !important;
     display: flex !important;
-    height: auto !important;
+    height: 100% !important;
     min-height: 0 !important;
+    max-height: 100% !important;
     grid-template-columns: none !important;
     grid-template-rows: none !important;
   }
@@ -1553,48 +1579,47 @@ a:hover { color: var(--red); }
     overflow: visible;
   }
 
-  /* Each spread may span multiple sheets; start new spreads on a fresh page */
-  .spread {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 0;
-    height: auto;
-    box-shadow: none !important;
-    margin: 0 !important;
-    padding: 0 0 8mm !important;
-    transform: none !important;
-    border: none;
-    background: var(--paper) !important;
-    overflow: visible;
-    page-break-inside: auto;
-    break-inside: auto;
-  }
-
+  /* Una flip-page = una hoja A4 completa */
   .flip-page {
-    display: block !important;
+    box-sizing: border-box;
+    display: flex !important;
     position: static !important;
-    width: 100% !important;
-    height: auto !important;
-    overflow: visible !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
     transform: none !important;
     margin: 0 !important;
     padding: 0 !important;
     box-shadow: none !important;
     page-break-inside: avoid;
     break-inside: avoid;
+    page-break-after: always;
+    break-after: page;
   }
 
-  .flip-page + .flip-page,
-  .spread + .spread {
-    page-break-before: always;
-    break-before: page;
+  .flip-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
   }
 
   .flip-page .spread {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    box-shadow: none !important;
     margin: 0 !important;
+    padding: 10mm 12mm 12mm !important;
+    transform: none !important;
+    border: none;
+    background: var(--paper) !important;
+    overflow: hidden;
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 
   .spread::before { opacity: 0.02; }
@@ -1634,11 +1659,28 @@ a:hover { color: var(--red); }
     transform: rotate(var(--photo-tilt, 0deg)) !important;
   }
 
+  .spread--front-cover,
   .spread--back {
     background: var(--ink) !important;
     color: var(--paper) !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+
+  .spread--front-cover .spread__masthead--name,
+  .spread--front-cover .cover-deck--front,
+  .spread--front-cover .spread__author,
+  .spread--front-cover .cover-eyebrow {
+    color: rgba(245, 240, 230, 0.9) !important;
+  }
+
+  .spread--front-cover .cover-kicker {
+    color: var(--red) !important;
+  }
+
+  .spread--front-cover .cover-cta {
+    background: var(--red) !important;
+    color: var(--paper) !important;
   }
 
   /* Stack images above text — no floats in print */
@@ -1675,11 +1717,15 @@ a:hover { color: var(--red); }
   .collage-cluster .collage-photo--sm { width: 64px; }
   .collage-cluster .collage-photo--md { width: 88px; }
 
+  .feature-hero img,
   .collage-photo img,
   .spread img {
     display: block;
     max-width: 100% !important;
+    max-height: 120mm !important;
+    width: auto !important;
     height: auto !important;
+    object-fit: contain !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -1781,9 +1827,27 @@ a:hover { color: var(--red); }
   .browser-frame img,
   .phone-frame img,
   .cover-hero__frame img {
-    max-height: 170mm !important;
+    max-height: 115mm !important;
     object-fit: contain !important;
     filter: contrast(1.05) saturate(0.95) !important;
+  }
+
+  .spread .panel {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .spread--product .panel__body,
+  .spread--web .panel__body,
+  .spread--diary .panel__body,
+  .spread--feature-text .panel__body {
+    font-size: 0.82rem;
+    line-height: 1.42;
+  }
+
+  .spread--feature-text .panel__title {
+    font-size: 1.35rem;
   }
 
   .spread--cover {
@@ -1938,25 +2002,33 @@ body.print-prep.magazine-mode .spread {
   opacity: 1 !important;
   visibility: visible !important;
   display: flex !important;
-  height: auto !important;
+  height: 100% !important;
   min-height: 0 !important;
+  max-height: 100% !important;
   transform: none !important;
   pointer-events: auto !important;
-  page-break-inside: auto;
+  page-break-inside: avoid;
+  overflow: hidden;
 }
 
 body.print-prep .flip-page {
-  display: block !important;
+  box-sizing: border-box;
+  display: flex !important;
   position: static !important;
-  height: auto !important;
-  overflow: visible !important;
+  width: 210mm !important;
+  height: 297mm !important;
+  max-height: 297mm !important;
+  overflow: hidden !important;
   transform: none !important;
   box-shadow: none !important;
+  margin: 0 auto !important;
+  page-break-after: always;
+  break-after: page;
 }
 
-body.print-prep .flip-page + .flip-page {
-  page-break-before: always;
-  break-before: page;
+body.print-prep .flip-page:last-child {
+  page-break-after: auto;
+  break-after: auto;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -2076,9 +2148,8 @@ body.print-prep .flip-page + .flip-page {
   body.magazine-mode .spread:hover { --tilt: 0deg; }
 
   body.magazine-mode .flip-page .spread--front-cover {
-    background:
-      linear-gradient(160deg, #f8f4ea 0%, var(--paper) 42%, #e4ddd0 100%);
-    border: 3px solid var(--ink);
+    background: linear-gradient(160deg, #1f1f1f 0%, var(--ink) 44%, #141414 100%);
+    border: 3px solid rgba(245, 240, 230, 0.22);
     padding: clamp(14px, 2vh, 22px) clamp(20px, 3vw, 32px) clamp(32px, 4vh, 44px);
     overflow: hidden;
     justify-content: flex-start;
