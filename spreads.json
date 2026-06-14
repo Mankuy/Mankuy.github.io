@@ -90,7 +90,7 @@
         "frame": "phone"
       },
       "tags": ["Gratis", "Beta", "localhost:4000"],
-      "cta": { "label": "Próximamente en GitHub", "url": null, "disabled": true }
+      "cta": { "label": "Ver en GitHub", "url": "https://github.com/Mankuy/asistente-academico", "disabled": false }
     },
     {
       "id": "supercouncil",
