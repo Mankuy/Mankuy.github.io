@@ -24,13 +24,13 @@
       "page": 1,
       "layout": "cover",
       "title": "Construí esto",
-      "hook": "Un psicólogo que programa. Mirá lo que le sale.",
-      "lead": "Ocho herramientas, cada una nacida de un problema que tuve en serio: corregir mi tesis, pagarle a la niñera, registrar la huerta, hacer que una IA deje de darme la razón. Ninguna vive en la nube. Todas corren en tu máquina.",
+      "hook": "No programo una línea. Dirijo a las IA que sí — mirá lo que sale.",
+      "lead": "Cada una nació de un problema que viví. El corrector, para mis amigos académicos; la de la niñera registra sus horas y arma el recibo; SuperCouncil es una IA que se audita sola. No escribo el código: dirijo a las IA que lo escriben.",
       "body": "Psicólogo · constructor · Montevideo, Uruguay",
       "coverLines": [
         { "text": "El corrector de tesis que te explica cada error", "page": 3 },
         { "text": "Una IA que no te da la razón (a propósito)", "page": 5 },
-        { "text": "El sueldo de la niñera, calculado solo", "page": 13 }
+        { "text": "Las horas de la niñera, del registro al recibo", "page": 13 }
       ],
       "stamp": "GRATIS · Nº1 · MVD · 2026",
       "ctaCover": "Pasá la página →"
@@ -41,14 +41,14 @@
       "layout": "index",
       "title": "De qué va",
       "hook": "Herramientas para problemas reales — algunas las comparto.",
-      "body": "Psicólogo y constructor en Montevideo. Ocho proyectos en este número, todos local-first.",
+      "body": "Psicólogo y constructor en Montevideo. Los proyectos de este número son local-first — corren en tu máquina, no en la nube.",
       "index": [
         { "id": "asistente", "name": "Asistente Académico", "page": 3, "tier": "Público", "note": "Tarjetas de corrección — APA/MLA, Word/PDF" },
         { "id": "supercouncil", "name": "SuperCouncil", "page": 5, "tier": "Público", "note": "Boardroom + Fábrica + Telegram" },
         { "id": "vincularmente", "name": "Vincularmente", "page": 7, "tier": "Web", "note": "Psicología y bienestar en vivo" },
         { "id": "gonza-discos", "name": "Gonza Discos", "page": 9, "tier": "Web", "note": "Tienda de vinilos con IA" },
         { "id": "gastos", "name": "Registro de Gastos", "page": 11, "tier": "Personal", "note": "Foto al recibo y proyecciones" },
-        { "id": "ninera", "name": "Sueldo Niñera", "page": 13, "tier": "Personal", "note": "Horas del mes → recibo" },
+        { "id": "ninera", "name": "Niñera: horas y sueldo", "page": 13, "tier": "Personal", "note": "Sus horas del mes → recibo claro" },
         { "id": "jardin", "name": "Jardín", "page": 15, "tier": "Personal", "note": "Cosecha con datos" },
         { "id": "salones", "name": "Salones de Fiesta", "page": 17, "tier": "En desarrollo", "note": "Reservas de salones infantiles" }
       ],
@@ -70,7 +70,7 @@
       "title": "Asistente Académico",
       "logo": { "src": "IMG/logos/asistente.png", "alt": "Asistente Académico" },
       "hook": "Un tutor exigente que corrige tu tesis — y te explica por qué.",
-      "body": "Cada error en una tarjeta con la norma; aceptás o rechazás. Vos mandás.\n\nTodo en tu máquina — tus textos no suben a ningún servidor.",
+      "body": "Cada error en una tarjeta con la norma; aceptás o rechazás. Vos mandás.\n\nLo hice para mis amigos académicos: ya pasé por la tesis y sé lo que duele. Todo en tu máquina — tus textos no suben a ningún servidor.",
       "features": [
         "APA, MLA y más — por nivel académico",
         "Modo Tesis: PDF entero con costo estimado previo",
@@ -200,9 +200,9 @@
       "page": 13,
       "layout": "feature",
       "tier": "personal",
-      "title": "Sueldo Niñera",
-      "hook": "Horas del mes → recibo automático.",
-      "body": "Registro las horas y la app arma el recibo de sueldo. Antes era Excel + calculadora.\n\nUn click y listo para imprimir.",
+      "title": "Niñera: horas y sueldo",
+      "hook": "Llevar sus horas y pagarle bien — sin Excel.",
+      "body": "Registro sus horas del mes y la app arma el recibo. Antes era Excel, calculadora y dudas con los feriados.\n\nPagarle en fecha y como corresponde, sin vueltas.",
       "features": [
         "Registro de horas por día",
         "Cálculo automático del mes",
@@ -260,7 +260,7 @@
       "layout": "editorial",
       "title": "¿Por qué un psicólogo hace apps?",
       "hook": "Porque los problemas no piden título universitario.",
-      "body": "Herramientas honestas, local-first. Misma regla para tesis, huerta y gastos.",
+      "body": "No escribo el código: dirijo a los agentes de IA que lo escriben. Mi oficio es entender el problema; el de ellos, ejecutarlo.\n\nCada herramienta salió de algo que viví —una tesis, las cuentas de casa, las horas de la niñera— y la armé sin maquillaje: si algo no anda, lo digo. Local-first, porque tus datos son tuyos.",
       "pullquote": "Un sistema que audita tu pensamiento.",
       "collage": [
         { "src": "IMG/Supercouncil.png", "alt": "SuperCouncil", "tilt": 3 }
