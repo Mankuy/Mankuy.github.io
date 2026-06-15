@@ -420,7 +420,7 @@
 
     return `
       <article class="spread spread--feature spread--feature-visual" id="spread-${esc(s.id)}" data-page="${s.page}">
-        <div class="feature-visual-stage">
+        <div class="feature-visual-stage" data-gallery="${esc(gallery)}">
           ${visual}
           ${secondary ? renderFeaturePolaroid(secondary, gallery, 'visual') : ''}
         </div>
@@ -554,6 +554,29 @@
 
     let gallery = [];
     let galleryIndex = 0;
+    let savedFlipPage = null;
+
+    ['pointerdown', 'mousedown', 'touchstart'].forEach(type => {
+      document.addEventListener(type, e => {
+        if (e.target.closest('[data-lightbox-src]')) e.stopPropagation();
+      }, true);
+    });
+
+    function syncFlipChrome(index) {
+      const flipPage = document.querySelectorAll('.flip-page')[index];
+      const spreadEl = flipPage?.querySelector('.spread');
+      const page = spreadEl?.dataset.page || index + 1;
+      const indicator = document.getElementById('magazine-indicator');
+      const pageChrome = document.getElementById('zine-page-label');
+      const prevBtn = document.getElementById('magazine-prev');
+      const nextBtn = document.getElementById('magazine-next');
+      const flipBook = document.getElementById('flip-book');
+      if (indicator) indicator.textContent = `${index + 1} / ${flipPageTotal}`;
+      if (pageChrome) pageChrome.textContent = `Pág ${page}`;
+      if (prevBtn) prevBtn.disabled = index <= 0;
+      if (nextBtn) nextBtn.disabled = index >= flipPageTotal - 1;
+      if (flipBook) flipBook.dataset.page = String(index + 1);
+    }
 
     function showSlide() {
       const item = gallery[galleryIndex];
@@ -570,6 +593,7 @@
     }
 
     function openFrom(btn) {
+      savedFlipPage = pageFlipInstance?.getCurrentPageIndex() ?? null;
       gallery = collectGallery(btn);
       const src = btn.getAttribute('data-lightbox-src');
       galleryIndex = Math.max(0, gallery.findIndex(item => item.src === src));
@@ -585,6 +609,14 @@
       gallery = [];
       galleryIndex = 0;
       document.body.classList.remove('lightbox-open');
+      if (pageFlipInstance != null && savedFlipPage != null) {
+        const current = pageFlipInstance.getCurrentPageIndex();
+        if (current !== savedFlipPage) {
+          pageFlipInstance.turnToPage(savedFlipPage);
+          syncFlipChrome(savedFlipPage);
+        }
+      }
+      savedFlipPage = null;
     }
 
     function step(delta) {
