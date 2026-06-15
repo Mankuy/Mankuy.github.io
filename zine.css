@@ -1172,6 +1172,21 @@ a:hover { color: var(--red); }
 
 .spread--back .links a:hover { color: var(--red); }
 
+.spread--back .links a.link-icon-only {
+  border-bottom: none;
+  padding: 6px;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.spread--back .links a.link-icon-only:hover {
+  transform: translateY(-2px);
+}
+
+.spread--back .links a.link-icon-only .link-icon {
+  width: 28px;
+  height: 28px;
+}
+
 .link-icon {
   display: inline-block;
   width: 1.15em;
