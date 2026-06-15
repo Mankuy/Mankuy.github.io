@@ -460,9 +460,14 @@
   function renderBackCover(s, total) {
     const gallery = `spread-${s.id}`;
     const collage = (s.collage || []).map(item => renderCollagePhoto(item, gallery)).join('');
-    const links = (s.links || []).map(l =>
-      `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`
-    ).join('');
+    const links = (s.links || []).map(l => {
+      const icon = l.icon === 'whatsapp'
+        ? '<span class="link-icon link-icon--whatsapp" aria-hidden="true"></span>'
+        : l.icon === 'github'
+          ? '<span class="link-icon link-icon--github" aria-hidden="true"></span>'
+          : '';
+      return `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${icon}<span>${esc(l.label)}</span></a></li>`;
+    }).join('');
     return `
       <article class="spread spread--back" id="spread-${esc(s.id)}" data-page="${s.page}">
         ${coverLogoImg('cover-logo--back')}

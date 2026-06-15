@@ -292,8 +292,8 @@
       "hook": "Las apps personales no están publicadas — las hice para mi casa.",
       "body": "Si te interesa una herramienta así, o querés hablar de SuperCouncil o el Asistente, escribime.",
       "links": [
-        { "label": "X / Twitter", "url": "https://x.com/SuperCouncil_" },
-        { "label": "GitHub", "url": "https://github.com/Mankuy" }
+        { "label": "WhatsApp", "url": "https://wa.me/59899148716", "icon": "whatsapp" },
+        { "label": "GitHub", "url": "https://github.com/Mankuy", "icon": "github" }
       ],
       "collage": [
         { "src": "IMG/ASISTENTE ACADEMICO.png", "tilt": -4, "size": "sm" },
