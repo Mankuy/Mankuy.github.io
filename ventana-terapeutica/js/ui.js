@@ -172,13 +172,42 @@
         if (!hogar.padre || mapa.parentNode === hogar.padre) return;
         hogar.padre.insertBefore(mapa, hogar.siguiente);
       };
+      const esMovil = function () {
+        return !!(g.matchMedia && g.matchMedia("(max-width: 900px), (pointer: coarse)").matches);
+      };
+      const encajar = function () {
+        if (!mapa.classList.contains("full-falso")) {
+          mapa.style.top = "";
+          mapa.style.left = "";
+          mapa.style.width = "";
+          mapa.style.height = "";
+          return;
+        }
+        const vv = g.visualViewport;
+        if (!vv) return;
+        mapa.style.top = vv.offsetTop + "px";
+        mapa.style.left = vv.offsetLeft + "px";
+        mapa.style.width = vv.width + "px";
+        mapa.style.height = vv.height + "px";
+      };
       const acomodar = function () {
         volverAlHogar();
+        encajar();
         full.textContent = enPantalla() ? "⛶ salir" : "⛶";
         g.dispatchEvent(new Event("resize"));
+        g.requestAnimationFrame(function () {
+          encajar();
+          g.dispatchEvent(new Event("resize"));
+        });
       };
       const falso = function (si) {
         mapa.classList.toggle("full-falso", !!si);
+        if (!si) {
+          mapa.style.top = "";
+          mapa.style.left = "";
+          mapa.style.width = "";
+          mapa.style.height = "";
+        }
         acomodar();
       };
       const salir = function () {
@@ -212,6 +241,13 @@
           salir();
           return;
         }
+        // En el celu el fullscreen nativo deja el canvas al tamaño viejo
+        // (o a 100vh, más grande que la pantalla visible). El overlay CSS
+        // se mide con visualViewport y entra.
+        if (esMovil()) {
+          falso(true);
+          return;
+        }
         const p = mapa.requestFullscreen && mapa.requestFullscreen();
         if (p && p.catch) {
           p.catch(function (e) {
@@ -223,6 +259,10 @@
         }
       });
       document.addEventListener("fullscreenchange", acomodar);
+      if (g.visualViewport) {
+        g.visualViewport.addEventListener("resize", encajar);
+        g.visualViewport.addEventListener("scroll", encajar);
+      }
       // Pake no pasa por la API estándar: le cuelga la clase
       // `pake-fullscreen-element` al mapa y puede no disparar
       // fullscreenchange. Mirando la clase nos enteramos igual, entre y salga
