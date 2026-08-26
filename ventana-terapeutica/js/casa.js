@@ -23,25 +23,84 @@
 
   const CREENCIAS = [
     {
-      id: "identidad",
-      frase: "«Así soy, y no hay mucho que hacer»",
-      ancla: "dmn",
-      anclaNombre: "el narrador",
-      nota: "Identidad cerrada: el libreto que el narrador sostiene desde hace años. Vive en el DMN. El prior más difícil de mover, y el que más cambia todo cuando se mueve.",
-    },
-    {
-      id: "culpa",
-      frase: "«Lo que pasó fue culpa mía»",
-      ancla: "lim",
-      anclaNombre: "la emoción",
-      nota: "Un peso fijo sobre un recuerdo: la emoción lo cargó, el narrador lo cerró con llave. Vive en la red límbica. El trabajo clásico de reconsolidación.",
-    },
-    {
-      id: "evitacion",
-      frase: "«Si lo dejo venir, me rompo»",
+      id: "observo",
+      frase: "«Puedo mirarlo sin comérmelo»",
+      polo: "abre",
       ancla: "sal",
       anclaNombre: "el portero",
-      nota: "Prior protector: en su momento cuidó. Hoy impide que el material llegue. Vive en la saliencia. La sesión lo salta si el portero no afloja.",
+      nota: "Un recurso: el portero deja pasar y no inunda. En el pico también afloja. La ventana no lo inventa: lo ensaya, o se te olvida.",
+    },
+    {
+      id: "acepto",
+      frase: "«Duele y igual estoy acá»",
+      polo: "abre",
+      ancla: "lim",
+      anclaNombre: "la emoción",
+      nota: "Aceptar no es bancársela callado: es que la emoción quepa sin que arme un juicio. Vive en lo límbico. Si no se practica, queda como una frase de esa noche.",
+    },
+    {
+      id: "adapto",
+      frase: "«Me acomodo a lo que hay»",
+      polo: "abre",
+      ancla: "dmn",
+      anclaNombre: "el narrador",
+      nota: "El narrador flexible: la historia se puede reescribir sin perder quién sos. Recurso del DMN. La sesión lo pone blando; los días después deciden si vuelve a ser hábito.",
+    },
+    {
+      id: "control",
+      frase: "«Si aflojo, se me cae todo»",
+      polo: "cierra",
+      ancla: "ejec",
+      anclaNombre: "el volante",
+      nota: "El volante apretado. En su momento sostuvo. Hoy no deja que entre nada nuevo. Vive en la ejecutiva: aflojarlo en el pico no alcanza si al otro día volvés a agarrar todo.",
+    },
+    {
+      id: "secreto",
+      frase: "«Esto no se le cuenta a nadie»",
+      polo: "cierra",
+      ancla: "lim",
+      anclaNombre: "la emoción",
+      nota: "No es culpa abstracta: es un peso que no puede salir de la boca. La emoción lo guarda. Contarlo en la ventana es el trabajo; el viaje solo lo destapa.",
+    },
+    {
+      id: "pedir",
+      frase: "«Puedo pedir sin tragármelo»",
+      polo: "abre",
+      ancla: "sal",
+      anclaNombre: "el portero",
+      nota: "Pedir es dejar que el portero mande una señal para afuera. Recurso. Si no se ensaya (un mensaje, un no, un favor), vuelve el tragar.",
+    },
+    {
+      id: "lugar",
+      frase: "«Hay un lugar para mí en esto»",
+      polo: "abre",
+      ancla: "dmn",
+      anclaNombre: "el narrador",
+      nota: "El narrador deja de ser el que sobra. Recurso de pertenencia. El pico lo pone blando; los días después, si nadie te hace lugar y vos tampoco, se apaga.",
+    },
+    {
+      id: "cuerpo",
+      frase: "«El cuerpo avisa y le creo»",
+      polo: "abre",
+      ancla: "sal",
+      anclaNombre: "el portero",
+      nota: "Interocepción que no es alarma: el portero informa, no incendia. Recurso. Sin práctica (parar, comer, salir) queda como una ocurrencia del viaje.",
+    },
+    {
+      id: "solo",
+      frase: "«Termino solo, da igual lo que haga»",
+      polo: "cierra",
+      ancla: "dmn",
+      anclaNombre: "el narrador",
+      nota: "El narrador ya escribió el final. No es soledad de un día: es un libreto. En el pico se abre; si al volver no hay un vínculo concreto, el final se reconsolida.",
+    },
+    {
+      id: "enojo",
+      frase: "«Si me enojo, los echo»",
+      polo: "cierra",
+      ancla: "ejec",
+      anclaNombre: "el volante",
+      nota: "El volante corta por lo sano. Protegió. Hoy deja la mesa vacía. La ventana pide un enojo que no sea destierro: decirlo, no borrar a la persona.",
     },
   ];
 
@@ -49,7 +108,7 @@
     { id: "sola", nombre: "sola", tasa: 0, nota: "La vida sigue. Nadie pregunta, nada se practica." },
     { id: "anotar", nombre: "anotar / charlar", tasa: 0.10, nota: "Contarlo, escribirlo, algún café con alguien: palabras sueltas sobre lo que pasó." },
     { id: "terapia", nombre: "terapia en la ventana", tasa: 0.22, nota: "Sesiones estos días, sobre el material que apareció. El clásico «integración»." },
-    { id: "practica", nombre: "terapia + práctica", tasa: 0.36, nota: "Terapia y además conducta nueva: exponerse a lo evitado, escribir la carta, cambiar la rutina que sostenía la creencia." },
+    { id: "practica", nombre: "terapia + práctica", tasa: 0.36, nota: "Terapia y además hacer algo con lo que apareció: una conversación, una rutina, un no que antes no salía." },
   ];
 
   /* Constantes del modelo (a la vista): cuánto tiende el prior a volver por
@@ -116,7 +175,8 @@
 
     const apertura = aperturaDe();
     const foco = (V.focoSala && V.focoSala()) || 1;
-    const tasa = integracion().tasa * foco;
+    const sentido = creencia().polo === "abre" ? -1 : 1;
+    const tasa = integracion().tasa * foco * sentido;
     const ts = [];
     const pesos = [];
 
@@ -188,11 +248,12 @@
 
   function palabraPeso(peso) {
     const r = peso / Math.max(0.01, peso0);
+    const recurso = creencia().polo === "abre";
     if (r >= 0.9) return "sigue tan firme como al llegar";
     if (r >= 0.7) return "aflojó un poco";
-    if (r >= 0.45) return "está blanda";
-    if (r >= 0.25) return "perdió buena parte de la autoridad";
-    return "ya no organiza como antes";
+    if (r >= 0.45) return recurso ? "está en duda" : "está blanda";
+    if (r >= 0.25) return recurso ? "cuesta encontrarla" : "perdió buena parte de la autoridad";
+    return recurso ? "casi no se oye" : "ya no organiza como antes";
   }
 
   function lectura(t, tr) {
@@ -209,6 +270,8 @@
 
   function veredicto(t, tr) {
     const peso = pesoEn(tr, t);
+    const c = creencia();
+    const recurso = c.polo === "abre";
     if (tr.apertura < 0.12) {
       return "Con esta dosis el prior casi no se enteró: no hay puerta abierta que escribir. " +
         "Por más terapia en la ventana, la integración trabaja sobre madera seca. " +
@@ -220,25 +283,36 @@
         return "Todavía firme. La sesión apenas empezó: la curva de priors todavía no bajó y la creencia sigue mandando.";
       }
       if (r > 0.55) {
-        return "Está aflojando. Este es el material en movimiento — el momento de sostener, no de interpretar encima.";
+        return recurso
+          ? "El recurso también afloja. No es que se rompió: el pico pone blando hasta lo que te cuida. Sostener, no clavar una interpretación."
+          : "Está aflojando. Este es el material en movimiento: el momento de sostener, no de interpretar encima.";
       }
-      return "En su punto más blando. La viga es " + creencia().anclaNombre +
+      return "En su punto más blando. La viga es " + c.anclaNombre +
         ": acá una frase pesa lo que en otro momento no pesaría. Lo que falta decidir es qué pasa después.";
     }
     const r = peso / peso0;
+    if (recurso) {
+      if (r >= 0.85) {
+        return "El recurso volvió a su lugar. La ventana no lo inventó: lo ensayó. Sin esos días, «puedo observar» era una frase del viaje.";
+      }
+      if (r >= 0.55) {
+        return "Está más flojo que al llegar: lo viste, y todavía no es hábito. Lo que se practique el resto de la ventana decide si se queda.";
+      }
+      return "Se fue con el viaje. Un recurso sin ensayo es una noche linda. La casa se construye después, haciendo la cosa chica que esa frase nombra.";
+    }
     if (r >= 0.85) {
       return "Se reconsolidó casi igual. La experiencia se archiva como «aquello que me pasó una vez»: " +
         "sin trabajo en la ventana, el viaje no deja casa.";
     }
     if (r >= 0.6) {
-      return "Quedó más liviana pero entera: hay material abierto y sin cerrar. Sigue siendo terreno de trabajo — la ventana todavía dura.";
+      return "Quedó más liviana pero entera: hay material abierto y sin cerrar. Sigue siendo terreno de trabajo. La ventana todavía dura.";
     }
     if (r >= 0.35) {
       return "Bastante reescrita: perdió buena parte de la autoridad. " +
         "Lo que se practique el resto de la ventana decide si el cambio se queda o se va.";
     }
     return "Perdió autoridad: la creencia sigue ahí, pero ya no organiza la vida. " +
-      "Eso es reconsolidación — y no pasa sin ventana, por más linda que haya sido la sesión.";
+      "Eso es reconsolidación, y no pasa sin ventana, por más linda que haya sido la sesión.";
   }
 
   /* ── Dibujo ─────────────────────────────────────────────── */
@@ -350,7 +424,7 @@
       '<button type="button" class="cs-salir">volver ✕</button>' +
       "</div>" +
       "<h3 class=\"cs-titulo\">La casa: qué se escribe en la ventana</h3>" +
-      '<p class="cs-intro">La sesión afloja la creencia. Lo que se haga estos días decide si vuelve a cerrar igual.</p>' +
+      '<p class="cs-intro">Hay priors que cierran y priors que cuidan. La sesión afloja los dos. Lo que se haga estos días decide si el que cierra vuelve, y si el recurso se queda.</p>' +
       '<canvas id="csCanvas" aria-hidden="true"></canvas>' +
       '<div class="cs-lectura" id="csLectura"></div>' +
       '<div class="cs-veredicto" id="csVeredicto"></div>' +
@@ -371,9 +445,8 @@
       '<p class="cs-nota" id="csNotaInteg"></p></div>' +
       '<p class="cs-fuente">Modelo de juguete de REBUS + integración (Carhart-Harris 2019; ' +
       "Lyons &amp; Carhart-Harris 2018). El mapeo creencia→red es ilustrativo, no una localización. " +
-      "Durante la sesión el peso sigue la curva de priors; en la ventana, cada día compite la reconsolidación " +
-      "contra lo que se escribe (práctica × plasticidad × apertura × si la sala apuntó a esa red). " +
-      "No cuantifica resultado clínico: ilustra por qué la ventana se llama terapéutica.</p>";
+      "Durante la sesión el peso sigue la curva de priors. En la ventana, un prior que cierra se reescribe " +
+      "si hay práctica; un recurso se ensaya o se olvida. No cuantifica resultado clínico.</p>";
 
     canvas = panel.querySelector("#csCanvas");
     ctx = canvas ? canvas.getContext("2d") : null;

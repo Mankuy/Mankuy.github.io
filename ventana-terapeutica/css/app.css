@@ -198,10 +198,10 @@ body {
   background: rgba(255, 255, 255, 0.04);
   color: var(--paper);
   font-family: var(--sans);
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   line-height: 1.3;
   text-align: left;
-  padding: 0.28rem 0.5rem;
+  padding: 0.22rem 0.45rem;
   border-radius: 9px;
   cursor: pointer;
   transition: background 0.16s, border-color 0.16s;

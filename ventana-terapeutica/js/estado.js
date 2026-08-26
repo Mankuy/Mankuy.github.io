@@ -224,7 +224,7 @@
     const ancla = V.casa && V.casa.ancla && V.casa.ancla();
     const sala = estado.sala || "alineada";
     if (sala === "desfasada") return 0.72;
-    if (sala === "alineada" && (ancla === "dmn" || ancla === "vis")) return 1.14;
+    if (sala === "alineada" && (ancla === "dmn" || ancla === "vis" || ancla === "ejec")) return 1.14;
     if (sala === "silencio" && (ancla === "sal" || ancla === "lim")) return 1.14;
     return 0.88;
   }
