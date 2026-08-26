@@ -1,0 +1,1916 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --ink: #07080d;
+  --paper: #e8e4d8;
+  --muted: rgba(232, 228, 216, 0.55);
+  --glass: rgba(10, 12, 20, 0.62);
+  --line: rgba(255, 255, 255, 0.1);
+  --psilo: #8b6cff;
+  --entropia: #ff5c8a;
+  --plasticidad: #3ddc97;
+  --priors: #f5c14c;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --suave: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+}
+
+#app {
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+}
+
+/* ── Cabecera ───────────────────────────────────────────── */
+
+#cabecera {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 1rem 0.4rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.marca {
+  margin: 0 0 0.15rem;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+#cabecera h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.cab-der {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.sub {
+  margin: 0;
+  max-width: 28rem;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  color: var(--muted);
+}
+
+#btnRelato {
+  flex-shrink: 0;
+  appearance: none;
+  border: 1px solid rgba(139, 108, 255, 0.55);
+  background: rgba(139, 108, 255, 0.16);
+  color: #c9baff;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.34rem 0.8rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.18s var(--suave);
+}
+
+#btnRelato:hover {
+  background: rgba(139, 108, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ── Modo relato: mientras corre, es lo único que hay que leer ── */
+
+#relato {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 0.85rem 0.7rem;
+  background: rgba(24, 20, 46, 0.82);
+  border: 1px solid rgba(139, 108, 255, 0.34);
+  border-radius: 16px;
+}
+
+#relato[hidden] { display: none; }
+
+#casa {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.7rem 0.8rem 0.65rem;
+  background: rgba(12, 28, 22, 0.78);
+  border: 1px solid rgba(61, 220, 151, 0.32);
+  border-radius: 16px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+#casa[hidden] { display: none; }
+
+.cs-cab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.cs-kicker {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(143, 240, 194, 0.75);
+}
+
+.cs-salir {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  cursor: pointer;
+  padding: 0.1rem 0.2rem;
+  border-radius: 6px;
+}
+
+.cs-salir:hover { color: var(--paper); background: rgba(255, 255, 255, 0.08); }
+
+.cs-titulo {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.cs-intro {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: rgba(232, 228, 216, 0.82);
+}
+
+.cs-grupo { min-width: 0; }
+
+.cs-rotulo {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.28rem;
+}
+
+.cs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.28rem;
+}
+
+.cs-chip {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  line-height: 1.3;
+  text-align: left;
+  padding: 0.28rem 0.5rem;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.16s, border-color 0.16s;
+}
+
+.cs-chip:hover { background: rgba(255, 255, 255, 0.1); }
+
+.cs-chip.on {
+  border-color: rgba(61, 220, 151, 0.55);
+  background: rgba(61, 220, 151, 0.16);
+  color: #d8ffe8;
+}
+
+.cs-chip--inline {
+  font-size: 0.64rem;
+  padding: 0.18rem 0.45rem;
+  border-radius: 999px;
+}
+
+.card--cohorte .cs-chip.on {
+  border-color: rgba(245, 193, 76, 0.55);
+  background: rgba(245, 193, 76, 0.16);
+  color: #fff4d2;
+}
+
+.cs-nota {
+  margin: 0.28rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: rgba(232, 228, 216, 0.62);
+}
+
+.cs-peso {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.2rem 0.6rem;
+  align-items: center;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.cs-peso input[type="range"] {
+  grid-column: 1 / -1;
+  accent-color: var(--priors);
+}
+
+.cs-peso em {
+  font-style: normal;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+}
+
+#csCanvas {
+  display: block;
+  width: 100%;
+  height: 92px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.cs-lectura {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  color: rgba(232, 228, 216, 0.55);
+}
+
+.cs-veredicto {
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: rgba(232, 228, 216, 0.9);
+}
+
+.cs-fuente {
+  margin: 0.15rem 0 0;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  line-height: 1.4;
+  color: rgba(232, 228, 216, 0.42);
+}
+
+/* Con el relato abierto, el panel de fase se guarda: una sola cosa para leer. */
+body.en-relato #panelFase { display: none; }
+
+/* La casa pide el rail entero: métricas y fase se guardan. */
+body.en-casa #panelFase,
+body.en-casa #metricas { display: none; }
+
+.rl-cab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.rl-paso {
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(201, 186, 255, 0.75);
+}
+
+.rl-salir {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  cursor: pointer;
+  padding: 0.1rem 0.2rem;
+  border-radius: 6px;
+}
+
+.rl-salir:hover { color: var(--paper); background: rgba(255, 255, 255, 0.08); }
+
+.rl-cuerpo {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  animation: cardIn 0.4s var(--suave) both;
+}
+
+.rl-cuerpo h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.12rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--paper);
+}
+
+.rl-cuerpo p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(232, 228, 216, 0.88);
+}
+
+.rl-cuerpo b { color: #fff; font-weight: 600; }
+
+.rl-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.rl-prev,
+.rl-next {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 9px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.16s;
+}
+
+.rl-prev:hover:not(:disabled),
+.rl-next:hover { background: rgba(255, 255, 255, 0.14); }
+
+.rl-prev:disabled { opacity: 0.3; cursor: default; }
+
+.rl-next {
+  border-color: rgba(139, 108, 255, 0.55);
+  background: rgba(139, 108, 255, 0.22);
+  color: #d6cbff;
+}
+
+.rl-puntos {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.rl-punto {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+  transition: background 0.16s, transform 0.16s var(--suave);
+}
+
+.rl-punto:hover { transform: scale(1.35); }
+.rl-punto.visto { background: rgba(139, 108, 255, 0.55); }
+.rl-punto.on { background: #c9baff; transform: scale(1.4); }
+
+#btnAyuda {
+  flex-shrink: 0;
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  padding: 0.32rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, transform 0.18s var(--suave);
+}
+
+#btnAyuda:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.34);
+  transform: translateY(-1px);
+}
+
+#btnCasa {
+  flex-shrink: 0;
+  appearance: none;
+  border: 1px solid rgba(61, 220, 151, 0.5);
+  background: rgba(61, 220, 151, 0.12);
+  color: #8ff0c2;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.34rem 0.8rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.18s var(--suave);
+}
+
+#btnCasa:hover {
+  background: rgba(61, 220, 151, 0.24);
+  transform: translateY(-1px);
+}
+
+body.en-casa #btnCasa {
+  background: rgba(61, 220, 151, 0.32);
+  color: #d8ffe8;
+}
+
+/* ── Barra de dosis y cepa ──────────────────────────────── */
+
+#barraDosis {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.8rem;
+  padding: 0.45rem 1rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  background: #0a0b12;
+  font-family: var(--sans);
+}
+
+.dz-campo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dz-campo--rango {
+  flex: 1 1 190px;
+  min-width: 150px;
+}
+
+.dz-campo input[type="range"] {
+  flex: 1;
+  accent-color: var(--psilo);
+}
+
+#dzCepa {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: #161822;
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 0.28rem 0.5rem;
+  cursor: pointer;
+  max-width: 15rem;
+}
+
+.dz-lectura {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.22rem 0.6rem 0.28rem;
+  color: var(--paper);
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: background 0.16s, border-color 0.16s;
+}
+
+.dz-lectura:hover { background: rgba(255, 255, 255, 0.1); }
+.dz-lectura[aria-expanded="true"] { border-color: rgba(255, 255, 255, 0.36); }
+
+#dzGr {
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+}
+
+#dzMg {
+  font-size: 0.68rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.dz-presets {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.dz-preset {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.18rem 0.55rem;
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s, border-color 0.16s;
+}
+
+.dz-preset:hover { color: var(--paper); border-color: rgba(255, 255, 255, 0.3); }
+
+.dz-preset.on {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: transparent;
+}
+
+.dz-salida {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin-left: auto;
+  font-size: 0.68rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+#dzBanda {
+  font-size: 0.76rem;
+  color: var(--paper);
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* La fila suelta necesita ~1280 px; por debajo se partía sola en renglones
+   desparejos y le comía el alto al mapa. Estos tres tramos la ordenan. */
+@media (max-width: 1319px) {
+  #barraDosis {
+    display: grid;
+    align-items: center;
+    gap: 0.35rem 0.6rem;
+    padding: 0.4rem 0.8rem 0.45rem;
+    /* Un renglón, pero con el slider como única pieza elástica. */
+    grid-template-columns: minmax(0, 200px) minmax(100px, 1fr) auto auto auto auto;
+    grid-template-areas:
+      "cepa rango lectura presets ctxbtn salida"
+      "ctx ctx ctx ctx ctx ctx";
+  }
+
+  .dz-campo--cepa { grid-area: cepa; }
+  .dz-campo--rango { grid-area: rango; min-width: 0; }
+  .dz-lectura { grid-area: lectura; }
+  .dz-presets { grid-area: presets; min-width: 0; }
+  .dz-ctx-btn { grid-area: ctxbtn; }
+  .dz-ctx { grid-area: ctx; }
+  .dz-salida { grid-area: salida; margin-left: auto; }
+
+  /* Los rótulos en versalita son decorativos: el select y el slider ya se
+     explican solos, y liberan bastante ancho. */
+  .dz-campo > span { display: none; }
+
+  #dzCepa { max-width: 100%; width: 100%; }
+}
+
+/* Ya no entra todo en un renglón: presets y salida bajan. */
+@media (max-width: 1049px) {
+  #barraDosis {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    grid-template-areas:
+      "cepa    rango   lectura"
+      "presets ctxbtn  salida"
+      "ctx     ctx     ctx";
+  }
+
+  .dz-ctx { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 620px) {
+  #barraDosis {
+    gap: 0.3rem 0.5rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "cepa    lectura"
+      "rango   rango"
+      "presets ctxbtn"
+      "salida  salida"
+      "ctx     ctx";
+  }
+
+  .dz-ctx {
+    grid-template-columns: 1fr;
+  }
+
+  /* La ocupación pico y la duración quedan en la ficha de dosis, que se abre
+     tocando los gramos: acá solo entra la banda. */
+  #dzPico,
+  #dzDur { display: none; }
+
+  .dz-presets {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .dz-presets::-webkit-scrollbar { display: none; }
+  .dz-preset { flex-shrink: 0; font-size: 0.62rem; padding: 0.16rem 0.5rem; }
+
+  #dzCepa { font-size: 0.72rem; padding: 0.24rem 0.4rem; }
+  #dzGr { font-size: 0.85rem; }
+  #dzMg { font-size: 0.64rem; }
+  .dz-lectura { padding: 0.2rem 0.5rem 0.24rem; }
+}
+
+#barraDosis[data-banda="micro"] #dzBanda { background: rgba(94, 224, 200, 0.16); color: #9df0e0; }
+#barraDosis[data-banda="baja"] #dzBanda { background: rgba(61, 220, 151, 0.16); color: #8ff0c2; }
+#barraDosis[data-banda="moderada"] #dzBanda { background: rgba(245, 193, 76, 0.16); color: #f7d68f; }
+#barraDosis[data-banda="alta"] #dzBanda { background: rgba(139, 108, 255, 0.22); color: #c3b2ff; }
+#barraDosis[data-banda="muyalta"] #dzBanda { background: rgba(255, 138, 76, 0.2); color: #ffbb93; }
+#barraDosis[data-banda="extrema"] #dzBanda { background: rgba(255, 92, 138, 0.22); color: #ff9fb8; }
+#barraDosis[data-banda="masalla"] #dzBanda { background: rgba(255, 92, 138, 0.4); color: #ffd0dc; }
+
+.dz-ctx-btn {
+  white-space: nowrap;
+}
+
+.dz-ctx-btn.on,
+.dz-ctx-btn.alterado {
+  color: #0b0714;
+  background: #f7d68f;
+  border-color: transparent;
+}
+
+.dz-ctx {
+  flex-basis: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.4rem 0.8rem;
+  padding: 0.35rem 0.1rem 0.15rem;
+  border-top: 1px solid var(--line);
+}
+
+.dz-ctx[hidden] { display: none; }
+
+.dz-ctx-fila {
+  min-width: 0;
+}
+
+.dz-ctx-rot {
+  display: block;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.22rem;
+}
+
+.dz-ctx-ops {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.22rem;
+}
+
+.dz-seg {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+  font-family: var(--sans);
+  font-size: 0.64rem;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s, border-color 0.16s;
+}
+
+.dz-seg:hover { color: var(--paper); border-color: rgba(255, 255, 255, 0.3); }
+
+.dz-seg.on {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: transparent;
+}
+
+.dz-ctx-nota {
+  margin: 0.28rem 0 0;
+  font-size: 0.62rem;
+  line-height: 1.35;
+  color: rgba(232, 228, 216, 0.48);
+}
+
+/* ── Escenario: mapa a la izquierda, columna de lectura a la derecha.
+      Nada flota encima del mapa. ─────────────────────────── */
+
+main {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) minmax(150px, 23vh);
+  min-height: 0;
+  overflow: hidden;
+}
+
+#escenario {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(290px, 26vw, 380px);
+  gap: 0.7rem;
+  padding: 0.7rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#mapa {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(80, 50, 140, 0.24), transparent 58%),
+    radial-gradient(ellipse at 72% 82%, rgba(40, 90, 80, 0.13), transparent 48%),
+    #07080d;
+}
+
+#lienzoRed,
+#lienzoCurvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* La simulación visual ocupa el mismo lugar que el cerebro: son dos ventanas
+   a la misma corrida, no dos cosas que compiten por espacio. */
+#lienzoVision {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+#mapa.viendo #lienzoVision { display: block; }
+#mapa.viendo #lienzoRed,
+#mapa.viendo #etiquetasRed,
+#mapa.viendo #leyendaRed { display: none; }
+
+#vistaSwitch {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 5;
+  display: flex;
+  gap: 0.2rem;
+  padding: 0.18rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(8, 10, 18, 0.72);
+  backdrop-filter: blur(9px);
+}
+
+#vistaSwitch[hidden] { display: none; }
+
+#vistaSwitch button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.16s, color 0.16s;
+}
+
+#vistaSwitch button:hover { color: var(--paper); }
+
+/* En pantalla completa el mapa ocupa todo y el fondo tiene que ser opaco:
+   si no, se ve el escritorio a través del degradé. */
+#mapa:fullscreen {
+  border-radius: 0;
+  border: 0;
+  background: #05060b;
+}
+
+#mapa:fullscreen #vistaSwitch { top: 1rem; left: 1rem; }
+
+/* Plan B: cuando el navegador niega el fullscreen nativo (la ventanita de
+   Hydra lo hace), el mapa se agranda por CSS. Va abajo de #ayuda (z-index 60)
+   para que el modal siga funcionando estando en pantalla completa. */
+#mapa.full-falso {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  border-radius: 0;
+  border: 0;
+  background: #05060b;
+}
+
+#mapa.full-falso #vistaSwitch { top: 1rem; left: 1rem; }
+
+/* Pake (WebView2) no usa :fullscreen: le cuelga esta clase al elemento y lo
+   saca del flujo con una altura que NO cubre la pantalla (medido: 1536x518
+   en una ventana de 1536x794). Como el mapa deja de ocupar su celda, el
+   #rail se corre a la primera columna del grid y se estira a 1122px — ahí
+   nace el "se ve todo mal y hay que refrescar".
+   Se lo fuerza a tapar de verdad. Sin !important no alcanza: los estilos que
+   mete Pake vienen después. */
+#mapa.pake-fullscreen-element {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 50 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #05060b !important;
+}
+
+#mapa.pake-fullscreen-element #vistaSwitch { top: 1rem; left: 1rem; }
+
+#vistaSwitch #btnPantalla {
+  border-left: 1px solid var(--line);
+  margin-left: 0.15rem;
+  padding-left: 0.5rem;
+}
+
+#vistaSwitch #btnViaje {
+  border-left: 1px solid var(--line);
+  margin-left: 0.15rem;
+  padding-left: 0.55rem;
+}
+
+#vistaSwitch #btnViaje[hidden] { display: none; }
+
+#vistaSwitch button.on {
+  color: var(--ink);
+  background: var(--paper);
+  font-weight: 600;
+}
+
+#rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Etiquetas flotantes: red.js las posiciona proyectando el 3D. */
+
+#etiquetasRed {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* La etiqueta cerrada es un chip. Abierta se vuelve un globo que sale del nodo
+   y cuenta qué le pasa a esa red en este minuto. */
+
+.et {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(8, 10, 18, 0.66);
+  backdrop-filter: blur(9px);
+  padding: 0.2rem 0.62rem 0.26rem;
+  cursor: pointer;
+  white-space: nowrap;
+  text-align: center;
+  /* Sin esto, cualquier texto sin color propio hereda el negro del <button>. */
+  color: var(--paper);
+  transition: opacity 0.25s, border-color 0.2s, background 0.2s, box-shadow 0.25s;
+}
+
+.et::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 9px;
+  height: 9px;
+  transform: translateX(-50%) rotate(45deg);
+  background: inherit;
+  border-right: 1px solid var(--c, rgba(255, 255, 255, 0.3));
+  border-bottom: 1px solid var(--c, rgba(255, 255, 255, 0.3));
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.et.abajo::after {
+  bottom: auto;
+  top: -5px;
+  border: 0;
+  border-left: 1px solid var(--c, rgba(255, 255, 255, 0.3));
+  border-top: 1px solid var(--c, rgba(255, 255, 255, 0.3));
+}
+
+.et-n {
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--c, var(--paper));
+}
+
+.et-a {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  color: var(--muted);
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.25s var(--suave), opacity 0.25s;
+}
+
+.et:hover {
+  border-color: var(--c, rgba(255, 255, 255, 0.5));
+  background: rgba(8, 10, 18, 0.9);
+  box-shadow: 0 0 18px -4px var(--c, transparent);
+}
+
+.et:hover .et-a {
+  max-height: 1rem;
+  opacity: 1;
+}
+
+.et.off { opacity: 0.3; }
+
+/* Elegida: chip resaltado con la colita apuntando a su nodo. */
+
+.et.on {
+  border-color: var(--c, rgba(255, 255, 255, 0.5));
+  background: rgba(9, 11, 19, 0.93);
+  box-shadow: 0 0 22px -6px var(--c, transparent);
+  z-index: 2;
+}
+
+.et.on::after { opacity: 1; }
+
+.et.on .et-n { font-size: 0.74rem; }
+
+.et.on .et-a {
+  max-height: 1.2rem;
+  opacity: 1;
+  font-size: 0.6rem;
+  font-style: italic;
+}
+
+/* Globo: solo con una o dos redes. Con tres o más taparía el mapa, así que
+   el detalle se va al panel y acá queda el chip. */
+
+.et.globo {
+  align-items: flex-start;
+  text-align: left;
+  white-space: normal;
+  width: max-content;
+  max-width: min(238px, 42%);
+  border-radius: 13px;
+  padding: 0.4rem 0.6rem 0.5rem;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+  animation: nubeIn 0.28s var(--suave) both;
+}
+
+.et-donde {
+  display: none;
+  margin-top: 0.15rem;
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  line-height: 1.3;
+  color: var(--c, var(--muted));
+  opacity: 0.75;
+}
+
+.et.globo .et-donde { display: block; }
+
+/* Arrastrable: si tapa algo, se corre. */
+.et.globo { cursor: grab; }
+.et.globo.agarrada { cursor: grabbing; }
+.et.globo.movida::after { opacity: 0; }
+
+.hilos {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.et-ahora {
+  display: none;
+  margin-top: 0.3rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  line-height: 1.38;
+  color: rgba(232, 228, 216, 0.88);
+}
+
+.et.globo .et-ahora { display: block; }
+
+/* La entrada anima SOLO opacidad y desenfoque. Nada de escala: red.js calcula
+   la separación de globos con offsetWidth (caja de layout) y una escala haría
+   que lo dibujado no coincida con lo calculado. */
+@keyframes nubeIn {
+  from { opacity: 0; filter: blur(3px); }
+  to { opacity: 1; filter: none; }
+}
+
+/* Leyenda */
+
+#leyendaRed {
+  position: absolute;
+  left: 0.7rem;
+  bottom: 0.55rem;
+  right: 0.7rem;
+  z-index: 4;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.32rem;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+#leyendaRed button {
+  appearance: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  font: inherit;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.18s var(--suave);
+}
+
+#leyendaRed button:hover {
+  transform: translateY(-1px);
+  color: var(--paper);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#leyendaRed button.on {
+  color: var(--paper);
+  border-color: var(--c, rgba(255, 255, 255, 0.55));
+  background: rgba(255, 255, 255, 0.11);
+}
+
+#leyendaRed .lg-a {
+  font-size: 0.62rem;
+  opacity: 0.6;
+}
+
+#leyendaRed i {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  align-self: center;
+}
+
+#leyendaRed .lg-todas,
+#leyendaRed .lg-nada {
+  border-color: rgba(255, 255, 255, 0.16);
+  font-size: 0.66rem;
+  letter-spacing: 0.03em;
+}
+
+#leyendaRed .lg-todas.on {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: transparent;
+}
+
+#leyendaRed .lg-nada[hidden] {
+  display: none;
+}
+
+/* ── Métricas (arriba de la columna) ────────────────────── */
+
+#metricas {
+  flex: 0 0 auto;
+  padding: 0.65rem 0.75rem 0.5rem;
+  background: var(--glass);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.met-titulo,
+.met-pista {
+  margin: 0 0 0.4rem;
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.met-pista {
+  margin: 0.4rem 0 0;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  font-size: 0.63rem;
+  opacity: 0.7;
+}
+
+.met {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 5.4rem 1fr 2.2rem;
+  gap: 0.4rem;
+  align-items: center;
+  margin-bottom: 0.26rem;
+  padding: 0.2rem 0.3rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.16s, border-color 0.16s;
+}
+
+.met:hover {
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.met.on {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.met span:first-child {
+  color: var(--muted);
+}
+
+.met.on span:first-child {
+  color: var(--paper);
+}
+
+.met em {
+  font-style: normal;
+  text-align: right;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar {
+  display: block;
+  height: 5px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  transition: width 0.12s linear;
+}
+
+.met[data-k="psilo"] .bar i { background: var(--psilo); }
+.met[data-k="entropia"] .bar i { background: var(--entropia); }
+.met[data-k="plasticidad"] .bar i { background: var(--plasticidad); }
+.met[data-k="priors"] .bar i { background: var(--priors); }
+
+/* ── Panel de fase y tarjetas ───────────────────────────── */
+
+#panelFase {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.7rem 0.8rem 0.75rem;
+  background: var(--glass);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+#panelFase::-webkit-scrollbar {
+  width: 7px;
+}
+
+#panelFase::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 99px;
+}
+
+.pf-cab.flash {
+  animation: flash 0.55s ease;
+}
+
+@keyframes flash {
+  from { transform: translateY(6px); opacity: 0.4; }
+  to { transform: none; opacity: 1; }
+}
+
+#panelFase .kicker {
+  margin: 0 0 0.25rem;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--priors);
+}
+
+#panelFase h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.06rem;
+  font-weight: 500;
+}
+
+#panelFase .cuerpo {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: rgba(232, 228, 216, 0.82);
+  transition: font-size 0.25s var(--suave), opacity 0.25s;
+}
+
+/* Con tarjetas abiertas el texto de fase se achica pero no desaparece. */
+#panelFase.con-ficha .cuerpo {
+  font-size: 0.76rem;
+  opacity: 0.66;
+  max-height: 4.2rem;
+  overflow: hidden;
+}
+
+#fichas {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#fichas[hidden] {
+  display: none;
+}
+
+.card {
+  position: relative;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--c, rgba(255, 255, 255, 0.3));
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 0.55rem 0.65rem 0.6rem;
+  animation: cardIn 0.42s var(--suave) both;
+}
+
+.card:nth-child(2) { animation-delay: 0.06s; }
+.card:nth-child(3) { animation-delay: 0.12s; }
+.card:nth-child(4) { animation-delay: 0.18s; }
+.card:nth-child(5) { animation-delay: 0.24s; }
+.card:nth-child(6) { animation-delay: 0.3s; }
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.card-tipo {
+  font-family: var(--sans);
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card-puntos {
+  display: inline-flex;
+  gap: 0.18rem;
+}
+
+.card-puntos i {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+}
+
+.card-x {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0 0.15rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.card-x:hover {
+  color: var(--paper);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.card h3 {
+  margin: 0 0 0.15rem;
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--c, var(--paper));
+}
+
+.card-apodo-in {
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.card-apodo {
+  margin: 0 0 0.35rem;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.card-ahora,
+.card-p,
+.card-clima {
+  margin: 0 0 0.38rem;
+  font-size: 0.78rem;
+  line-height: 1.42;
+  color: rgba(232, 228, 216, 0.86);
+}
+
+.card-ahora {
+  padding: 0.35rem 0.45rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.card-p b,
+.card-ahora b {
+  color: rgba(232, 228, 216, 0.96);
+}
+
+.card-p:last-child,
+.card-linea:last-child p {
+  margin-bottom: 0;
+}
+
+.card--combo {
+  border-left-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.card--todas {
+  border-left-color: var(--paper);
+}
+
+.card-clima {
+  font-style: italic;
+  color: rgba(232, 228, 216, 0.72);
+}
+
+.card-linea {
+  padding-top: 0.35rem;
+  margin-top: 0.35rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.card-linea h4 {
+  margin: 0 0 0.15rem;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(232, 228, 216, 0.9);
+}
+
+.card-linea p {
+  margin: 0;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: rgba(232, 228, 216, 0.8);
+}
+
+.card--vision {
+  border-left-color: var(--entropia);
+  background: rgba(255, 92, 138, 0.07);
+}
+
+.card--dosis {
+  border-left-color: var(--psilo);
+  background: rgba(139, 108, 255, 0.07);
+}
+
+.card--cohorte {
+  border-left-color: var(--priors);
+  background: rgba(245, 193, 76, 0.07);
+}
+
+.card-alerta {
+  margin: 0 0 0.38rem;
+  padding: 0.35rem 0.45rem;
+  border-radius: 8px;
+  border-left: 2px solid var(--entropia);
+  background: rgba(255, 92, 138, 0.1);
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: rgba(232, 228, 216, 0.9);
+}
+
+.card-fuente {
+  margin: 0.35rem 0 0;
+  padding-top: 0.35rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-family: var(--sans);
+  font-size: 0.63rem;
+  line-height: 1.4;
+  color: rgba(232, 228, 216, 0.46);
+}
+
+.fichas-nota {
+  margin: 0.1rem 0 -0.15rem;
+  font-family: var(--sans);
+  font-size: 0.63rem;
+  line-height: 1.35;
+  color: rgba(232, 228, 216, 0.44);
+  animation: cardIn 0.4s var(--suave) both;
+}
+
+/* ── Curvas ─────────────────────────────────────────────── */
+
+#panelCurvas {
+  position: relative;
+  border-top: 1px solid var(--line);
+  background: #0b0d14;
+}
+
+#btnCohorte {
+  position: absolute;
+  top: 0.28rem;
+  left: 6.4rem;
+  z-index: 4;
+  appearance: none;
+  border: 1px solid rgba(245, 193, 76, 0.4);
+  background: rgba(12, 14, 22, 0.78);
+  color: #f7d68f;
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background 0.16s, color 0.16s, border-color 0.16s;
+}
+
+#btnCohorte:hover {
+  background: rgba(245, 193, 76, 0.18);
+  border-color: rgba(245, 193, 76, 0.7);
+}
+
+#btnCohorte.on {
+  background: rgba(245, 193, 76, 0.28);
+  color: #fff4d2;
+  border-color: transparent;
+}
+
+#tooltipCurva {
+  position: fixed;
+  z-index: 30;
+  transform: translate(-50%, calc(-100% - 14px));
+  min-width: 168px;
+  padding: 0.5rem 0.6rem 0.45rem;
+  background: rgba(20, 23, 34, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 11px;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  pointer-events: none;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.55);
+  animation: tipIn 0.16s var(--suave) both;
+}
+
+@keyframes tipIn {
+  from { opacity: 0; transform: translate(-50%, calc(-100% - 6px)) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, calc(-100% - 14px)) scale(1); }
+}
+
+#tooltipCurva::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 9px;
+  height: 9px;
+  transform: translateX(-50%) rotate(45deg);
+  background: rgba(20, 23, 34, 0.97);
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+#tooltipCurva[hidden] { display: none; }
+
+.tc-t {
+  font-weight: 700;
+  font-size: 0.78rem;
+  margin-bottom: 0.3rem;
+  color: var(--paper);
+}
+
+.tc-grid {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.tc-fila {
+  display: grid;
+  grid-template-columns: 0.6rem 1fr auto;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--muted);
+  border-radius: 5px;
+  padding: 0.05rem 0.15rem;
+}
+
+.tc-fila.on {
+  color: var(--paper);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.tc-fila i {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+}
+
+.tc-fila b { font-weight: 500; }
+
+.tc-fila em {
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  color: var(--paper);
+}
+
+.tc-hint {
+  margin-top: 0.35rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.62rem;
+  color: rgba(232, 228, 216, 0.5);
+}
+
+.tc-banda {
+  margin-top: 0.3rem;
+  padding-top: 0.28rem;
+  border-top: 1px solid rgba(245, 193, 76, 0.22);
+  font-size: 0.62rem;
+  line-height: 1.35;
+  color: #f7d68f;
+}
+
+/* ── Barra de tiempo ────────────────────────────────────── */
+
+#barraTiempo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.8rem;
+  padding: 0.65rem 1rem 0.75rem;
+  border-top: 1px solid var(--line);
+  background: #0a0b12;
+}
+
+#btnPlay {
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #161822;
+  color: var(--paper);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: transform 0.18s var(--suave), background 0.18s;
+}
+
+#btnPlay:hover { transform: scale(1.06); }
+
+#btnPlay.on {
+  background: var(--psilo);
+  color: #0b0714;
+  border-color: transparent;
+}
+
+#lecturaTiempo {
+  min-width: 5.2rem;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+#scrubber {
+  flex: 1 1 160px;
+  accent-color: var(--psilo);
+}
+
+#velocidad {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.1rem 0.18rem;
+  font-family: var(--sans);
+}
+
+#velocidad button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+#velocidad button:hover:not(:disabled) {
+  color: var(--paper);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#velocidad button:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+#velValor {
+  min-width: 2.4rem;
+  text-align: center;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+#velocidad.alterada {
+  border-color: rgba(139, 108, 255, 0.5);
+  background: rgba(139, 108, 255, 0.1);
+}
+
+#velocidad.alterada #velValor { color: #c3b2ff; }
+
+/* Tira en un solo renglón: apilados, los seis chips se comían dos filas del
+   footer y se las sacaban al mapa. Si no entran, se scrollean. */
+#chipsFase {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  scroll-padding: 0 1rem;
+  /* Que el último chip no muera pegado al borde. */
+  padding-bottom: 1px;
+}
+
+#chipsFase::-webkit-scrollbar { display: none; }
+
+#chipsFase button {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 10px;
+  padding: 0.22rem 0.7rem 0.28rem;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s, border-color 0.16s, transform 0.16s var(--suave);
+}
+
+#chipsFase button:hover {
+  transform: translateY(-1px);
+  color: var(--paper);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+#chipsFase .ch-k {
+  font-size: 0.58rem;
+  opacity: 0.6;
+}
+
+#chipsFase button.activa {
+  color: #0b0714;
+  background: var(--paper);
+  border-color: transparent;
+}
+
+#chipsFase button.activa .ch-k { opacity: 0.68; }
+
+/* ── Ayuda ──────────────────────────────────────────────── */
+
+#ayuda {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(4, 5, 10, 0.72);
+  backdrop-filter: blur(6px);
+  animation: velo 0.22s ease both;
+}
+
+#ayuda[hidden] { display: none; }
+
+@keyframes velo {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ay-box {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: 86vh;
+  overflow-y: auto;
+  padding: 1.4rem 1.5rem 1.2rem;
+  background: rgba(14, 16, 26, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  animation: cardIn 0.34s var(--suave) both;
+}
+
+.ay-box h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.ay-intro {
+  margin: 0 0 0.9rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(232, 228, 216, 0.82);
+}
+
+.ay-pasos {
+  margin: 0 0 0.9rem;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: rgba(232, 228, 216, 0.8);
+}
+
+.ay-pasos b { color: var(--paper); }
+
+.ay-clave {
+  margin: 0 0 0.8rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 10px;
+  border-left: 2px solid var(--plasticidad);
+  background: rgba(61, 220, 151, 0.08);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.ay-fuente a { color: rgba(201, 186, 255, 0.9); }
+
+.ay-fuente {
+  margin: 0 0 1rem;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.ay-cerrar {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.8rem;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ay-cerrar:hover { color: var(--paper); }
+
+.ay-ok {
+  position: static;
+  display: block;
+  width: 100%;
+  padding: 0.55rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+}
+
+.ay-ok:hover { background: rgba(255, 255, 255, 0.13); }
+
+/* ── Pantallas chicas ───────────────────────────────────── */
+
+@media (max-width: 900px) {
+  #escenario {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 44%);
+  }
+  #rail { flex-direction: row; }
+  #metricas { flex: 0 0 44%; overflow-y: auto; }
+  #leyendaRed .lg-a { display: none; }
+  .et-a { display: none; }
+}
+
+@media (max-width: 780px) {
+  #cabecera { flex-direction: column; align-items: start; }
+  .cab-der { width: 100%; justify-content: space-between; }
+  main { grid-template-rows: minmax(0, 1fr) 170px; }
+  #leyendaRed { font-size: 0.64rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ventana terapéutica</title>
+  <meta name="description" content="Simulador educativo de una sesión de psilocibina: de la molécula a la ventana de 14 días. No es consejo clínico.">
+  <meta property="og:title" content="Ventana terapéutica">
+  <meta property="og:description" content="La molécula abre. La plasticidad se queda. El viaje es la llave; esto es la casa.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/app.css?v=58">
+</head>
+<body>
+  <div id="app">
+    <header id="cabecera">
+      <div>
+        <p class="marca">fisiología · 0 → 14 días</p>
+        <h1>Ventana terapéutica</h1>
+      </div>
+      <div class="cab-der">
+        <p class="sub">La molécula abre. La plasticidad se queda. El viaje es la llave; esto es la casa.</p>
+        <button type="button" id="btnCasa" title="Laboratorio de la ventana: una creencia y 14 días">la casa</button>
+        <button type="button" id="btnRelato">▶ contame la historia</button>
+        <button type="button" id="btnAyuda" title="Cómo se lee esto">? cómo se lee</button>
+      </div>
+    </header>
+
+    <section id="barraDosis" aria-label="Dosis y cepa"></section>
+
+    <main>
+      <section id="escenario">
+        <div id="mapa">
+          <canvas id="lienzoRed"></canvas>
+          <canvas id="lienzoVision"></canvas>
+          <div id="etiquetasRed"></div>
+          <ul id="leyendaRed"></ul>
+          <div id="vistaSwitch" role="group" aria-label="Qué mostrar">
+            <button type="button" data-vista="cerebro" class="on">🧠 el cerebro</button>
+            <button type="button" data-vista="cerrados">👁 ojos cerrados</button>
+            <button type="button" data-vista="abiertos">🌀 ojos abiertos</button>
+            <button type="button" id="btnViaje" title="Resortea dónde y cuándo aparecen las presencias" hidden>🎲 otro viaje</button>
+            <button type="button" id="btnPantalla" title="Pantalla completa (Esc para salir)">⛶</button>
+          </div>
+        </div>
+
+        <aside id="rail">
+          <div id="metricas"></div>
+          <div id="relato" hidden></div>
+          <div id="casa" hidden></div>
+          <div id="panelFase">
+            <div class="pf-cab">
+              <p class="kicker">antes de la dosis</p>
+              <h2>Línea de base</h2>
+              <p class="cuerpo">El default mode anda cerrado. Todavía no pasó nada.</p>
+            </div>
+            <div id="fichas" hidden></div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="panelCurvas">
+        <button type="button" id="btnCohorte" aria-pressed="false" title="La misma dosis, cien personas">cien personas</button>
+        <canvas id="lienzoCurvas"></canvas>
+        <div id="tooltipCurva" hidden></div>
+      </section>
+    </main>
+
+    <footer id="barraTiempo">
+      <button id="btnPlay" type="button" aria-label="Reproducir">▶</button>
+      <div id="lecturaTiempo">0 min</div>
+      <input id="scrubber" type="range" min="0" max="1000" value="0" step="1" aria-label="Tiempo">
+      <div id="velocidad"></div>
+      <nav id="chipsFase"></nav>
+    </footer>
+  </div>
+
+  <div id="ayuda" hidden>
+    <div class="ay-box" role="dialog" aria-label="Cómo se lee esto">
+      <button type="button" class="ay-cerrar" aria-label="Cerrar">×</button>
+      <h2>Cómo se lee esto</h2>
+      <p class="ay-intro">
+        Una sola sesión de psilocibina, seguida durante 14 días. A la izquierda, cinco redes
+        cerebrales. Abajo, las cuatro variables que las mueven.
+      </p>
+      <ol class="ay-pasos">
+        <li><b>Elegí cepa y dosis</b> arriba. Todo el modelo se recalcula: de microdosis a 8 gramos secos, y de <i>P. mexicana</i> a <i>P. azurescens</i>, que es casi 7 veces más fuerte por gramo.</li>
+        <li><b>Dale ▶</b> y mirá cómo cambia todo entre el minuto 0 y el día 14. El tiempo no es lineal: la primera mitad son 8 horas, la segunda son 14 días.</li>
+        <li><b>Tocá una red</b> — en el mapa o en la leyenda — y te sale un globo con lo que le está pasando en ese minuto. El panel de la derecha te cuenta el fondo.</li>
+        <li><b>Tocá dos o más</b> y aparece la tarjeta de la combinación: qué pasa entre ellas. Con «todas juntas» tenés la lectura del cerebro entero.</li>
+        <li><b>Tocá una curva</b> del gráfico de abajo (o una barra del panel derecho) y te explica qué mide y por qué importa. Si clickeás fuera de las curvas, movés el tiempo.</li>
+        <li><b>Cien personas</b> pinta una banda detrás de la línea: la misma dosis, 120 cuerpos. Ningún número es un pronóstico. Los arquetipos eligen dónde pararse.</li>
+        <li><b>El día y el cuerpo</b> arriba (⧗) mueve la curva de verdad: estómago, lemon tek, IRS, sesión reciente. La punteada es el mismo gramo, otro día.</li>
+        <li><b>La casa</b> es el laboratorio de la ventana: una creencia se afloja en el pico y los 14 días deciden si vuelve o se reescribe. No cuantifica terapia: ilustra la hipótesis.</li>
+      </ol>
+      <p class="ay-clave">
+        La idea de fondo: la <b style="color:#8b6cff">psilocina</b> se va en horas, pero la
+        <b style="color:#3ddc97">plasticidad</b> se queda días. Ese hueco entre las dos curvas
+        es la ventana terapéutica.
+      </p>
+      <p class="ay-fuente">
+        Modelo educativo basado en Carhart-Harris (REBUS), Nardou 2023 y Madsen 2019. No es consejo clínico.
+        La banda de cohorte usa coeficientes de variación de literatura PK; los arquetipos y el laboratorio de la ventana son ilustrativos.
+        Las mallas del cerebro derivan de <b>BodyParts3D</b>, Copyright © 2008
+        Life Science Integrated Database Center, licenciadas
+        <a href="https://creativecommons.org/licenses/by-sa/2.1/jp/deed.es" target="_blank" rel="noopener">CC BY-SA 2.1 Japón</a>.
+      </p>
+      <button type="button" class="ay-cerrar ay-ok">Entendido</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+  <script src="js/anatomia.js?v=58"></script>
+  <script src="js/cepas.js?v=58"></script>
+  <script src="js/fisiologia.js?v=58"></script>
+  <script src="js/fases.js?v=58"></script>
+  <script src="js/estado.js?v=58"></script>
+  <script src="js/cohorte.js?v=58"></script>
+  <script src="js/redes.js?v=58"></script>
+  <script src="js/variables.js?v=58"></script>
+  <script src="js/curvas.js?v=58"></script>
+  <script src="js/casa.js?v=58"></script>
+  <script src="js/ui.js?v=58"></script>
+  <script src="js/relato.js?v=58"></script>
+  <script src="js/vision.js?v=58"></script>
+  <script src="js/red.js?v=58"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.Ventana && Ventana.curvas) Ventana.curvas.montar();
+      // La visión va ANTES que la ui: la ui pregunta si hay WebGL para decidir
+      // si muestra el conmutador de vista, y al revés siempre le daba que no.
+      if (window.Ventana && Ventana.vision) Ventana.vision.montar();
+      if (window.Ventana && Ventana.ui) Ventana.ui.montar();
+      if (window.Ventana && Ventana.casa) Ventana.casa.montar();
+      if (window.Ventana && Ventana.red) Ventana.red.montar();
+      if (window.Ventana && Ventana.relato) Ventana.relato.montar();
+      if (window.Ventana && Ventana.arrancar) Ventana.arrancar();
+    });
+  </script>
+</body>
+</html>

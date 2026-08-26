@@ -1,0 +1,20 @@
+Mallas de este directorio (cerebro.bin, cerebelo.bin, tronco.bin) y las
+coordenadas de hubs.json
+========================================================================
+
+Obra derivada de BodyParts3D.
+
+  BodyParts3D, Copyright (C) 2008 Life Science Integrated Database Center
+  licenciado bajo CC Atribución-CompartirIgual 2.1 Japón
+  https://creativecommons.org/licenses/by-sa/2.1/jp/deed.es
+  http://lifesciencedb.jp/bp3d/
+
+Qué se hizo: se tomaron las mallas STL del hemisferio izquierdo (giros
+corticales, sustancia blanca, cerebelo y tronco encefálico), se recortaron al
+plano medio, se simplificaron por agrupamiento de vértices y se reescalaron a
+un sistema de coordenadas normalizado. El procedimiento está en
+scripts/construir_cerebro.py.
+
+Por la cláusula CompartirIgual, estas mallas derivadas se distribuyen bajo la
+misma licencia CC BY-SA 2.1 Japón. El resto del simulador no está cubierto por
+esta licencia.
