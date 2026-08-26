@@ -100,6 +100,14 @@
     return sel().indexOf(id) !== -1;
   }
 
+  function anclaId() {
+    return (V.casa && V.casa.ancla && V.casa.ancla()) || null;
+  }
+
+  function caudal(id) {
+    return (V.caudalRed && V.caudalRed(id)) || 1;
+  }
+
   /* ── Datos ───────────────────────────────────────────────── */
 
   function armarDatos() {
@@ -179,6 +187,7 @@
     for (let i = 0; i < botones.length; i++) {
       const on = s.indexOf(botones[i].dataset.id) !== -1;
       botones[i].classList.toggle("on", on);
+      botones[i].classList.toggle("ancla", anclaId() === botones[i].dataset.id);
       botones[i].setAttribute("aria-pressed", on ? "true" : "false");
     }
     const todas = ul.querySelector('[data-act="todas"]');
@@ -341,7 +350,8 @@
       const r = REDES[i];
       const abierta = marcada(r.id);
       const globo = abierta && globos;
-      const sig = fid + "|" + (abierta ? "1" : "0") + "|" + (globo ? "g" : "c");
+      const esViga = anclaId() === r.id;
+      const sig = fid + "|" + (abierta ? "1" : "0") + "|" + (globo ? "g" : "c") + "|" + (esViga ? "v" : "");
       const e = etiquetas[i];
       if (e.sig === sig) continue;
       e.sig = sig;
@@ -349,7 +359,7 @@
       if (!info) continue;
       let html =
         '<span class="et-n">' + esc(r.nombre) + "</span>" +
-        '<span class="et-a">' + esc(info.apodo) + "</span>";
+        '<span class="et-a">' + esc(info.apodo) + (esViga ? " · viga" : "") + "</span>";
       if (!abierta && desplaz[r.id]) delete desplaz[r.id];
       if (globo) {
         const donde = hubs(i)
@@ -362,6 +372,7 @@
       e.el.innerHTML = html;
       e.el.classList.toggle("on", abierta);
       e.el.classList.toggle("globo", globo);
+      e.el.classList.toggle("ancla", esViga);
       e.w = 0;
     }
   }
@@ -871,10 +882,12 @@
       const p = posN[i];
       const on = activa(n.red);
       m.position.set(p.x, p.y, p.z);
+      const g = caudal(n.red);
       const pulse =
-        (0.85 + s.psilo * 0.55 + Math.sin(t * 2 + i) * 0.08) * (marcada(n.red) ? 1.4 : 1);
+        (0.85 + s.psilo * 0.55 + Math.sin(t * 2 + i) * 0.08) *
+        (marcada(n.red) ? 1.4 : 1) * Math.sqrt(g);
       m.scale.setScalar(pulse);
-      m.material.emissiveIntensity = (0.35 + s.entropia * 0.9) * (on ? 1 : 0.25);
+      m.material.emissiveIntensity = (0.35 + s.entropia * 0.9 * g) * (on ? 1 : 0.25);
       m.material.opacity = on ? 1 : 0.14;
     });
 
@@ -891,7 +904,8 @@
       setSeg(aRed, ri, a, b);
     });
     aRed.needsUpdate = true;
-    lineRed.material.opacity = 0.32 + s.entropia * 0.3;
+    const ancla = anclaId();
+    lineRed.material.opacity = 0.32 + s.entropia * 0.3 * (ancla ? caudal(ancla) : 1);
 
     const aEntre = lineEntre.geometry.attributes.position;
     ENTRE.forEach(function (par, i) {
@@ -1058,8 +1072,9 @@
 
     REDES.forEach(function (r, ri) {
       if (hubsXY[ri].length < 2 || !activa(r.id)) return;
-      ctx.strokeStyle = rgba(r.color, 0.3 + s.entropia * 0.3);
-      ctx.lineWidth = 1.5;
+      const g = caudal(r.id);
+      ctx.strokeStyle = rgba(r.color, (0.3 + s.entropia * 0.3) * Math.min(1.4, g));
+      ctx.lineWidth = 1.5 * Math.sqrt(g);
       ctx.beginPath();
       ctx.moveTo(hubsXY[ri][0].x, hubsXY[ri][0].y);
       ctx.lineTo(hubsXY[ri][1].x, hubsXY[ri][1].y);
@@ -1117,10 +1132,12 @@
       const p = posNodo(n, s, t);
       const xy = toXY(p.x, p.y, w, h);
       const on = activa(n.red);
+      const g = caudal(n.red);
       const rad =
-        (2 + s.psilo * 1.8 + Math.sin(t * 2 + n.fase) * 0.5) * (marcada(n.red) ? 1.3 : 1);
+        (2 + s.psilo * 1.8 + Math.sin(t * 2 + n.fase) * 0.5) *
+        (marcada(n.red) ? 1.3 : 1) * Math.sqrt(g);
       ctx.beginPath();
-      ctx.fillStyle = rgba(n.color, (0.18 + s.entropia * 0.2) * (on ? 1 : 0.14));
+      ctx.fillStyle = rgba(n.color, (0.18 + s.entropia * 0.2 * g) * (on ? 1 : 0.14));
       ctx.arc(xy.x, xy.y, rad * 3, 0, Math.PI * 2);
       ctx.fill();
       ctx.beginPath();
@@ -1140,9 +1157,10 @@
     });
 
     hubsXY.forEach(function (lista, ri) {
-      if (!marcada(REDES[ri].id)) return;
-      ctx.strokeStyle = rgba(REDES[ri].color, 0.7);
-      ctx.lineWidth = 1.5;
+      const id = REDES[ri].id;
+      if (!marcada(id) && anclaId() !== id) return;
+      ctx.strokeStyle = rgba(REDES[ri].color, marcada(id) ? 0.7 : 0.45);
+      ctx.lineWidth = marcada(id) ? 1.5 : 1.1;
       lista.forEach(function (c) {
         ctx.beginPath();
         ctx.arc(c.x, c.y, 16 + s.psilo * 6, 0, Math.PI * 2);
@@ -1208,6 +1226,7 @@
       if (!ctx) ctx = canvas.getContext("2d");
       if (ctx) pintar2d(s, d);
     }
+    syncLeyenda();
     refrescarEtiquetas();
     pintarEtiquetas();
   }

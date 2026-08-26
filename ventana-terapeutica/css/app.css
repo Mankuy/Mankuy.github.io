@@ -579,18 +579,22 @@ body.en-casa #btnCasa {
     gap: 0.35rem 0.6rem;
     padding: 0.4rem 0.8rem 0.45rem;
     /* Un renglón, pero con el slider como única pieza elástica. */
-    grid-template-columns: minmax(0, 200px) minmax(100px, 1fr) auto auto auto auto;
+    grid-template-columns: minmax(0, 180px) minmax(80px, 1fr) auto auto auto auto auto auto;
     grid-template-areas:
-      "cepa rango lectura presets ctxbtn salida"
-      "ctx ctx ctx ctx ctx ctx";
+      "cepa rango lectura presets sesion ctxbtn salabtn salida"
+      "ctx ctx ctx ctx ctx ctx ctx ctx"
+      "sala sala sala sala sala sala sala sala";
   }
 
   .dz-campo--cepa { grid-area: cepa; }
   .dz-campo--rango { grid-area: rango; min-width: 0; }
   .dz-lectura { grid-area: lectura; }
   .dz-presets { grid-area: presets; min-width: 0; }
-  .dz-ctx-btn { grid-area: ctxbtn; }
+  .dz-sesion { grid-area: sesion; }
+  #dzCtxBtn { grid-area: ctxbtn; }
+  #dzSalaBtn { grid-area: salabtn; }
   .dz-ctx { grid-area: ctx; }
+  #dzSala { grid-area: sala; }
   .dz-salida { grid-area: salida; margin-left: auto; }
 
   /* Los rótulos en versalita son decorativos: el select y el slider ya se
@@ -606,8 +610,10 @@ body.en-casa #btnCasa {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
     grid-template-areas:
       "cepa    rango   lectura"
-      "presets ctxbtn  salida"
-      "ctx     ctx     ctx";
+      "presets sesion  salida"
+      "ctxbtn  salabtn salabtn"
+      "ctx     ctx     ctx"
+      "sala    sala    sala";
   }
 
   .dz-ctx { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -620,9 +626,11 @@ body.en-casa #btnCasa {
     grid-template-areas:
       "cepa    lectura"
       "rango   rango"
-      "presets ctxbtn"
+      "presets sesion"
+      "ctxbtn  salabtn"
       "salida  salida"
-      "ctx     ctx";
+      "ctx     ctx"
+      "sala    sala";
   }
 
   .dz-ctx {
@@ -654,6 +662,18 @@ body.en-casa #btnCasa {
 #barraDosis[data-banda="muyalta"] #dzBanda { background: rgba(255, 138, 76, 0.2); color: #ffbb93; }
 #barraDosis[data-banda="extrema"] #dzBanda { background: rgba(255, 92, 138, 0.22); color: #ff9fb8; }
 #barraDosis[data-banda="masalla"] #dzBanda { background: rgba(255, 92, 138, 0.4); color: #ffd0dc; }
+
+.dz-sesion {
+  display: flex;
+  gap: 0.22rem;
+}
+
+.dz-sala {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  grid-template-columns: none;
+}
 
 .dz-ctx-btn {
   white-space: nowrap;
@@ -980,6 +1000,10 @@ main {
   z-index: 2;
 }
 
+.et.ancla {
+  box-shadow: 0 0 0 1px var(--c, #f5c14c);
+}
+
 .et.on::after { opacity: 1; }
 
 .et.on .et-n { font-size: 0.74rem; }
@@ -1098,6 +1122,11 @@ main {
   color: var(--paper);
   border-color: var(--c, rgba(255, 255, 255, 0.55));
   background: rgba(255, 255, 255, 0.11);
+}
+
+#leyendaRed button.ancla {
+  color: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--c, #f5c14c);
 }
 
 #leyendaRed .lg-a {

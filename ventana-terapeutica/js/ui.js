@@ -336,9 +336,24 @@
         return '<button type="button" class="dz-preset" data-mg="' + p.mg + '">' + p.nombre + "</button>";
       }).join("") +
       "</div>" +
+      '<div class="dz-sesion" role="group" aria-label="Sesión">' +
+      '<button type="button" class="dz-seg" data-sesion="1">sesión 1</button>' +
+      '<button type="button" class="dz-seg" data-sesion="2">sesión 2</button>' +
+      "</div>" +
       '<button type="button" class="dz-preset dz-ctx-btn" id="dzCtxBtn" aria-expanded="false" aria-controls="dzCtx">' +
       "⧗ el día y el cuerpo</button>" +
+      '<button type="button" class="dz-preset dz-ctx-btn" id="dzSalaBtn" aria-expanded="false" aria-controls="dzSala">' +
+      "la sala</button>" +
       '<div class="dz-ctx" id="dzCtx" hidden>' + ctxFilas + "</div>" +
+      '<div class="dz-ctx dz-sala" id="dzSala" hidden>' +
+      Object.keys(V.SALAS || {}).map(function (sid) {
+        const s = V.SALAS[sid];
+        return (
+          '<button type="button" class="dz-seg" data-sala="' + sid + '" title="' + esc(s.nota) + '">' +
+          esc(s.nombre) + "</button>"
+        );
+      }).join("") +
+      "</div>" +
       '<div class="dz-salida"><b id="dzBanda">—</b><span id="dzPico">—</span><span id="dzDur">—</span></div>';
 
     const selCepa = dosis.querySelector("#dzCepa");
@@ -366,8 +381,15 @@
 
     if (ctxBtn && ctxCaja) {
       ctxBtn.addEventListener("click", function () {
-        ctxCaja.hidden = !ctxCaja.hidden;
-        ctxBtn.setAttribute("aria-expanded", ctxCaja.hidden ? "false" : "true");
+        const abrir = ctxCaja.hidden;
+        ctxCaja.hidden = !abrir;
+        ctxBtn.setAttribute("aria-expanded", abrir ? "true" : "false");
+        const salaCaja = dosis.querySelector("#dzSala");
+        if (abrir && salaCaja) {
+          salaCaja.hidden = true;
+          const sb = dosis.querySelector("#dzSalaBtn");
+          if (sb) sb.setAttribute("aria-expanded", "false");
+        }
       });
       ctxCaja.querySelectorAll(".dz-seg").forEach(function (b) {
         b.addEventListener("click", function () {
@@ -375,6 +397,33 @@
         });
       });
     }
+
+    const salaBtn = dosis.querySelector("#dzSalaBtn");
+    const salaCaja = dosis.querySelector("#dzSala");
+    if (salaBtn && salaCaja) {
+      salaBtn.addEventListener("click", function () {
+        const abrir = salaCaja.hidden;
+        salaCaja.hidden = !abrir;
+        salaBtn.setAttribute("aria-expanded", abrir ? "true" : "false");
+        if (abrir && ctxCaja) {
+          ctxCaja.hidden = true;
+          ctxBtn.setAttribute("aria-expanded", "false");
+        }
+        V.estado.salaInfo = abrir;
+        pintar(true);
+      });
+      salaCaja.querySelectorAll("[data-sala]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          if (V.setSala) V.setSala(b.dataset.sala);
+        });
+      });
+    }
+
+    dosis.querySelectorAll("[data-sesion]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (V.setSesion) V.setSesion(Number(b.dataset.sesion));
+      });
+    });
 
     dosis.querySelector("#dzLectura").addEventListener("click", function () {
       V.estado.dosisInfo = !V.estado.dosisInfo;
@@ -391,7 +440,8 @@
     const sig =
       V.estado.cepaId + "|" + V.estado.gramos.toFixed(3) + "|" +
       (V.estado.perfil || "") + "|" +
-      (mods.estomago || "") + (mods.prep || "") + (mods.irs || "") + (mods.ultima || "");
+      (mods.estomago || "") + (mods.prep || "") + (mods.irs || "") + (mods.ultima || "") +
+      "|" + (V.estado.sesion || 1) + "|" + (V.estado.sala || "");
     if (!forzar && sig === sigDosis) return;
     sigDosis = sig;
 
@@ -421,13 +471,24 @@
       ctxBtn.classList.toggle("on", V.modAlterado());
       ctxBtn.classList.toggle("alterado", V.modAlterado());
     }
+    const salaBtnP = dosis.querySelector("#dzSalaBtn");
+    if (salaBtnP) {
+      salaBtnP.classList.toggle("on", V.estado.sala && V.estado.sala !== "alineada");
+      salaBtnP.classList.toggle("alterado", V.estado.sala && V.estado.sala !== "alineada");
+    }
     const MODS = V.MODULADORES || {};
-    dosis.querySelectorAll(".dz-seg").forEach(function (b) {
+    dosis.querySelectorAll("[data-mod]").forEach(function (b) {
       b.classList.toggle(
         "on",
         MODS[b.dataset.mod] &&
           V.estado.moduladores[b.dataset.mod] === b.dataset.op
       );
+    });
+    dosis.querySelectorAll("[data-sala]").forEach(function (b) {
+      b.classList.toggle("on", V.estado.sala === b.dataset.sala);
+    });
+    dosis.querySelectorAll("[data-sesion]").forEach(function (b) {
+      b.classList.toggle("on", String(V.estado.sesion || 1) === b.dataset.sesion);
     });
   }
 
@@ -447,6 +508,29 @@
     return (
       '<p class="card-p">' + activos.join(" · ") +
       ". En el gráfico, la línea punteada es esta misma persona sin el cambio: el mismo gramo, otro día.</p>"
+    );
+  }
+
+  function lineaSesion() {
+    if (!V.estado || V.estado.sesion !== 2) return "";
+    return (
+      '<p class="card-p"><b>Sesión 2.</b> Misma dosis, misma cepa. Llega con el prior que dejó la ventana. ' +
+      "Si no se escribió nada, es un déjà vu: la curva de priors casi no cambia. " +
+      "La punteada amarilla es la sesión 1. Inspirado en el esquema de dos dosis, no es una simulación de esos ensayos.</p>"
+    );
+  }
+
+  function lineaSala() {
+    const SALAS = V.SALAS;
+    if (!SALAS || !V.estado) return "";
+    const s = SALAS[V.estado.sala] || SALAS.alineada;
+    const ancla = V.casa && V.casa.ancla && V.casa.ancla();
+    const red = (V.redes && ancla && V.redes.de(ancla)) || null;
+    return (
+      '<p class="card-p"><b>La sala:</b> ' + esc(s.nombre) + " (" + esc(s.efecto) + "). " +
+      "No mueve miligramos: reparte el caudal entre redes. " +
+      (red ? "La viga de esta creencia es " + esc(red.apodo) + ". " : "") +
+      esc(s.nota) + "</p>"
     );
   }
 
@@ -470,6 +554,8 @@
       '<p class="card-p">' + esc(b.texto) + "</p>" +
       (b.alerta ? '<p class="card-alerta">' + esc(b.alerta) + "</p>" : "") +
       lineaContexto() +
+      lineaSesion() +
+      lineaSala() +
       '<p class="card-p"><b>' + esc(c.nombre) + ".</b> " + esc(c.nota) + "</p>" +
       '<p class="card-fuente">Contenido de referencia: ' +
       String(c.psi).replace(".", ",") + " % psilocibina y " +
@@ -734,7 +820,7 @@
     const fid = fase ? fase.id : "base";
     const sel = V.redes ? V.redes.ordenar(V.estado.sel) : V.estado.sel.slice();
     const curva = V.estado.curva;
-    const verDosis = !!V.estado.dosisInfo;
+    const verDosis = !!V.estado.dosisInfo || V.estado.sesion === 2 || !!V.estado.salaInfo;
     const verVision = !!V.estado.vista && V.estado.vista !== "cerebro";
     const verCohorte = !!V.estado.cohorte;
     const mods = V.estado.moduladores || {};
@@ -742,7 +828,8 @@
       fid + "|" + curva + "|" + sel.join(",") + "|" + (verVision ? "v" : "") + "|" +
       (verDosis ? V.estado.cepaId + V.estado.gramos.toFixed(2) : "") + "|" +
       (verCohorte ? "c" + (V.estado.perfil || "") : "") + "|" +
-      (mods.estomago || "") + (mods.prep || "") + (mods.irs || "") + (mods.ultima || "");
+      (mods.estomago || "") + (mods.prep || "") + (mods.irs || "") + (mods.ultima || "") +
+      "|" + (V.estado.sesion || 1) + "|" + (V.estado.sala || "") + (V.estado.salaInfo ? "i" : "");
     if (!forzar && fichas.dataset.sig === sig) return;
     fichas.dataset.sig = sig;
 
@@ -810,7 +897,7 @@
     const fase = V.fases ? V.fases.en(V.estado.t) : null;
     const hayFicha = !!(
       V.estado.curva || V.estado.sel.length || V.estado.dosisInfo ||
-      V.estado.cohorte ||
+      V.estado.cohorte || V.estado.sesion === 2 || V.estado.salaInfo ||
       (V.estado.vista && V.estado.vista !== "cerebro")
     );
 

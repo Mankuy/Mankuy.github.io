@@ -17,9 +17,38 @@
     cohorte: false,
     perfil: "promedio",
     moduladores: { estomago: "ayunas", prep: "secos", irs: "no", ultima: "mes" },
+    sesion: 1,
+    sala: "alineada",
   };
 
   const VELS = [0.25, 0.5, 1, 2, 4];
+
+  /* Tres salas. No tocan ocupación: reparte qué redes se llevan la entropía.
+     Alineada es la de los ensayos (playlist que sigue el pico). */
+  const SALAS = {
+    alineada: {
+      id: "alineada",
+      nombre: "playlist al pico",
+      efecto: "el caudal va a imagen y narrador",
+      nota: "La sala de los ensayos: música que sube con la molécula. Los ojos cerrados mandan el caudal a visual y DMN. Kaelen, Carhart-Harris.",
+      pesos: { dmn: 1.28, vis: 1.28, ejec: 1, sal: 0.82, lim: 0.9 },
+    },
+    silencio: {
+      id: "silencio",
+      nombre: "silencio",
+      efecto: "el caudal va al cuerpo y la alarma",
+      nota: "Sin música el portero y la emoción se quedan con el ancho de banda. El viaje es más interoceptivo, menos geométrico.",
+      pesos: { dmn: 0.75, vis: 0.7, ejec: 1, sal: 1.32, lim: 1.28 },
+    },
+    desfasada: {
+      id: "desfasada",
+      nombre: "playlist tarde",
+      efecto: "la música picoa cuando la molécula ya bajó",
+      nota: "Misma playlist, mal tempo: el pico químico pasa casi en seco y el caudal llega en el descenso. No cambia los mg. Cambia si el material aterriza.",
+      pesos: { dmn: 1.12, vis: 1.12, ejec: 1, sal: 0.9, lim: 0.9 },
+      delayMin: 90,
+    },
+  };
 
   /* Moduladores del día: el mismo gramo, otro contexto. Cada opción escala
      parámetros reales del motor (ka, cmax, ec50). Los valores son órdenes de
@@ -176,6 +205,52 @@
     avisar();
   }
 
+  function caudalRed(id) {
+    const sala = SALAS[estado.sala] || SALAS.alineada;
+    let g = (sala.pesos && sala.pesos[id]) || 1;
+    if (estado.sala === "desfasada" && V.fisio) {
+      const t = estado.t;
+      const ahora = V.fisio.fEntropia(t);
+      const tarde = V.fisio.fEntropia(Math.max(0, t - (sala.delayMin || 90)));
+      const mix = 0.4 * ahora + 0.6 * tarde;
+      g = 0.55 + ((sala.pesos && sala.pesos[id]) || 1) * mix * 0.7;
+    }
+    const ancla = V.casa && V.casa.ancla && V.casa.ancla();
+    if (ancla === id) g *= 1.22;
+    return g;
+  }
+
+  function focoSala() {
+    const ancla = V.casa && V.casa.ancla && V.casa.ancla();
+    const sala = estado.sala || "alineada";
+    if (sala === "desfasada") return 0.72;
+    if (sala === "alineada" && (ancla === "dmn" || ancla === "vis")) return 1.14;
+    if (sala === "silencio" && (ancla === "sal" || ancla === "lim")) return 1.14;
+    return 0.88;
+  }
+
+  function setSala(id) {
+    if (!SALAS[id] || estado.sala === id) return;
+    estado.sala = id;
+    avisar();
+  }
+
+  function setSesion(n) {
+    const s = n === 2 ? 2 : 1;
+    if (estado.sesion === s) return;
+    if (s === 2) {
+      const bland = V.casa && V.casa.heredar ? V.casa.heredar() : 0;
+      if (V.fisio && V.fisio.setBlandura) V.fisio.setBlandura(bland);
+      estado.sesion = 2;
+      estado.dosisInfo = true;
+    } else {
+      if (V.casa && V.casa.restaurar) V.casa.restaurar();
+      if (V.fisio && V.fisio.setBlandura) V.fisio.setBlandura(0);
+      estado.sesion = 1;
+    }
+    avisar();
+  }
+
   function irA(t) {
     const F = V.fisio;
     estado.t = Math.max(0, Math.min(F.T_MAX, t));
@@ -232,6 +307,7 @@
 
   V.estado = estado;
   V.MODULADORES = MODULADORES;
+  V.SALAS = SALAS;
   V.irA = irA;
   V.irSuave = irSuave;
   V.seleccionada = seleccionada;
@@ -242,6 +318,10 @@
   V.setDosis = setDosis;
   V.setPerfil = setPerfil;
   V.setModulador = setModulador;
+  V.setSala = setSala;
+  V.setSesion = setSesion;
+  V.caudalRed = caudalRed;
+  V.focoSala = focoSala;
   V.toggleCohorte = toggleCohorte;
   V.modMult = modMult;
   V.modAlterado = modAlterado;

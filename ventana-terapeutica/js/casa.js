@@ -25,17 +25,23 @@
     {
       id: "identidad",
       frase: "«Así soy, y no hay mucho que hacer»",
-      nota: "Identidad cerrada: el libreto que el narrador sostiene desde hace años. El prior más difícil de mover — y el que más cambia todo cuando se mueve.",
+      ancla: "dmn",
+      anclaNombre: "el narrador",
+      nota: "Identidad cerrada: el libreto que el narrador sostiene desde hace años. Vive en el DMN. El prior más difícil de mover, y el que más cambia todo cuando se mueve.",
     },
     {
       id: "culpa",
       frase: "«Lo que pasó fue culpa mía»",
-      nota: "Un peso fijo sobre un recuerdo: la emoción lo cargó, el narrador lo cerró con llave. El trabajo clásico de reconsolidación.",
+      ancla: "lim",
+      anclaNombre: "la emoción",
+      nota: "Un peso fijo sobre un recuerdo: la emoción lo cargó, el narrador lo cerró con llave. Vive en la red límbica. El trabajo clásico de reconsolidación.",
     },
     {
       id: "evitacion",
       frase: "«Si lo dejo venir, me rompo»",
-      nota: "Prior protector: en su momento cuidó. Hoy impide que el material llegue siquiera a terapia — y la sesión lo salta.",
+      ancla: "sal",
+      anclaNombre: "el portero",
+      nota: "Prior protector: en su momento cuidó. Hoy impide que el material llegue. Vive en la saliencia. La sesión lo salta si el portero no afloja.",
     },
   ];
 
@@ -57,6 +63,7 @@
   let abierto = false;
 
   let creenciaId = CREENCIAS[0].id;
+  let pesoLlegada = 0.85;
   let peso0 = 0.85;
   let integId = "sola";
 
@@ -99,14 +106,17 @@
     const F = V.fisio;
     if (!F) return cache;
     const info = F.info();
+    const sala = (V.estado && V.estado.sala) || "alineada";
+    const sesion = (V.estado && V.estado.sesion) || 1;
     const sig = [
-      info.mg, info.mult.ka, info.mult.cmax, info.mult.ec50,
-      creenciaId, peso0.toFixed(3), integId,
+      info.mg, info.mult.ka, info.mult.cmax, info.mult.ec50, info.blandura || 0,
+      creenciaId, peso0.toFixed(3), integId, sala, sesion,
     ].join("|");
     if (cache.sig === sig) return cache;
 
     const apertura = aperturaDe();
-    const tasa = integracion().tasa;
+    const foco = (V.focoSala && V.focoSala()) || 1;
+    const tasa = integracion().tasa * foco;
     const ts = [];
     const pesos = [];
 
@@ -128,8 +138,26 @@
       pesos.push(peso);
     }
 
-    cache = { sig: sig, ts: ts, pesos: pesos, apertura: apertura };
+    cache = { sig: sig, ts: ts, pesos: pesos, apertura: apertura, foco: foco };
     return cache;
+  }
+
+  function heredar() {
+    const tr = trayectoria();
+    const fin = tr.pesos.length ? tr.pesos[tr.pesos.length - 1] : peso0;
+    const bland = 1 - fin / Math.max(0.01, peso0);
+    peso0 = clamp(fin, 0.05, 0.98);
+    cache.sig = null;
+    const el = panel && panel.querySelector("#csPeso");
+    if (el) el.value = String(Math.round(peso0 * 100));
+    return clamp(bland, 0, 1);
+  }
+
+  function restaurar() {
+    peso0 = pesoLlegada;
+    cache.sig = null;
+    const el = panel && panel.querySelector("#csPeso");
+    if (el) el.value = String(Math.round(peso0 * 100));
   }
 
   function pesoEn(tr, t) {
@@ -170,9 +198,11 @@
   function lectura(t, tr) {
     const fase = V.fases ? V.fases.en(t) : null;
     const peso = pesoEn(tr, t);
+    const c = creencia();
     return (
       (fase ? fase.nombre.toLowerCase() : "") +
       " · " + palabraPeso(peso) +
+      " · viga: " + c.anclaNombre +
       " · apertura: " + palabraApertura(tr.apertura)
     );
   }
@@ -192,8 +222,8 @@
       if (r > 0.55) {
         return "Está aflojando. Este es el material en movimiento — el momento de sostener, no de interpretar encima.";
       }
-      return "En su punto más blando. Acá una frase pesa lo que en otro momento no pesaría: " +
-        "el peso de la creencia está en su mínimo. Lo que falta decidir es qué pasa después.";
+      return "En su punto más blando. La viga es " + creencia().anclaNombre +
+        ": acá una frase pesa lo que en otro momento no pesaría. Lo que falta decidir es qué pasa después.";
     }
     const r = peso / peso0;
     if (r >= 0.85) {
@@ -316,7 +346,7 @@
 
     panel.innerHTML =
       '<div class="cs-cab">' +
-      '<span class="cs-kicker">laboratorio · sesión + 14 días</span>' +
+      '<span class="cs-kicker" id="csKicker">laboratorio · sesión + 14 días</span>' +
       '<button type="button" class="cs-salir">volver ✕</button>' +
       "</div>" +
       "<h3 class=\"cs-titulo\">La casa: qué se escribe en la ventana</h3>" +
@@ -340,10 +370,10 @@
       "</div>" +
       '<p class="cs-nota" id="csNotaInteg"></p></div>' +
       '<p class="cs-fuente">Modelo de juguete de REBUS + integración (Carhart-Harris 2019; ' +
-      "Lyons &amp; Carhart-Harris 2018). Durante la sesión el peso sigue la curva de priors; en la ventana, " +
-      "cada día compite la reconsolidación (tiende a volver: 0,30 del hueco por día) contra lo que se escribe " +
-      "(la práctica, proporcional a plasticidad × apertura lograda). No cuantifica resultado clínico: ilustra " +
-      "por qué la ventana se llama terapéutica.</p>";
+      "Lyons &amp; Carhart-Harris 2018). El mapeo creencia→red es ilustrativo, no una localización. " +
+      "Durante la sesión el peso sigue la curva de priors; en la ventana, cada día compite la reconsolidación " +
+      "contra lo que se escribe (práctica × plasticidad × apertura × si la sala apuntó a esa red). " +
+      "No cuantifica resultado clínico: ilustra por qué la ventana se llama terapéutica.</p>";
 
     canvas = panel.querySelector("#csCanvas");
     ctx = canvas ? canvas.getContext("2d") : null;
@@ -356,6 +386,7 @@
       peso.value = String(Math.round(peso0 * 100));
       peso.addEventListener("input", function () {
         peso0 = Number(peso.value) / 100;
+        if (!V.estado || V.estado.sesion !== 2) pesoLlegada = peso0;
         pintar(true);
       });
     }
@@ -364,6 +395,7 @@
       b.addEventListener("click", function () {
         creenciaId = b.dataset.creencia;
         pintar(true);
+        if (V.red && V.red.sincronizar) V.red.sincronizar();
       });
     });
     panel.querySelectorAll("[data-integ]").forEach(function (b) {
@@ -389,6 +421,12 @@
       ctx.hidden = true;
       if (ctxBtn) ctxBtn.setAttribute("aria-expanded", "false");
     }
+    const sala = document.getElementById("dzSala");
+    const salaBtn = document.getElementById("dzSalaBtn");
+    if (sala && !sala.hidden) {
+      sala.hidden = true;
+      if (salaBtn) salaBtn.setAttribute("aria-expanded", "false");
+    }
     abierto = true;
     document.body.classList.add("en-casa");
     panel.hidden = false;
@@ -411,8 +449,17 @@
     const tr = trayectoria();
     const t = V.estado.t;
 
+    const kick = panel.querySelector("#csKicker");
+    if (kick) {
+      kick.textContent =
+        (V.estado && V.estado.sesion === 2)
+          ? "laboratorio · sesión 2 + 14 días"
+          : "laboratorio · sesión + 14 días";
+    }
+
     const sigChips =
-      creenciaId + "|" + integId + "|" + Math.round(peso0 * 100);
+      creenciaId + "|" + integId + "|" + Math.round(peso0 * 100) +
+      "|" + ((V.estado && V.estado.sesion) || 1);
     if (forzar || panel.dataset.chips !== sigChips) {
       panel.dataset.chips = sigChips;
       panel.querySelectorAll("[data-creencia]").forEach(function (b) {
@@ -452,6 +499,9 @@
     mostrar: function (si) { if (si) entrar(); else if (abierto) salir(); },
     activo: activo,
     pintar: pintar,
+    ancla: function () { return creencia().ancla; },
+    heredar: heredar,
+    restaurar: restaurar,
     creencias: CREENCIAS,
     integraciones: INTEGRACION,
   };

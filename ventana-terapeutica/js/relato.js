@@ -159,6 +159,7 @@
   function aplicar(p) {
     if (V.estado.play) V.togglePlay();
     if (p.dosis) V.setDosis(p.dosis.gramos, p.dosis.cepaId);
+    if (V.setSesion) V.setSesion(1);
     if (V.setVista) V.setVista(p.vista || "cerebro");
     V.estado.curva = p.curva || null;
     V.estado.dosisInfo = false;

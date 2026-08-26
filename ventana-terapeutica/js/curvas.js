@@ -355,6 +355,36 @@
     });
   }
 
+  /* Sesión 2: la amarilla punteada es la sesión 1 (blandura 0). */
+  function dibujarSesion(b, foco) {
+    if (!V.estado || V.estado.sesion !== 2 || !V.fisio.cadena) return;
+    const p = (V.perfilMult && V.perfilMult()) || {};
+    const m = (V.modMult && V.modMult()) || {};
+    const base = V.fisio.cadena(V.fisio.info().mg, {
+      ka: (p.ka || 1) * (m.ka || 1),
+      cmax: (p.cmax || 1) * (m.cmax || 1),
+      ec50: (p.ec50 || 1) * (m.ec50 || 1),
+      blandura: 0,
+    });
+    const atenuada = foco && foco !== "priors" ? 0.28 : 0.7;
+    ctx.globalAlpha = atenuada;
+    ctx.strokeStyle = COLORES.priors;
+    ctx.lineWidth = 1.3;
+    ctx.setLineDash([4, 5]);
+    ctx.beginPath();
+    let primero = true;
+    for (let i = 0; i <= 60; i++) {
+      const u = i / 60;
+      const y = yDeVal(b, base.priors(V.fisio.sliderATiempo(u)));
+      const x = xDeU(b, u);
+      if (primero) { ctx.moveTo(x, y); primero = false; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+  }
+
   function pintar() {
     if (!ctx || !canvas) return;
     const F = V.fisio;
@@ -364,6 +394,7 @@
     ejes(b);
     dibujarCohorte(b, foco);
     dibujarReferencia(b, foco);
+    dibujarSesion(b, foco);
 
     const btnCohorte = document.getElementById("btnCohorte");
     if (btnCohorte) {

@@ -79,6 +79,7 @@
      está calibrado así para el Ka base. */
   const MULT_BASE = { ka: 1, cmax: 1, ec50: 1 };
   let mult = { ka: 1, cmax: 1, ec50: 1 };
+  let blandura = 0;
 
   let dosisMg = 27.4;
   let yo = null;
@@ -161,13 +162,18 @@
       return clamp(semilla + 0.86 * iPicoP * sube, 0, 1) * meseta;
     };
 
+    const bland = clamp(mm.blandura || 0, 0, 1);
     const priors = function (t) {
       const ent = entropia(t);
       const d = t / 1440;
       const agudo = 1 - 0.74 * Math.pow(ent, 0.85);
       const blando = 1 - 0.22 * plasticidad(t);
       const mezcla = d < 0.35 ? agudo : agudo * 0.25 + blando * 0.75;
-      return clamp(mezcla, 0.14, 1);
+      const p = clamp(mezcla, 0.14, 1);
+      if (!bland) return p;
+      // Sesión 2: llega ya un poco abierta. No toca ocupación.
+      const extra = 0.42 * bland;
+      return clamp(p * (1 - extra) + 0.14 * extra, 0.14, 1);
     };
 
     return {
@@ -209,7 +215,12 @@
 
   /* Recalcula lo que depende de la dosis y del contexto. */
   function recalcular() {
-    yo = crearCadena(dosisMg, mult);
+    yo = crearCadena(dosisMg, {
+      ka: mult.ka,
+      cmax: mult.cmax,
+      ec50: mult.ec50,
+      blandura: blandura,
+    });
     iPico = yo.iPico;
     duracion = yo.duracion;
   }
@@ -225,6 +236,11 @@
       cmax: (m && m.cmax) || 1,
       ec50: (m && m.ec50) || 1,
     };
+    recalcular();
+  }
+
+  function setBlandura(b) {
+    blandura = clamp(b == null ? 0 : b, 0, 1);
     recalcular();
   }
 
@@ -280,6 +296,7 @@
     snapshot: snapshot,
     setDosis: setDosis,
     setMult: setMult,
+    setBlandura: setBlandura,
     /* Cadena suelta para quien la necesite: la cohorte corre 120 de estas,
        el gráfico dibuja la de referencia (sin moduladores) en punteado. */
     cadena: crearCadena,
@@ -297,6 +314,7 @@
         duracionMin: duracion,
         diasVentana: 2 + 12 * iPico,
         mult: { ka: mult.ka, cmax: mult.cmax, ec50: mult.ec50 },
+        blandura: blandura,
         alterado: mult.ka !== 1 || mult.cmax !== 1 || mult.ec50 !== 1,
       };
     },
